@@ -1,0 +1,576 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		A48B50F12DCF6F560082D211 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A48B50D22DCF6F540082D211 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A48B50D92DCF6F540082D211;
+			remoteInfo = TeleMed;
+		};
+		A48B50FB2DCF6F560082D211 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A48B50D22DCF6F540082D211 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A48B50D92DCF6F540082D211;
+			remoteInfo = TeleMed;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		A48B50DA2DCF6F540082D211 /* TeleMed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TeleMed.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A48B50F02DCF6F560082D211 /* TeleMedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TeleMedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A48B50FA2DCF6F560082D211 /* TeleMedUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TeleMedUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A48B51022DCF6F560082D211 /* Exceptions for "TeleMed" folder in "TeleMed" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				SupportingFiles/Info.plist,
+			);
+			target = A48B50D92DCF6F540082D211 /* TeleMed */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		A48B50DC2DCF6F540082D211 /* TeleMed */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A48B51022DCF6F560082D211 /* Exceptions for "TeleMed" folder in "TeleMed" target */,
+			);
+			path = TeleMed;
+			sourceTree = "<group>";
+		};
+		A48B50F32DCF6F560082D211 /* TeleMedTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = TeleMedTests;
+			sourceTree = "<group>";
+		};
+		A48B50FD2DCF6F560082D211 /* TeleMedUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = TeleMedUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A48B50D72DCF6F540082D211 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A48B50ED2DCF6F560082D211 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A48B50F72DCF6F560082D211 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A48B50D12DCF6F540082D211 = {
+			isa = PBXGroup;
+			children = (
+				A48B50DC2DCF6F540082D211 /* TeleMed */,
+				A48B50F32DCF6F560082D211 /* TeleMedTests */,
+				A48B50FD2DCF6F560082D211 /* TeleMedUITests */,
+				A48B50DB2DCF6F540082D211 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A48B50DB2DCF6F540082D211 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A48B50DA2DCF6F540082D211 /* TeleMed.app */,
+				A48B50F02DCF6F560082D211 /* TeleMedTests.xctest */,
+				A48B50FA2DCF6F560082D211 /* TeleMedUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A48B50D92DCF6F540082D211 /* TeleMed */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A48B51032DCF6F560082D211 /* Build configuration list for PBXNativeTarget "TeleMed" */;
+			buildPhases = (
+				A48B50D62DCF6F540082D211 /* Sources */,
+				A48B50D72DCF6F540082D211 /* Frameworks */,
+				A48B50D82DCF6F540082D211 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A48B50DC2DCF6F540082D211 /* TeleMed */,
+			);
+			name = TeleMed;
+			packageProductDependencies = (
+			);
+			productName = TeleMed;
+			productReference = A48B50DA2DCF6F540082D211 /* TeleMed.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A48B50EF2DCF6F560082D211 /* TeleMedTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A48B51082DCF6F560082D211 /* Build configuration list for PBXNativeTarget "TeleMedTests" */;
+			buildPhases = (
+				A48B50EC2DCF6F560082D211 /* Sources */,
+				A48B50ED2DCF6F560082D211 /* Frameworks */,
+				A48B50EE2DCF6F560082D211 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A48B50F22DCF6F560082D211 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A48B50F32DCF6F560082D211 /* TeleMedTests */,
+			);
+			name = TeleMedTests;
+			packageProductDependencies = (
+			);
+			productName = TeleMedTests;
+			productReference = A48B50F02DCF6F560082D211 /* TeleMedTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		A48B50F92DCF6F560082D211 /* TeleMedUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A48B510B2DCF6F560082D211 /* Build configuration list for PBXNativeTarget "TeleMedUITests" */;
+			buildPhases = (
+				A48B50F62DCF6F560082D211 /* Sources */,
+				A48B50F72DCF6F560082D211 /* Frameworks */,
+				A48B50F82DCF6F560082D211 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A48B50FC2DCF6F560082D211 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A48B50FD2DCF6F560082D211 /* TeleMedUITests */,
+			);
+			name = TeleMedUITests;
+			packageProductDependencies = (
+			);
+			productName = TeleMedUITests;
+			productReference = A48B50FA2DCF6F560082D211 /* TeleMedUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A48B50D22DCF6F540082D211 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1630;
+				LastUpgradeCheck = 1630;
+				TargetAttributes = {
+					A48B50D92DCF6F540082D211 = {
+						CreatedOnToolsVersion = 16.3;
+					};
+					A48B50EF2DCF6F560082D211 = {
+						CreatedOnToolsVersion = 16.3;
+						TestTargetID = A48B50D92DCF6F540082D211;
+					};
+					A48B50F92DCF6F560082D211 = {
+						CreatedOnToolsVersion = 16.3;
+						TestTargetID = A48B50D92DCF6F540082D211;
+					};
+				};
+			};
+			buildConfigurationList = A48B50D52DCF6F540082D211 /* Build configuration list for PBXProject "TeleMed" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A48B50D12DCF6F540082D211;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = A48B50DB2DCF6F540082D211 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A48B50D92DCF6F540082D211 /* TeleMed */,
+				A48B50EF2DCF6F560082D211 /* TeleMedTests */,
+				A48B50F92DCF6F560082D211 /* TeleMedUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A48B50D82DCF6F540082D211 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A48B50EE2DCF6F560082D211 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A48B50F82DCF6F560082D211 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A48B50D62DCF6F540082D211 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A48B50EC2DCF6F560082D211 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A48B50F62DCF6F560082D211 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A48B50F22DCF6F560082D211 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A48B50D92DCF6F540082D211 /* TeleMed */;
+			targetProxy = A48B50F12DCF6F560082D211 /* PBXContainerItemProxy */;
+		};
+		A48B50FC2DCF6F560082D211 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A48B50D92DCF6F540082D211 /* TeleMed */;
+			targetProxy = A48B50FB2DCF6F560082D211 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A48B51042DCF6F560082D211 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = R7R5AE32ZE;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TeleMed/SupportingFiles/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = human.intelligence.TeleMed;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A48B51052DCF6F560082D211 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = R7R5AE32ZE;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TeleMed/SupportingFiles/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = human.intelligence.TeleMed;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A48B51062DCF6F560082D211 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = R7R5AE32ZE;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A48B51072DCF6F560082D211 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = R7R5AE32ZE;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A48B51092DCF6F560082D211 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = R7R5AE32ZE;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = human.intelligence.TeleMedTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TeleMed.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TeleMed";
+			};
+			name = Debug;
+		};
+		A48B510A2DCF6F560082D211 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = R7R5AE32ZE;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = human.intelligence.TeleMedTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TeleMed.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TeleMed";
+			};
+			name = Release;
+		};
+		A48B510C2DCF6F560082D211 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = R7R5AE32ZE;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = human.intelligence.TeleMedUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TeleMed;
+			};
+			name = Debug;
+		};
+		A48B510D2DCF6F560082D211 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = R7R5AE32ZE;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = human.intelligence.TeleMedUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TeleMed;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A48B50D52DCF6F540082D211 /* Build configuration list for PBXProject "TeleMed" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A48B51062DCF6F560082D211 /* Debug */,
+				A48B51072DCF6F560082D211 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A48B51032DCF6F560082D211 /* Build configuration list for PBXNativeTarget "TeleMed" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A48B51042DCF6F560082D211 /* Debug */,
+				A48B51052DCF6F560082D211 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A48B51082DCF6F560082D211 /* Build configuration list for PBXNativeTarget "TeleMedTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A48B51092DCF6F560082D211 /* Debug */,
+				A48B510A2DCF6F560082D211 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A48B510B2DCF6F560082D211 /* Build configuration list for PBXNativeTarget "TeleMedUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A48B510C2DCF6F560082D211 /* Debug */,
+				A48B510D2DCF6F560082D211 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A48B50D22DCF6F540082D211 /* Project object */;
+}
