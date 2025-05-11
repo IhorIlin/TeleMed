@@ -8,6 +8,7 @@ xcuserdata/
 # Xcode user-specific settings
 *.xcuserdatad
 *.xcuserdata
+*.xcuserstate
 
 ## Obj-C/Swift specific
 *.hmap
