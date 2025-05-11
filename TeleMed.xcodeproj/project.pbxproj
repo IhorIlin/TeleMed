@@ -37,6 +37,17 @@
 			);
 			target = A48B50D92DCF6F540082D211 /* TeleMed */;
 		};
+		A48B51952DD08C5A0082D211 /* Exceptions for "TeleMed" folder in "TeleMedTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Common/Protocols/Coordinator.swift,
+				Common/Protocols/Storyboarded.swift,
+				Common/Utilities/Storyboard.swift,
+				Coordinators/AppCoordinator.swift,
+				Coordinators/AuthCoordinator.swift,
+			);
+			target = A48B50EF2DCF6F560082D211 /* TeleMedTests */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -44,6 +55,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				A48B51022DCF6F560082D211 /* Exceptions for "TeleMed" folder in "TeleMed" target */,
+				A48B51952DD08C5A0082D211 /* Exceptions for "TeleMed" folder in "TeleMedTests" target */,
 			);
 			path = TeleMed;
 			sourceTree = "<group>";
