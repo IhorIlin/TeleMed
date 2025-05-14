@@ -35,10 +35,17 @@ final class LoginViewController: UIViewController, Storyboarded {
     
     @IBAction func signUpPressed(_ sender: UIButton) {
     }
+    
+    @objc func endEditing() {
+        view.endEditing(true)
+    }
 }
 
 private extension LoginViewController {
     func configureUI() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(endEditing))
+        
+        view.addGestureRecognizer(tapGesture)
         view.backgroundColor = ColorPalette.Background.primary
         
         configureContainerView()
