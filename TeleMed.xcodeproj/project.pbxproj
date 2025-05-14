@@ -30,6 +30,19 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A480B6D92DD4BC88007B8AA4 /* Exceptions for "TeleMed" folder in "TeleMedUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Resources/Fonts/Inter-Black.ttf",
+				"Resources/Fonts/Inter-Bold.ttf",
+				"Resources/Fonts/Inter-Light.ttf",
+				"Resources/Fonts/Inter-Medium.ttf",
+				"Resources/Fonts/Inter-Regular.ttf",
+				"Resources/Fonts/Inter-SemiBold.ttf",
+				"Resources/Fonts/Inter-Thin.ttf",
+			);
+			target = A48B50F92DCF6F560082D211 /* TeleMedUITests */;
+		};
 		A48B51022DCF6F560082D211 /* Exceptions for "TeleMed" folder in "TeleMed" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -42,9 +55,18 @@
 			membershipExceptions = (
 				Common/Protocols/Coordinator.swift,
 				Common/Protocols/Storyboarded.swift,
+				Common/Utilities/ColorPalette.swift,
+				Common/Utilities/Font.swift,
 				Common/Utilities/Storyboard.swift,
 				Coordinators/AppCoordinator.swift,
 				Coordinators/AuthCoordinator.swift,
+				"Resources/Fonts/Inter-Black.ttf",
+				"Resources/Fonts/Inter-Bold.ttf",
+				"Resources/Fonts/Inter-Light.ttf",
+				"Resources/Fonts/Inter-Medium.ttf",
+				"Resources/Fonts/Inter-Regular.ttf",
+				"Resources/Fonts/Inter-SemiBold.ttf",
+				"Resources/Fonts/Inter-Thin.ttf",
 			);
 			target = A48B50EF2DCF6F560082D211 /* TeleMedTests */;
 		};
@@ -56,6 +78,7 @@
 			exceptions = (
 				A48B51022DCF6F560082D211 /* Exceptions for "TeleMed" folder in "TeleMed" target */,
 				A48B51952DD08C5A0082D211 /* Exceptions for "TeleMed" folder in "TeleMedTests" target */,
+				A480B6D92DD4BC88007B8AA4 /* Exceptions for "TeleMed" folder in "TeleMedUITests" target */,
 			);
 			path = TeleMed;
 			sourceTree = "<group>";
