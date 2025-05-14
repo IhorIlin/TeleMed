@@ -8,9 +8,10 @@
 import UIKit
 
 final class AuthCoordinator: Coordinator {
+    var navigationController = UINavigationController()
     var childCoordinators: [Coordinator] = []
     
     func start() {
-        
+        navigationController.pushViewController(LoginViewController.instantiate(), animated: false)
     }
 }

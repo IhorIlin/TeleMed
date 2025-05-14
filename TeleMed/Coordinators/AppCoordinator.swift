@@ -12,6 +12,9 @@ final class AppCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
     
     func start() {
+        let authCoordinator = AuthCoordinator()
+        childCoordinators.append(authCoordinator)
         
+        authCoordinator.start()
     }
 }
