@@ -53,4 +53,15 @@ enum ColorPalette {
         static let barBackground = Background.primary
         static let tint          = Link.primary
     }
+    
+    // MARK: - Shadows
+    enum Shadow {
+        static let primaryShadow = UIColor(hex: "#000000", alpha: 0.1)
+    }
+    
+    // MARK: - Borders
+    enum Border {
+        static let borderPrimary = UIColor(hex: "#D1D5DB") // Soft cool gray (Tailwind's `gray-300`)
+        static let borderActive = UIColor(hex: "#4F46E5") // Indigo
+    }
 }

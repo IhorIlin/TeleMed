@@ -8,13 +8,34 @@
 import UIKit
 
 final class AppCoordinator: Coordinator {
-    let tabBarController = UITabBarController()
+    private let tabBarController = UITabBarController()
+    private let navigationController = UINavigationController()
     var childCoordinators: [Coordinator] = []
     
+    let window: UIWindow
+    
+    var isLogedIn: Bool = false // Will be replaced with AuthService
+    
+    init(window: UIWindow) {
+        self.window = window
+    }
+    
     func start() {
-        let authCoordinator = AuthCoordinator()
+        if isLogedIn {
+            
+        } else {
+            showAuthFlow()
+        }
+    }
+    
+    func showAuthFlow() {
+        let authCoordinator = AuthCoordinator(navigationController: navigationController)
         childCoordinators.append(authCoordinator)
         
         authCoordinator.start()
+        
+        window.rootViewController = navigationController
+        
+        window.makeKeyAndVisible()
     }
 }

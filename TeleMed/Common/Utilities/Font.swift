@@ -18,6 +18,29 @@ enum Font {
         static let thin = "Inter-Thin"
     }
     
+    // MARK: - Predefined Text Styles
+    enum TextStyle {
+        static func titleLarge() -> UIFont {
+            Font.custom(weight: .bold, size: 24)
+        }
+        
+        static func titleMedium() -> UIFont {
+            Font.custom(weight: .medium, size: 18)
+        }
+        
+        static func body() -> UIFont {
+            Font.custom(weight: .regular, size: 16)
+        }
+        
+        static func caption() -> UIFont {
+            Font.custom(weight: .bold, size: 12)
+        }
+        
+        static func button() -> UIFont {
+            Font.custom(weight: .medium, size: 16)
+        }
+    }
+    
     enum Weight {
         case black
         case bold

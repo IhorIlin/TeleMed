@@ -26,10 +26,21 @@ final class LoginViewController: UIViewController, Storyboarded {
         
         configureUI()
     }
+    
+    @IBAction func forgotPasswordPressed(_ sender: UIButton) {
+    }
+    
+    @IBAction func loginPressed(_ sender: UIButton) {
+    }
+    
+    @IBAction func signUpPressed(_ sender: UIButton) {
+    }
 }
 
 private extension LoginViewController {
     func configureUI() {
+        view.backgroundColor = ColorPalette.Background.primary
+        
         configureContainerView()
         configureMainTitleLabel()
         configureSubtitleLabel()
@@ -38,46 +49,67 @@ private extension LoginViewController {
         configurePasswordLabel()
         configurePasswordTextField()
         configureForgotPasswordButton()
+        configureLoginButton()
         configureSignUpButton()
     }
     
     func configureContainerView() {
+        containerView.backgroundColor = ColorPalette.Background.secondary
         
+        containerView.layer.cornerRadius = 16
+        containerView.layer.shadowColor = ColorPalette.Shadow.primaryShadow.cgColor
+        containerView.layer.shadowOffset = CGSize(width: 0, height: 4)
+        containerView.layer.shadowOpacity = 1
+        containerView.layer.shadowRadius = 8
     }
     
     func configureMainTitleLabel() {
-        
+        mainTitleLabel.font = Font.TextStyle.titleLarge()
+        mainTitleLabel.textColor = ColorPalette.Text.primary
     }
     
     func configureSubtitleLabel() {
-        
+        subtitleLabel.font = Font.TextStyle.titleMedium()
+        subtitleLabel.textColor = ColorPalette.Text.secondary
     }
     
     func configureEmailLabel() {
-        
+        emailLabel.font = Font.TextStyle.caption()
+        emailLabel.textColor = ColorPalette.Text.primary
+        emailLabel.text = "Email"
     }
     
     func configureEmailTextField() {
-        
+        emailTextField.layer.cornerRadius = 12
+        emailTextField.layer.borderWidth = 1
+        emailTextField.layer.borderColor = ColorPalette.Border.borderPrimary.cgColor
     }
     
     func configurePasswordLabel() {
-        
+        passwordLabel.font = Font.TextStyle.caption()
+        passwordLabel.textColor = ColorPalette.Text.primary
+        passwordLabel.text = "Password"
     }
     
     func configurePasswordTextField() {
-        
+        passwordTextField.layer.cornerRadius = 12
+        passwordTextField.layer.borderWidth = 1
+        passwordTextField.layer.borderColor = ColorPalette.Border.borderPrimary.cgColor
     }
     
     func configureForgotPasswordButton() {
-        
+        forgotPasswordButton.setTitleColor(ColorPalette.Link.primary, for: .normal)
+        forgotPasswordButton.titleLabel?.font = Font.TextStyle.caption()
     }
     
     func configureLoginButton() {
-        
+        loginButton.layer.cornerRadius = 12
+        loginButton.backgroundColor = ColorPalette.Button.primaryBackground
+        loginButton.tintColor = ColorPalette.Button.primaryText
     }
     
     func configureSignUpButton() {
-        
+        signUpButton.setTitleColor(ColorPalette.Link.primary, for: .normal)
+        signUpButton.titleLabel?.font = Font.TextStyle.caption()
     }
 }
