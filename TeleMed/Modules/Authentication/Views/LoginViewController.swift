@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 final class LoginViewController: UIViewController, Storyboarded {
     static var storyboard: Storyboard = .auth
@@ -21,16 +22,24 @@ final class LoginViewController: UIViewController, Storyboarded {
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var signUpButton: UIButton!
     
+    private let viewModel = LoginViewModel(authService: DefaultAuthService(networkClient: DefaultNetworkClient()))
+    
+    private var cancellables = Set<AnyCancellable>()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureUI()
+        
+        bindFields()
+        bindFormValidation()
     }
     
     @IBAction func forgotPasswordPressed(_ sender: UIButton) {
     }
     
     @IBAction func loginPressed(_ sender: UIButton) {
+        viewModel.login()
     }
     
     @IBAction func signUpPressed(_ sender: UIButton) {
@@ -38,6 +47,29 @@ final class LoginViewController: UIViewController, Storyboarded {
     
     @objc func endEditing() {
         view.endEditing(true)
+    }
+}
+
+private extension LoginViewController {
+    func bindFields() {
+        emailTextField
+            .publisher(for: \.text)
+            .compactMap { $0 }
+            .assign(to: \.email, on: viewModel)
+            .store(in: &cancellables)
+        
+        passwordTextField
+            .publisher(for: \.text)
+            .compactMap { $0 }
+            .assign(to: \.password, on: viewModel)
+            .store(in: &cancellables)
+    }
+    
+    func bindFormValidation() {
+        viewModel.$isFormValid
+            .receive(on: RunLoop.main)
+            .assign(to: \.isEnabled, on: loginButton)
+            .store(in: &cancellables)
     }
 }
 
@@ -87,6 +119,7 @@ private extension LoginViewController {
     }
     
     func configureEmailTextField() {
+        emailTextField.keyboardType = .emailAddress
         emailTextField.layer.cornerRadius = 12
         emailTextField.layer.borderWidth = 1
         emailTextField.layer.borderColor = ColorPalette.Border.borderPrimary.cgColor

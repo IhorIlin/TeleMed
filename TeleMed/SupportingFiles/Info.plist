@@ -7,11 +7,13 @@
 		<string>Inter-Black.ttf</string>
 		<string>Inter-Bold.ttf</string>
 		<string>Inter-Regular.ttf</string>
-		<string>Inter-Semibold.ttf</string>
+		<string>Inter-SemiBold.ttf</string>
 		<string>Inter-Thin.ttf</string>
 		<string>Inter-Medium.ttf</string>
 		<string>Inter-Light.ttf</string>
 	</array>
+    <key>BASE_URL</key>
+    <string>$(BASE_URL)</string>
 	<key>CFBundleIdentifier</key>
 	<string></string>
 	<key>UIApplicationSceneManifest</key>
