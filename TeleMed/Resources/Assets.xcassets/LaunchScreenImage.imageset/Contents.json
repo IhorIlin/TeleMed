@@ -1,0 +1,32 @@
+{
+  "images" : [
+    {
+      "filename" : "TeleMedApp_Launch_ExactIcon_Transparent 1.png",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "light"
+        }
+      ],
+      "filename" : "TeleMedApp_Launch_ExactIcon_Transparent.png",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "TeleMedApp_Launch_ExactIcon_Dark_Transparent.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

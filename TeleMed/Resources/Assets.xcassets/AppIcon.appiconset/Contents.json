@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "telemed_icon.png",
+      "filename" : "zoomed-Icon-1024-light.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -13,7 +13,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "telemed_icon 1.png",
+      "filename" : "zoomed-Icon-1024-dark.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -25,7 +25,7 @@
           "value" : "tinted"
         }
       ],
-      "filename" : "telemed_icon 2.png",
+      "filename" : "zoomed-Icon-1024-tint.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"

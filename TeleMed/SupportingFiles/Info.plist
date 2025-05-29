@@ -12,6 +12,8 @@
 		<string>Inter-Medium.ttf</string>
 		<string>Inter-Light.ttf</string>
 	</array>
+    <key>BASE_URL</key>
+    <string>$(BASE_URL)</string>
 	<key>CFBundleIdentifier</key>
 	<string></string>
 	<key>UIApplicationSceneManifest</key>
