@@ -8,4 +8,6 @@
 // Configuration settings file format documentation can be found at:
 // https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
 
-BASE_URL=https://localhost:8080
+PROTOCOL=https:/
+
+BASE_URL=$PROTOCOL/localhost:8080
