@@ -33,7 +33,9 @@
 		A480B6D92DD4BC88007B8AA4 /* Exceptions for "TeleMed" folder in "TeleMedUITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Common/Networking/API/APIService.swift,
+				Common/Networking/API/DefaultAuthService.swift,
+				Common/Networking/API/Protocols/AuthService.swift,
+				Common/Networking/API/Protocols/NetworkClient.swift,
 				Common/Networking/Config/Debug.xcconfig,
 				Common/Networking/Config/NetworkConfig.swift,
 				Common/Networking/Config/Release.xcconfig,
@@ -60,13 +62,16 @@
 		A48B51952DD08C5A0082D211 /* Exceptions for "TeleMed" folder in "TeleMedTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Common/Networking/API/APIService.swift,
+				Common/Networking/API/DefaultAuthService.swift,
+				Common/Networking/API/Protocols/AuthService.swift,
+				Common/Networking/API/Protocols/NetworkClient.swift,
 				Common/Networking/Config/Debug.xcconfig,
 				Common/Networking/Config/NetworkConfig.swift,
 				Common/Networking/Config/Release.xcconfig,
 				Common/Networking/Config/Staging.xcconfig,
 				Common/Networking/Endpoints/AuthEndpoint.swift,
 				Common/Networking/Endpoints/Endpoint.swift,
+				Common/Networking/Errors/NetworkClientError.swift,
 				Common/Protocols/Coordinator.swift,
 				Common/Protocols/Storyboarded.swift,
 				Common/Utilities/ColorPalette.swift,
