@@ -40,7 +40,8 @@ final class LoginViewModel: ObservableObject {
     private func setupValidation() {
         Publishers.CombineLatest($email, $password)
             .map { email, password in
-                !email.isEmpty && !password.isEmpty 
-            }.assign(to: &$isFormValid)
+                email.isValidEmail && password.isValidPassword
+            }
+            .assign(to: &$isFormValid)
     }
 }

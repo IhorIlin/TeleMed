@@ -22,6 +22,8 @@ final class LoginViewController: UIViewController, Storyboarded {
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var signUpButton: UIButton!
     
+    @IBOutlet weak var formCenterYConstraint: NSLayoutConstraint!
+    
     private let viewModel = LoginViewModel(authService: DefaultAuthService(networkClient: DefaultNetworkClient()))
     
     private var cancellables = Set<AnyCancellable>()
@@ -33,6 +35,7 @@ final class LoginViewController: UIViewController, Storyboarded {
         
         bindFields()
         bindFormValidation()
+        observeKeyboardNotifications()
     }
     
     @IBAction func forgotPasswordPressed(_ sender: UIButton) {
@@ -52,15 +55,25 @@ final class LoginViewController: UIViewController, Storyboarded {
 
 private extension LoginViewController {
     func bindFields() {
-        emailTextField
-            .publisher(for: \.text)
-            .compactMap { $0 }
+        NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: emailTextField)
+            .compactMap { notification in
+                guard let field = notification.object as? UITextField else {
+                    return ""
+                }
+                
+                return field.text ?? ""
+            }
             .assign(to: \.email, on: viewModel)
             .store(in: &cancellables)
         
-        passwordTextField
-            .publisher(for: \.text)
-            .compactMap { $0 }
+        NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: passwordTextField)
+            .compactMap { notification in
+                guard let field = notification.object as? UITextField else {
+                    return ""
+                }
+                
+                return field.text ?? ""
+            }
             .assign(to: \.password, on: viewModel)
             .store(in: &cancellables)
     }
@@ -119,6 +132,8 @@ private extension LoginViewController {
     }
     
     func configureEmailTextField() {
+        emailTextField.delegate = self
+        emailTextField.returnKeyType = .next
         emailTextField.keyboardType = .emailAddress
         emailTextField.layer.cornerRadius = 12
         emailTextField.layer.borderWidth = 1
@@ -132,6 +147,9 @@ private extension LoginViewController {
     }
     
     func configurePasswordTextField() {
+        passwordTextField.delegate = self
+        passwordTextField.returnKeyType = .done
+        passwordTextField.isSecureTextEntry = true
         passwordTextField.layer.cornerRadius = 12
         passwordTextField.layer.borderWidth = 1
         passwordTextField.layer.borderColor = ColorPalette.Border.borderPrimary.cgColor
@@ -152,4 +170,68 @@ private extension LoginViewController {
         signUpButton.setTitleColor(ColorPalette.Link.primary, for: .normal)
         signUpButton.titleLabel?.font = Font.TextStyle.caption()
     }
+}
+
+extension LoginViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == emailTextField {
+            passwordTextField.becomeFirstResponder()
+        } else {
+            textField.resignFirstResponder()
+        }
+        
+        return true
+    }
+}
+
+// Keyboard avoiding stuff
+private extension LoginViewController {
+    func observeKeyboardNotifications() {
+        let willShow = NotificationCenter.default
+            .publisher(for: UIResponder.keyboardWillShowNotification)
+            .compactMap { notification in
+                notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
+            }
+        
+        let willHide = NotificationCenter.default
+            .publisher(for: UIResponder.keyboardWillHideNotification)
+            .map { _ in CGRect.zero }
+        
+        Publishers.Merge(willShow, willHide)
+            .receive(on: RunLoop.main)
+            .sink { [weak self] keyboardFrame in
+                self?.adjustViewForKeyboard(keyboardFrame: keyboardFrame)
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func adjustViewForKeyboard(keyboardFrame: CGRect) {
+        if let activeField = getActiveTextField() {
+            let fieldFrame = activeField.convert(activeField.bounds, to: view)
+            let keyboardTop = keyboardFrame.minY
+            let fieldBottom = fieldFrame.maxY
+            
+            let overlap = fieldBottom - keyboardTop
+            
+            let offset = max(overlap + 16, 0) // Add padding
+            
+            UIView.animate(withDuration: 0.3) {
+                self.formCenterYConstraint.constant = -offset
+                self.view.layoutIfNeeded()
+            }
+        } else {
+            if keyboardFrame == .zero {
+                UIView.animate(withDuration: 0.3) {
+                    self.formCenterYConstraint.constant = 0
+                    self.view.layoutIfNeeded()
+                }
+                return
+            }
+        }
+    }
+    
+    private func getActiveTextField() -> UITextField? {
+        return [emailTextField, passwordTextField].first(where: { $0.isFirstResponder })
+    }
+    
 }
