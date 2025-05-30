@@ -1,5 +1,5 @@
 //
-//  DefaultAuthService.swift
+//  DefaultAuthClient.swift
 //  TeleMed
 //
 //  Created by Ihor Ilin on 29.05.2025.
@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class DefaultAuthService: AuthService {
+final class DefaultAuthClient: AuthClient {
     private let networkClient: NetworkClient
     
     init(networkClient: NetworkClient) {

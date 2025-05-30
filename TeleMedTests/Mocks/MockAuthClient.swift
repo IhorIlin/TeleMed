@@ -1,5 +1,5 @@
 //
-//  MockAuthService.swift
+//  MockAuthClient.swift
 //  TeleMedTests
 //
 //  Created by Ihor Ilin on 29.05.2025.
@@ -8,7 +8,7 @@
 import Combine
 @testable import TeleMed
 
-final class MockAuthService: AuthService {
+final class MockAuthClient: AuthClient {
     var loginCalled = false
     var loginResult: Result<LoginResponseDTO, NetworkClientError> = .success(.init(token: "mock-token"))
 

@@ -11,19 +11,19 @@ import Combine
 
 final class LoginViewModelTests: XCTestCase {
     private var viewModel: LoginViewModel!
-    private var mockAuthService: MockAuthService!
+    private var mockAuthClient: MockAuthClient!
     private var cancellables: Set<AnyCancellable> = []
 
     override func setUpWithError() throws {
         try super.setUpWithError()
         
-        mockAuthService = MockAuthService()
-        viewModel = LoginViewModel(authService: mockAuthService)
+        mockAuthClient = MockAuthClient()
+        viewModel = LoginViewModel(authService: mockAuthClient)
     }
 
     override func tearDown() {
         viewModel = nil
-        mockAuthService = nil
+        mockAuthClient = nil
         cancellables.removeAll()
         super.tearDown()
     }
@@ -44,12 +44,12 @@ final class LoginViewModelTests: XCTestCase {
 
     func testLogin_Success() {
         let expectation = expectation(description: "Login succeeds")
-        mockAuthService.loginResult = .success(.init(token: "dummy-token"))
+        mockAuthClient.loginResult = .success(.init(token: "dummy-token"))
 
         viewModel.login()
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            XCTAssertTrue(self.mockAuthService.loginCalled)
+            XCTAssertTrue(self.mockAuthClient.loginCalled)
             expectation.fulfill()
         }
 
@@ -58,12 +58,12 @@ final class LoginViewModelTests: XCTestCase {
 
     func testLogin_Failure() {
         let expectation = expectation(description: "Login fails")
-        mockAuthService.loginResult = .failure(NetworkClientError.serverError(statusCode: 401, data: Data()))
+        mockAuthClient.loginResult = .failure(NetworkClientError.serverError(statusCode: 401, data: Data()))
 
         viewModel.login()
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            XCTAssertTrue(self.mockAuthService.loginCalled)
+            XCTAssertTrue(self.mockAuthClient.loginCalled)
             expectation.fulfill()
         }
 
