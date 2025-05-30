@@ -33,15 +33,9 @@
 		A480B6D92DD4BC88007B8AA4 /* Exceptions for "TeleMed" folder in "TeleMedUITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Common/Networking/API/DefaultAuthService.swift,
-				Common/Networking/API/Protocols/AuthService.swift,
-				Common/Networking/API/Protocols/NetworkClient.swift,
 				Common/Networking/Config/Debug.xcconfig,
-				Common/Networking/Config/NetworkConfig.swift,
 				Common/Networking/Config/Release.xcconfig,
 				Common/Networking/Config/Staging.xcconfig,
-				Common/Networking/Endpoints/AuthEndpoint.swift,
-				Common/Networking/Endpoints/Endpoint.swift,
 				"Resources/Fonts/Inter-Black.ttf",
 				"Resources/Fonts/Inter-Bold.ttf",
 				"Resources/Fonts/Inter-Light.ttf",
@@ -62,7 +56,10 @@
 		A48B51952DD08C5A0082D211 /* Exceptions for "TeleMed" folder in "TeleMedTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"Common/Extensions/String+Extension.swift",
+				"Common/Extensions/UIColor+Extension.swift",
 				Common/Networking/API/DefaultAuthService.swift,
+				Common/Networking/API/DefaultNetworkClient.swift,
 				Common/Networking/API/Protocols/AuthService.swift,
 				Common/Networking/API/Protocols/NetworkClient.swift,
 				Common/Networking/Config/Debug.xcconfig,
@@ -79,6 +76,10 @@
 				Common/Utilities/Storyboard.swift,
 				Coordinators/AppCoordinator.swift,
 				Coordinators/AuthCoordinator.swift,
+				Modules/Authentication/Models/LoginRequestDTO.swift,
+				Modules/Authentication/Models/LoginResponseDTO.swift,
+				Modules/Authentication/ViewModels/LoginViewModel.swift,
+				Modules/Authentication/Views/LoginViewController.swift,
 				"Resources/Fonts/Inter-Black.ttf",
 				"Resources/Fonts/Inter-Bold.ttf",
 				"Resources/Fonts/Inter-Light.ttf",
