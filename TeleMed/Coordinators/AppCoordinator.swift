@@ -14,7 +14,7 @@ final class AppCoordinator: Coordinator {
     
     let window: UIWindow
     
-    var isLogedIn: Bool = false // Will be replaced with AuthService
+    var isLogedIn: Bool = false // Will be replaced with AuthClient
     
     init(window: UIWindow) {
         self.window = window

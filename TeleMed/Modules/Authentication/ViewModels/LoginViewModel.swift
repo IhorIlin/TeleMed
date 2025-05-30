@@ -13,10 +13,10 @@ final class LoginViewModel: ObservableObject {
     @Published var password: String = ""
     @Published private(set) var isFormValid: Bool = false
     
-    private var authService: AuthService
+    private var authService: AuthClient
     private var cancellables: Set<AnyCancellable> = []
     
-    init(authService: AuthService) {
+    init(authService: AuthClient) {
         self.authService = authService
         
         setupValidation()
@@ -32,8 +32,12 @@ final class LoginViewModel: ObservableObject {
                     print("failure: \(networkClientError.localizedDescription)")
                 }
             } receiveValue: { response in
-                // Store token in Keychain!
-                print(response.token)
+                do {
+                    try KeychainService.shared.save(response.token, for: .authToken)
+                } catch {
+                    // handle error !
+                    print(error.localizedDescription)
+                }
             }.store(in: &cancellables)
     }
     
