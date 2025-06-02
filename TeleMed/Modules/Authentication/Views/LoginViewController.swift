@@ -28,6 +28,9 @@ final class LoginViewController: UIViewController, Storyboarded {
     
     private var cancellables = Set<AnyCancellable>()
     
+    var showSignUp: (() -> Void)?
+    var showForgotPassword: (() -> Void)?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -39,6 +42,7 @@ final class LoginViewController: UIViewController, Storyboarded {
     }
     
     @IBAction func forgotPasswordPressed(_ sender: UIButton) {
+        showForgotPassword?()
     }
     
     @IBAction func loginPressed(_ sender: UIButton) {
@@ -46,10 +50,15 @@ final class LoginViewController: UIViewController, Storyboarded {
     }
     
     @IBAction func signUpPressed(_ sender: UIButton) {
+        showSignUp?()
     }
     
     @objc func endEditing() {
         view.endEditing(true)
+    }
+    
+    deinit {
+        print("deinit for LoginViewController")
     }
 }
 
@@ -162,7 +171,7 @@ private extension LoginViewController {
     
     func configureLoginButton() {
         loginButton.layer.cornerRadius = 12
-        loginButton.backgroundColor = ColorPalette.Button.primaryBackground
+        loginButton.backgroundColor = ColorPalette.Button.indigo
         loginButton.tintColor = ColorPalette.Button.primaryText
     }
     
