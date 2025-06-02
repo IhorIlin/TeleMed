@@ -26,9 +26,11 @@ final class SignUpViewController: UIViewController, Storyboarded {
     
     @IBOutlet weak var formCenterYConstraint: NSLayoutConstraint!
     
+    private var viewModel = SignUpViewModel(authClient: DefaultAuthClient(networkClient: DefaultNetworkClient()), keychain: KeychainService.shared)
     private var cancellables = Set<AnyCancellable>()
     
     var showLogin: (() -> Void)?
+    var showHome: (() -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,13 +38,29 @@ final class SignUpViewController: UIViewController, Storyboarded {
         configureUI()
         
         observeKeyboardNotifications()
+        
+        bindFields()
+        
+        validateForm()
     }
     
     @IBAction func signUpButtonPressed(_ sender: UIButton) {
+        viewModel.register()
     }
     
     @IBAction func loginButtonPressed(_ sender: UIButton) {
         showLogin?()
+    }
+    
+    @IBAction func roleChanged(_ sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 0:
+            viewModel.userRole = .patient
+        case 1:
+            viewModel.userRole = .doctor
+        default:
+            break
+        }
     }
     
     @objc func endEditing() {
@@ -54,12 +72,72 @@ final class SignUpViewController: UIViewController, Storyboarded {
     }
 }
 
+// MARK: - Binding -
+extension SignUpViewController {
+    private func bindFields() {
+        NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: emailTextField)
+            .compactMap { notification in
+                guard let field = notification.object as? UITextField else {
+                    return ""
+                }
+                
+                return field.text
+            }
+            .assign(to: \.email, on: viewModel)
+            .store(in: &cancellables)
+        
+        NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: passwordTextField)
+            .compactMap { notification in
+                guard let field = notification.object as? UITextField else {
+                    return ""
+                }
+                
+                return field.text
+            }
+            .assign(to: \.password, on: viewModel)
+            .store(in: &cancellables)
+        
+        NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: confirmPasswordTextField)
+            .compactMap { notification in
+                guard let field = notification.object as? UITextField else {
+                    return ""
+                }
+                
+                return field.text
+            }
+            .assign(to: \.confirmPassword, on: viewModel)
+            .store(in: &cancellables)
+        
+        viewModel.subject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] event in
+                switch event {
+                case .navigateToHome:
+                    self?.showHome?()
+                case .showError(let error):
+                    // display error on UI
+                    break
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func validateForm() {
+        viewModel.$isFormValid
+            .receive(on: RunLoop.main)
+            .assign(to: \.isEnabled, on: signUpButton)
+            .store(in: &cancellables)
+    }
+}
+
 extension SignUpViewController {
     private func configureUI() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(endEditing))
         
         view.addGestureRecognizer(tapGesture)
         view.backgroundColor = ColorPalette.Background.primary
+        
+        segmentedControl.selectedSegmentIndex = viewModel.userRole == .patient ? 0 : 1
         
         configureContainerView()
         configureMainTitleLabel()

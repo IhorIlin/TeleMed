@@ -32,10 +32,18 @@ final class AppCoordinator: Coordinator {
         let authCoordinator = AuthCoordinator(navigationController: navigationController)
         childCoordinators.append(authCoordinator)
         
+        authCoordinator.onAuthSuccess = { [weak self] in
+            self?.showTabBar()
+        }
+        
         authCoordinator.start()
         
         window.rootViewController = navigationController
         
         window.makeKeyAndVisible()
+    }
+    
+    func showTabBar() {
+        print("Navigate to tabBar :-) !")
     }
 }
