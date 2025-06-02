@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 final class SignUpViewController: UIViewController, Storyboarded {
     static var storyboard: Storyboard = .auth
@@ -23,12 +24,18 @@ final class SignUpViewController: UIViewController, Storyboarded {
     @IBOutlet weak var signUpButton: UIButton!
     @IBOutlet weak var loginButton: UIButton!
     
+    @IBOutlet weak var formCenterYConstraint: NSLayoutConstraint!
+    
+    private var cancellables = Set<AnyCancellable>()
+    
     var showLogin: (() -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureUI()
+        
+        observeKeyboardNotifications()
     }
     
     @IBAction func signUpButtonPressed(_ sender: UIButton) {
@@ -141,6 +148,57 @@ extension SignUpViewController {
         signUpButton.layer.cornerRadius = 12
         signUpButton.backgroundColor = ColorPalette.Button.vibrantGreen
         signUpButton.tintColor = ColorPalette.Button.primaryText
+    }
+}
+
+// Keyboard avoiding stuff
+private extension SignUpViewController {
+    func observeKeyboardNotifications() {
+        let willShow = NotificationCenter.default
+            .publisher(for: UIResponder.keyboardWillShowNotification)
+            .compactMap { notification in
+                notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
+            }
+        
+        let willHide = NotificationCenter.default
+            .publisher(for: UIResponder.keyboardWillHideNotification)
+            .map { _ in CGRect.zero }
+        
+        Publishers.Merge(willShow, willHide)
+            .receive(on: RunLoop.main)
+            .sink { [weak self] keyboardFrame in
+                self?.adjustViewForKeyboard(keyboardFrame: keyboardFrame)
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func adjustViewForKeyboard(keyboardFrame: CGRect) {
+        if let activeField = getActiveTextField() {
+            let fieldFrame = activeField.convert(activeField.bounds, to: view)
+            let keyboardTop = keyboardFrame.minY
+            let fieldBottom = fieldFrame.maxY
+            
+            let overlap = fieldBottom - keyboardTop
+            
+            let offset = max(overlap + 16, 0) // Add padding
+            
+            UIView.animate(withDuration: 0.3) {
+                self.formCenterYConstraint.constant = -offset
+                self.view.layoutIfNeeded()
+            }
+        } else {
+            if keyboardFrame == .zero {
+                UIView.animate(withDuration: 0.3) {
+                    self.formCenterYConstraint.constant = 0
+                    self.view.layoutIfNeeded()
+                }
+                return
+            }
+        }
+    }
+    
+    private func getActiveTextField() -> UITextField? {
+        return [emailTextField, passwordTextField, confirmPasswordTextField].first(where: { $0.isFirstResponder })
     }
 }
 
