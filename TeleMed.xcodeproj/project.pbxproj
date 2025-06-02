@@ -79,6 +79,8 @@
 				Coordinators/AuthCoordinator.swift,
 				Modules/Authentication/Models/LoginRequestDTO.swift,
 				Modules/Authentication/Models/LoginResponseDTO.swift,
+				Modules/Authentication/Models/RefreshTokenRequestDTO.swift,
+				Modules/Authentication/Models/RefreshTokenResponseDTO.swift,
 				Modules/Authentication/ViewModels/LoginViewModel.swift,
 				Modules/Authentication/Views/LoginViewController.swift,
 				"Resources/Fonts/Inter-Black.ttf",
@@ -171,6 +173,7 @@
 				A48B50D62DCF6F540082D211 /* Sources */,
 				A48B50D72DCF6F540082D211 /* Frameworks */,
 				A48B50D82DCF6F540082D211 /* Resources */,
+				A4D0AD212DEC66590088F12B /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -299,6 +302,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A4D0AD212DEC66590088F12B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n# Play JARVIS greeting on successful build\nafplay \"/Users/ihorilin/Sounds/assemble.mp3\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		A48B50D62DCF6F540082D211 /* Sources */ = {
