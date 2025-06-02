@@ -33,15 +33,9 @@
 		A480B6D92DD4BC88007B8AA4 /* Exceptions for "TeleMed" folder in "TeleMedUITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Common/Networking/API/DefaultAuthService.swift,
-				Common/Networking/API/Protocols/AuthService.swift,
-				Common/Networking/API/Protocols/NetworkClient.swift,
 				Common/Networking/Config/Debug.xcconfig,
-				Common/Networking/Config/NetworkConfig.swift,
 				Common/Networking/Config/Release.xcconfig,
 				Common/Networking/Config/Staging.xcconfig,
-				Common/Networking/Endpoints/AuthEndpoint.swift,
-				Common/Networking/Endpoints/Endpoint.swift,
 				"Resources/Fonts/Inter-Black.ttf",
 				"Resources/Fonts/Inter-Bold.ttf",
 				"Resources/Fonts/Inter-Light.ttf",
@@ -62,8 +56,11 @@
 		A48B51952DD08C5A0082D211 /* Exceptions for "TeleMed" folder in "TeleMedTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Common/Networking/API/DefaultAuthService.swift,
-				Common/Networking/API/Protocols/AuthService.swift,
+				"Common/Extensions/String+Extension.swift",
+				"Common/Extensions/UIColor+Extension.swift",
+				Common/Networking/API/DefaultAuthClient.swift,
+				Common/Networking/API/DefaultNetworkClient.swift,
+				Common/Networking/API/Protocols/AuthClient.swift,
 				Common/Networking/API/Protocols/NetworkClient.swift,
 				Common/Networking/Config/Debug.xcconfig,
 				Common/Networking/Config/NetworkConfig.swift,
@@ -73,12 +70,19 @@
 				Common/Networking/Endpoints/Endpoint.swift,
 				Common/Networking/Errors/NetworkClientError.swift,
 				Common/Protocols/Coordinator.swift,
+				Common/Protocols/SecureStoring.swift,
 				Common/Protocols/Storyboarded.swift,
 				Common/Utilities/ColorPalette.swift,
 				Common/Utilities/Font.swift,
 				Common/Utilities/Storyboard.swift,
 				Coordinators/AppCoordinator.swift,
 				Coordinators/AuthCoordinator.swift,
+				Modules/Authentication/Models/LoginRequestDTO.swift,
+				Modules/Authentication/Models/LoginResponseDTO.swift,
+				Modules/Authentication/Models/RefreshTokenRequestDTO.swift,
+				Modules/Authentication/Models/RefreshTokenResponseDTO.swift,
+				Modules/Authentication/ViewModels/LoginViewModel.swift,
+				Modules/Authentication/Views/LoginViewController.swift,
 				"Resources/Fonts/Inter-Black.ttf",
 				"Resources/Fonts/Inter-Bold.ttf",
 				"Resources/Fonts/Inter-Light.ttf",
@@ -169,6 +173,7 @@
 				A48B50D62DCF6F540082D211 /* Sources */,
 				A48B50D72DCF6F540082D211 /* Frameworks */,
 				A48B50D82DCF6F540082D211 /* Resources */,
+				A4D0AD212DEC66590088F12B /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -298,6 +303,26 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		A4D0AD212DEC66590088F12B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n# Play JARVIS greeting on successful build\nafplay \"/Users/ihorilin/Sounds/assemble.mp3\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		A48B50D62DCF6F540082D211 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -351,8 +376,8 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -381,8 +406,8 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -682,8 +707,8 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

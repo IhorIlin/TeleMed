@@ -138,6 +138,7 @@
                         <outlet property="emailLabel" destination="bB5-0U-pkI" id="Gea-Wv-4wp"/>
                         <outlet property="emailTextField" destination="rue-px-DGA" id="ThO-aJ-4JN"/>
                         <outlet property="forgotPasswordButton" destination="DfP-u5-fI6" id="2E1-ZK-nra"/>
+                        <outlet property="formCenterYConstraint" destination="FIH-WJ-DeC" id="sta-a3-AcE"/>
                         <outlet property="loginButton" destination="z5u-Re-Ste" id="K1V-CM-EAn"/>
                         <outlet property="mainTitleLabel" destination="1kV-6u-L2j" id="zu2-tN-Wzy"/>
                         <outlet property="passwordLabel" destination="0Mz-He-rPY" id="ucm-Bt-Hv7"/>

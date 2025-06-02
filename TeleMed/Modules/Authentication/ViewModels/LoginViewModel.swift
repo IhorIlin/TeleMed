@@ -13,17 +13,17 @@ final class LoginViewModel: ObservableObject {
     @Published var password: String = ""
     @Published private(set) var isFormValid: Bool = false
     
-    private var authService: AuthService
+    private var authClient: AuthClient
     private var cancellables: Set<AnyCancellable> = []
     
-    init(authService: AuthService) {
-        self.authService = authService
+    init(authClient: AuthClient) {
+        self.authClient = authClient
         
         setupValidation()
     }
     
     func login() {
-        authService.login(with: LoginRequestDTO(email: email, password: password))
+        authClient.login(with: LoginRequestDTO(email: email, password: password))
             .sink { completion in
                 switch completion {
                 case .finished:
@@ -32,15 +32,21 @@ final class LoginViewModel: ObservableObject {
                     print("failure: \(networkClientError.localizedDescription)")
                 }
             } receiveValue: { response in
-                // Store token in Keychain!
-                print(response.token)
+                do {
+                    try KeychainService.shared.saveAuthTokens(authToken: response.token, refreshToken: response.refreshToken)
+                    print("authToken: \(response.token) \nrefreshToken: \(response.refreshToken)")
+                } catch {
+                    // handle error !
+                    print(error.localizedDescription)
+                }
             }.store(in: &cancellables)
     }
     
     private func setupValidation() {
         Publishers.CombineLatest($email, $password)
             .map { email, password in
-                !email.isEmpty && !password.isEmpty 
-            }.assign(to: &$isFormValid)
+                email.isValidEmail && password.isValidPassword
+            }
+            .assign(to: &$isFormValid)
     }
 }

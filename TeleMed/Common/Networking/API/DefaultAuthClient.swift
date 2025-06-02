@@ -1,5 +1,5 @@
 //
-//  DefaultAuthService.swift
+//  DefaultAuthClient.swift
 //  TeleMed
 //
 //  Created by Ihor Ilin on 29.05.2025.
@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class DefaultAuthService: AuthService {
+final class DefaultAuthClient: AuthClient {
     private let networkClient: NetworkClient
     
     init(networkClient: NetworkClient) {
@@ -17,6 +17,12 @@ final class DefaultAuthService: AuthService {
     
     func login(with request: LoginRequestDTO) -> AnyPublisher<LoginResponseDTO, NetworkClientError> {
         let endpoint = AuthEndpoint.login(email: request.email, password: request.password)
+        
+        return networkClient.request(endpoint: endpoint)
+    }
+    
+    func refreshToken(with request: RefreshTokenRequestDTO) -> AnyPublisher<RefreshTokenResponseDTO, NetworkClientError> {
+        let endpoint = AuthEndpoint.refreshToken(refreshToken: request.refreshToken)
         
         return networkClient.request(endpoint: endpoint)
     }
