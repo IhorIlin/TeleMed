@@ -11,6 +11,7 @@ enum AuthEndpoint: Endpoint {
     case login(email: String, password: String)
     case signUp(email: String, password: String, role: String)
     case forgotPassword(email: String)
+    case refreshToken(refreshToken: String)
     
     var url: URL {
         let baseURL = NetworkConfig.baseURL
@@ -23,6 +24,8 @@ enum AuthEndpoint: Endpoint {
             path = "/auth/register"
         case .forgotPassword:
             path = "/auth/forgot-password"
+        case .refreshToken:
+            path = "/auth/refresh"
         }
 
         guard let url = URL(string: baseURL + path) else {
@@ -52,6 +55,10 @@ enum AuthEndpoint: Endpoint {
             return try? JSONSerialization.data(withJSONObject: payload)
         case .forgotPassword(let email):
             let payload = ["email": email]
+            
+            return try? JSONSerialization.data(withJSONObject: payload)
+        case .refreshToken(let refreshToken):
+            let payload = ["refreshToken": refreshToken]
             
             return try? JSONSerialization.data(withJSONObject: payload)
         }

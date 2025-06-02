@@ -20,4 +20,10 @@ final class DefaultAuthClient: AuthClient {
         
         return networkClient.request(endpoint: endpoint)
     }
+    
+    func refreshToken(with request: RefreshTokenRequestDTO) -> AnyPublisher<RefreshTokenResponseDTO, NetworkClientError> {
+        let endpoint = AuthEndpoint.refreshToken(refreshToken: request.refreshToken)
+        
+        return networkClient.request(endpoint: endpoint)
+    }
 }

@@ -24,7 +24,7 @@ final class LoginViewController: UIViewController, Storyboarded {
     
     @IBOutlet weak var formCenterYConstraint: NSLayoutConstraint!
     
-    private let viewModel = LoginViewModel(authService: DefaultAuthClient(networkClient: DefaultNetworkClient()))
+    private let viewModel = LoginViewModel(authClient: DefaultAuthClient(networkClient: DefaultNetworkClient()))
     
     private var cancellables = Set<AnyCancellable>()
     

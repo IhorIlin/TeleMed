@@ -13,17 +13,17 @@ final class LoginViewModel: ObservableObject {
     @Published var password: String = ""
     @Published private(set) var isFormValid: Bool = false
     
-    private var authService: AuthClient
+    private var authClient: AuthClient
     private var cancellables: Set<AnyCancellable> = []
     
-    init(authService: AuthClient) {
-        self.authService = authService
+    init(authClient: AuthClient) {
+        self.authClient = authClient
         
         setupValidation()
     }
     
     func login() {
-        authService.login(with: LoginRequestDTO(email: email, password: password))
+        authClient.login(with: LoginRequestDTO(email: email, password: password))
             .sink { completion in
                 switch completion {
                 case .finished:
@@ -33,7 +33,8 @@ final class LoginViewModel: ObservableObject {
                 }
             } receiveValue: { response in
                 do {
-                    try KeychainService.shared.save(response.token, for: .authToken)
+                    try KeychainService.shared.saveAuthTokens(authToken: response.token, refreshToken: response.refreshToken)
+                    print("authToken: \(response.token) \nrefreshToken: \(response.refreshToken)")
                 } catch {
                     // handle error !
                     print(error.localizedDescription)
