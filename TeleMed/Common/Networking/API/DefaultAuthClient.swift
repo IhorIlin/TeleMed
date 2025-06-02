@@ -26,4 +26,10 @@ final class DefaultAuthClient: AuthClient {
         
         return networkClient.request(endpoint: endpoint)
     }
+    
+    func register(with request: RegisterRequestDTO) -> AnyPublisher<RegisterResponseDTO, NetworkClientError> {
+        let endpoint = AuthEndpoint.signUp(email: request.email, password: request.password, role: request.role.rawValue)
+        
+        return networkClient.request(endpoint: endpoint)
+    }
 }

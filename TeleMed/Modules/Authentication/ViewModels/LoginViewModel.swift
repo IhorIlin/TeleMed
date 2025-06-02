@@ -14,11 +14,12 @@ final class LoginViewModel: ObservableObject {
     @Published private(set) var isFormValid: Bool = false
     
     private var authClient: AuthClient
+    private var keychain: KeychainStore
     private var cancellables: Set<AnyCancellable> = []
     
-    init(authClient: AuthClient) {
+    init(authClient: AuthClient, keychain: KeychainStore) {
         self.authClient = authClient
-        
+        self.keychain = keychain
         setupValidation()
     }
     
@@ -31,9 +32,9 @@ final class LoginViewModel: ObservableObject {
                 case .failure(let networkClientError):
                     print("failure: \(networkClientError.localizedDescription)")
                 }
-            } receiveValue: { response in
+            } receiveValue: { [weak self] response in
                 do {
-                    try KeychainService.shared.saveAuthTokens(authToken: response.token, refreshToken: response.refreshToken)
+                    try self?.keychain.saveAuthTokens(authToken: response.token, refreshToken: response.refreshToken)
                     print("authToken: \(response.token) \nrefreshToken: \(response.refreshToken)")
                 } catch {
                     // handle error !

@@ -8,6 +8,8 @@
 import Foundation
 import Security
 
+typealias KeychainStore = SecureKeyValueStoring & TokenStoring
+
 enum KeychainKey: String, CaseIterable {
     case authToken
     case refreshToken
@@ -39,7 +41,7 @@ enum KeychainError: Error {
     }
 }
 
-final class KeychainService: SecureStoring {
+final class KeychainService: SecureKeyValueStoring {
     static let shared = KeychainService()
     
     private let serviceName = Bundle.main.bundleIdentifier ?? "KeychainService"
@@ -112,7 +114,7 @@ final class KeychainService: SecureStoring {
     }
 }
 
-extension KeychainService {
+extension KeychainService: TokenStoring {
     func saveAuthTokens(authToken: String, refreshToken: String) throws {
         try saveString(authToken, for: .authToken)
         try saveString(refreshToken, for: .refreshToken)
