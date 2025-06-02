@@ -242,5 +242,4 @@ private extension LoginViewController {
     private func getActiveTextField() -> UITextField? {
         return [emailTextField, passwordTextField].first(where: { $0.isFirstResponder })
     }
-    
 }

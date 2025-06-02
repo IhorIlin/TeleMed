@@ -292,6 +292,7 @@
                         <outlet property="containerView" destination="ziN-ce-2ca" id="L98-ot-YVH"/>
                         <outlet property="emailLabel" destination="VPL-1C-lmd" id="i6k-GC-A0y"/>
                         <outlet property="emailTextField" destination="aw3-f0-6Rg" id="cw9-Ra-Cw3"/>
+                        <outlet property="formCenterYConstraint" destination="1Do-dJ-J8g" id="SXJ-Gm-p7g"/>
                         <outlet property="loginButton" destination="ZiY-O4-GJs" id="PV5-Gf-EFF"/>
                         <outlet property="mainTitleLabel" destination="5tR-Px-NZj" id="rM8-VK-BH8"/>
                         <outlet property="passwordLabel" destination="3dJ-XU-Bfc" id="loQ-mq-6eD"/>
