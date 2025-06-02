@@ -16,6 +16,30 @@ final class AuthCoordinator: Coordinator {
     }
     
     func start() {
-        navigationController.pushViewController(LoginViewController.instantiate(), animated: false)
+        showLogin()
+    }
+    
+    private func showLogin() {
+        let loginController = LoginViewController.instantiate()
+        
+        loginController.showSignUp = { [weak self] in
+            self?.showSignUp()
+        }
+        
+        loginController.showForgotPassword = { [weak self] in
+            self?.showLogin()
+        }
+        
+        navigationController.pushViewController(loginController, animated: false)
+    }
+    
+    private func showSignUp() {
+        let signUpController = SignUpViewController.instantiate()
+        
+        signUpController.showLogin = { [weak self] in
+            self?.navigationController.popViewController(animated: true)
+        }
+        
+        navigationController.pushViewController(signUpController, animated: true)
     }
 }

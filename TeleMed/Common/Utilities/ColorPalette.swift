@@ -19,7 +19,8 @@ enum ColorPalette {
 
     // MARK: - Buttons
     enum Button {
-        static let primaryBackground   = UIColor(hex: "#4F46E5") // Indigo
+        static let indigo              = UIColor(hex: "#4F46E5") // Indigo
+        static let vibrantGreen        = UIColor(hex: "#22C55E") // Vibrant green 
         static let primaryText         = UIColor(hex: "#FFFFFF")
         static let secondaryBackground = UIColor(hex: "#E5E7EB") // Soft gray
         static let secondaryText       = UIColor(hex: "#4B5563") // Dark gray
