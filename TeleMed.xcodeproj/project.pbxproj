@@ -78,6 +78,7 @@
 				Common/Utilities/Storyboard.swift,
 				Coordinators/AppCoordinator.swift,
 				Coordinators/AuthCoordinator.swift,
+				Coordinators/TabBarCoordinator.swift,
 				Modules/Authentication/Models/LoginRequestDTO.swift,
 				Modules/Authentication/Models/LoginResponseDTO.swift,
 				Modules/Authentication/Models/RefreshTokenRequestDTO.swift,

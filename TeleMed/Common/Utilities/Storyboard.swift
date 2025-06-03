@@ -9,6 +9,7 @@ import UIKit
 
 enum Storyboard: String {
     case auth = "Auth"
+    case mainTabBar = "MainTabBar"
     case profile = "Profile"
     case dashboard = "Dashboard"
     case appointments = "Appointments"

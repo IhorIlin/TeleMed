@@ -33,7 +33,7 @@ final class AppCoordinator: Coordinator {
         childCoordinators.append(authCoordinator)
         
         authCoordinator.onAuthSuccess = { [weak self] in
-            self?.showTabBar()
+            self?.showMainTabBar()
         }
         
         authCoordinator.start()
@@ -43,7 +43,7 @@ final class AppCoordinator: Coordinator {
         window.makeKeyAndVisible()
     }
     
-    func showTabBar() {
-        print("Navigate to tabBar :-) !")
+    func showMainTabBar() {
+        let 
     }
 }
