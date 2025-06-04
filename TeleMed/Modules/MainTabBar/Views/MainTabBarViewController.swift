@@ -7,8 +7,7 @@
 
 import UIKit
 
-final class MainTabBarViewController: UITabBarController, Storyboarded {
-    static var storyboard: Storyboard = .mainTabBar
+final class MainTabBarViewController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -7,8 +7,7 @@
 
 import UIKit
 
-final class ForgotPasswordViewController: UIViewController, Storyboarded {
-    static var storyboard: Storyboard = .auth
+final class ForgotPasswordViewController: UIViewController { 
     
     override func viewDidLoad() {
         super.viewDidLoad()

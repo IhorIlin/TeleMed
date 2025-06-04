@@ -8,28 +8,36 @@
 import UIKit
 import Combine
 
-final class LoginViewController: UIViewController, Storyboarded {
-    static var storyboard: Storyboard = .auth
+final class LoginViewController: UIViewController {
+    private var containerView = UIView()
+    private var mainTitleLabel = UILabel()
+    private var subtitleLabel = UILabel()
+    private var emailLabel = UILabel()
+    private var emailTextField = AuthTextField()
+    private var passwordLabel = UILabel()
+    private var passwordTextField = AuthTextField()
+    private var forgotPasswordButton = UIButton()
+    private var loginButton = UIButton()
+    private var signUpButton = UIButton()
     
-    @IBOutlet weak var containerView: UIView!
-    @IBOutlet weak var mainTitleLabel: UILabel!
-    @IBOutlet weak var subtitleLabel: UILabel!
-    @IBOutlet weak var emailLabel: UILabel!
-    @IBOutlet weak var emailTextField: UITextField!
-    @IBOutlet weak var passwordLabel: UILabel!
-    @IBOutlet weak var passwordTextField: UITextField!
-    @IBOutlet weak var forgotPasswordButton: UIButton!
-    @IBOutlet weak var loginButton: UIButton!
-    @IBOutlet weak var signUpButton: UIButton!
+    private var formCenterYConstraint: NSLayoutConstraint!
     
-    @IBOutlet weak var formCenterYConstraint: NSLayoutConstraint!
-    
-    private let viewModel = LoginViewModel(authClient: DefaultAuthClient(networkClient: DefaultNetworkClient()), keychain: KeychainService.shared)
+    private let viewModel: LoginViewModel
     
     private var cancellables = Set<AnyCancellable>()
     
     var showSignUp: (() -> Void)?
     var showForgotPassword: (() -> Void)?
+    
+    init(viewModel: LoginViewModel) {
+        self.viewModel = viewModel
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented!")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,19 +49,23 @@ final class LoginViewController: UIViewController, Storyboarded {
         observeKeyboardNotifications()
     }
     
-    @IBAction func forgotPasswordPressed(_ sender: UIButton) {
+    @objc
+    private func forgotPasswordPressed(_ sender: UIButton) {
         showForgotPassword?()
     }
     
-    @IBAction func loginPressed(_ sender: UIButton) {
+    @objc
+    private func loginPressed(_ sender: UIButton) {
         viewModel.login()
     }
     
-    @IBAction func signUpPressed(_ sender: UIButton) {
+    @objc
+    private func signUpPressed(_ sender: UIButton) {
         showSignUp?()
     }
     
-    @objc func endEditing() {
+    @objc
+    func endEditing() {
         view.endEditing(true)
     }
     
@@ -105,16 +117,29 @@ private extension LoginViewController {
         configureContainerView()
         configureMainTitleLabel()
         configureSubtitleLabel()
-        configureEmailLabel()
         configureEmailTextField()
-        configurePasswordLabel()
+        configureEmailLabel()
         configurePasswordTextField()
+        configurePasswordLabel()
         configureForgotPasswordButton()
         configureLoginButton()
         configureSignUpButton()
     }
     
     func configureContainerView() {
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(containerView)
+        
+        formCenterYConstraint = NSLayoutConstraint(item: containerView, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1, constant: 0)
+        
+        view.addConstraints([
+            NSLayoutConstraint(item: containerView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1, constant: 16),
+            NSLayoutConstraint(item: containerView, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1, constant: -16),
+            NSLayoutConstraint(item: containerView, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1, constant: 0),
+            formCenterYConstraint
+        ])
+        
         containerView.backgroundColor = ColorPalette.Background.secondary
         
         containerView.layer.cornerRadius = 16
@@ -125,22 +150,63 @@ private extension LoginViewController {
     }
     
     func configureMainTitleLabel() {
+        mainTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        containerView.addSubview(mainTitleLabel)
+        
+        containerView.addConstraints([
+            NSLayoutConstraint(item: mainTitleLabel, attribute: .top, relatedBy: .equal, toItem: containerView, attribute: .top, multiplier: 1, constant: 24),
+            NSLayoutConstraint(item: mainTitleLabel, attribute: .centerX, relatedBy: .equal, toItem: containerView, attribute: .centerX, multiplier: 1, constant: 0)
+        ])
+        
+        mainTitleLabel.text = "Welcome Back 👋"
         mainTitleLabel.font = Font.TextStyle.titleLarge()
         mainTitleLabel.textColor = ColorPalette.Text.primary
     }
     
     func configureSubtitleLabel() {
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        containerView.addSubview(subtitleLabel)
+        
+        containerView.addConstraints([
+            NSLayoutConstraint(item: subtitleLabel, attribute: .top, relatedBy: .equal, toItem: mainTitleLabel, attribute: .bottom, multiplier: 1, constant: 12),
+            NSLayoutConstraint(item: subtitleLabel, attribute: .centerX, relatedBy: .equal, toItem: containerView, attribute: .centerX, multiplier: 1, constant: 0)
+        ])
+        
+        subtitleLabel.text = "Please login to your account"
         subtitleLabel.font = Font.TextStyle.titleMedium()
         subtitleLabel.textColor = ColorPalette.Text.secondary
     }
     
     func configureEmailLabel() {
+        emailLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        containerView.addSubview(emailLabel)
+        
+        containerView.addConstraints([
+            NSLayoutConstraint(item: emailLabel, attribute: .leading, relatedBy: .equal, toItem: emailTextField, attribute: .leading, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: emailLabel, attribute: .bottom, relatedBy: .equal, toItem: emailTextField, attribute: .top, multiplier: 1, constant: -4)
+        ])
+        
         emailLabel.font = Font.TextStyle.caption()
         emailLabel.textColor = ColorPalette.Text.primary
         emailLabel.text = "Email"
     }
     
     func configureEmailTextField() {
+        emailTextField.translatesAutoresizingMaskIntoConstraints = false
+        
+        containerView.addSubview(emailTextField)
+        
+        containerView.addConstraints([
+            NSLayoutConstraint(item: emailTextField, attribute: .leading, relatedBy: .equal, toItem: containerView, attribute: .leading, multiplier: 1, constant: 16),
+            NSLayoutConstraint(item: emailTextField, attribute: .trailing, relatedBy: .equal, toItem: containerView, attribute: .trailing, multiplier: 1, constant: -16),
+            NSLayoutConstraint(item: emailTextField, attribute: .top, relatedBy: .equal, toItem: subtitleLabel, attribute: .bottom, multiplier: 1, constant: 75),
+            NSLayoutConstraint(item: emailTextField, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 48)
+        ])
+        
+        emailTextField.placeholder = "your@email.com"
         emailTextField.delegate = self
         emailTextField.returnKeyType = .next
         emailTextField.keyboardType = .emailAddress
@@ -150,12 +216,33 @@ private extension LoginViewController {
     }
     
     func configurePasswordLabel() {
+        passwordLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        containerView.addSubview(passwordLabel)
+        
+        containerView.addConstraints([
+            NSLayoutConstraint(item: passwordLabel, attribute: .leading, relatedBy: .equal, toItem: passwordTextField, attribute: .leading, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: passwordLabel, attribute: .bottom, relatedBy: .equal, toItem: passwordTextField, attribute: .top, multiplier: 1, constant: -4)
+        ])
+        
         passwordLabel.font = Font.TextStyle.caption()
         passwordLabel.textColor = ColorPalette.Text.primary
         passwordLabel.text = "Password"
     }
     
     func configurePasswordTextField() {
+        passwordTextField.translatesAutoresizingMaskIntoConstraints = false
+        
+        containerView.addSubview(passwordTextField)
+        
+        containerView.addConstraints([
+            NSLayoutConstraint(item: passwordTextField, attribute: .leading, relatedBy: .equal, toItem: emailTextField, attribute: .leading, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: passwordTextField, attribute: .trailing, relatedBy: .equal, toItem: emailTextField, attribute: .trailing, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: passwordTextField, attribute: .top, relatedBy: .equal, toItem: emailTextField, attribute: .bottom, multiplier: 1, constant: 50),
+            NSLayoutConstraint(item: passwordTextField, attribute: .height, relatedBy: .equal, toItem: emailTextField, attribute: .height, multiplier: 1, constant: 0)
+        ])
+        
+        passwordTextField.placeholder = "Enter your password"
         passwordTextField.delegate = self
         passwordTextField.returnKeyType = .done
         passwordTextField.isSecureTextEntry = true
@@ -165,19 +252,59 @@ private extension LoginViewController {
     }
     
     func configureForgotPasswordButton() {
+        forgotPasswordButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        containerView.addSubview(forgotPasswordButton)
+        
+        containerView.addConstraints([
+            NSLayoutConstraint(item: forgotPasswordButton, attribute: .top, relatedBy: .equal, toItem: passwordTextField, attribute: .bottom, multiplier: 1, constant: 8),
+            NSLayoutConstraint(item: forgotPasswordButton, attribute: .trailing, relatedBy: .equal, toItem: passwordTextField, attribute: .trailing, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: forgotPasswordButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 30)
+        ])
+        
         forgotPasswordButton.setTitleColor(ColorPalette.Link.primary, for: .normal)
         forgotPasswordButton.titleLabel?.font = Font.TextStyle.caption()
+        forgotPasswordButton.setTitle("Forgot Password?", for: .normal)
+        forgotPasswordButton.addTarget(self, action: #selector(forgotPasswordPressed(_:)), for: .touchUpInside)
     }
     
     func configureLoginButton() {
+        loginButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        containerView.addSubview(loginButton)
+        
+        containerView.addConstraints([
+            NSLayoutConstraint(item: loginButton, attribute: .top, relatedBy: .equal, toItem: passwordTextField, attribute: .bottom, multiplier: 1, constant: 60),
+            NSLayoutConstraint(item: loginButton, attribute: .leading, relatedBy: .equal, toItem: passwordTextField, attribute: .leading, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: loginButton, attribute: .trailing, relatedBy: .equal, toItem: passwordTextField, attribute: .trailing, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: loginButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 50),
+            NSLayoutConstraint(item: loginButton, attribute: .bottom, relatedBy: .equal, toItem: containerView, attribute: .bottom, multiplier: 1, constant: -65)
+        ])
+        
         loginButton.layer.cornerRadius = 12
         loginButton.backgroundColor = ColorPalette.Button.indigo
         loginButton.tintColor = ColorPalette.Button.primaryText
+        loginButton.setTitleColor(UIColor.lightGray, for: .disabled)
+        loginButton.setTitle("Log In", for: .normal)
+        loginButton.setImage(UIImage(systemName: "lock.fill"), for: .normal)
+        loginButton.addTarget(self, action: #selector(loginPressed(_:)), for: .touchUpInside)
     }
     
     func configureSignUpButton() {
+        signUpButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        containerView.addSubview(signUpButton)
+        
+        containerView.addConstraints([
+            NSLayoutConstraint(item: signUpButton, attribute: .centerX, relatedBy: .equal, toItem: containerView, attribute: .centerX, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: signUpButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 30),
+            NSLayoutConstraint(item: signUpButton, attribute: .bottom, relatedBy: .equal, toItem: containerView, attribute: .bottom, multiplier: 1, constant: -16)
+        ])
+        
         signUpButton.setTitleColor(ColorPalette.Link.primary, for: .normal)
         signUpButton.titleLabel?.font = Font.TextStyle.caption()
+        signUpButton.setTitle("Don't have an account? Sign up here", for: .normal)
+        signUpButton.addTarget(self, action: #selector(signUpPressed(_:)), for: .touchUpInside)
     }
 }
 

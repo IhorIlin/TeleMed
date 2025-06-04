@@ -8,7 +8,7 @@
 import UIKit
 
 final class AppCoordinator: Coordinator {
-    private let tabBarController = UITabBarController()
+    private let tabBarController = MainTabBarViewController()
     private let navigationController = UINavigationController()
     var childCoordinators: [Coordinator] = []
     
@@ -44,6 +44,12 @@ final class AppCoordinator: Coordinator {
     }
     
     func showMainTabBar() {
-        let 
+        let mainTabBarCoordinator = TabBarCoordinator(tabBarController: tabBarController)
+        
+        mainTabBarCoordinator.start()
+        
+        window.rootViewController = tabBarController
+        
+        window.makeKeyAndVisible()
     }
 }
