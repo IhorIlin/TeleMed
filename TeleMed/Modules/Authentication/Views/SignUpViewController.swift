@@ -78,7 +78,7 @@ final class SignUpViewController: UIViewController {
     }
     
     deinit {
-        print("deinit for SignUpViewController")
+        print("SignUpViewController deinited!")
     }
 }
 

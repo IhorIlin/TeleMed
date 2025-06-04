@@ -16,6 +16,26 @@ final class TabBarCoordinator: Coordinator {
     }
     
     func start() {
+        let dashboardNavigationController = UINavigationController()
+        let appointmentsNavigationController = UINavigationController()
+        let profileNavigationController = UINavigationController()
         
+        let dashboardCoordinator = DashboardCoordinator(navigationController: dashboardNavigationController)
+        let appointmentsCoordinator = AppointmentsCoordinator(navigationController: appointmentsNavigationController)
+        let profileCoordinator = ProfileCoordinator(navigationController: profileNavigationController)
+        
+        childCoordinators.append(dashboardCoordinator)
+        childCoordinators.append(appointmentsCoordinator)
+        childCoordinators.append(profileCoordinator)
+        
+        tabBarController.viewControllers = [
+            dashboardNavigationController,
+            appointmentsNavigationController,
+            profileNavigationController
+        ]
+        
+        dashboardCoordinator.start()
+        appointmentsCoordinator.start()
+        profileCoordinator.start()
     }
 }

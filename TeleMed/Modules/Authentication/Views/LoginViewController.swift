@@ -48,6 +48,10 @@ final class LoginViewController: UIViewController {
         bindFields()
         bindFormValidation()
         observeKeyboardNotifications()
+        
+        //For quick login(remove later)
+        emailTextField.text = viewModel.email
+        passwordTextField.text = viewModel.password
     }
     
     @objc
@@ -71,7 +75,7 @@ final class LoginViewController: UIViewController {
     }
     
     deinit {
-        print("deinit for LoginViewController")
+        print("LoginViewController deinited")
     }
 }
 
