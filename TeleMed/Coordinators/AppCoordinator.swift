@@ -8,8 +8,6 @@
 import UIKit
 
 final class AppCoordinator: Coordinator {
-    private let tabBarController = UITabBarController()
-    private let navigationController = UINavigationController()
     var childCoordinators: [Coordinator] = []
     
     let window: UIWindow
@@ -29,11 +27,17 @@ final class AppCoordinator: Coordinator {
     }
     
     func showAuthFlow() {
+        let navigationController = UINavigationController()
+        
         let authCoordinator = AuthCoordinator(navigationController: navigationController)
+        
         childCoordinators.append(authCoordinator)
         
         authCoordinator.onAuthSuccess = { [weak self] in
-            self?.showTabBar()
+            
+            self?.childCoordinators.removeAll()
+            
+            self?.showMainTabBar()
         }
         
         authCoordinator.start()
@@ -43,7 +47,17 @@ final class AppCoordinator: Coordinator {
         window.makeKeyAndVisible()
     }
     
-    func showTabBar() {
-        print("Navigate to tabBar :-) !")
+    func showMainTabBar() {
+        let tabBarController = MainTabBarViewController()
+        
+        let mainTabBarCoordinator = TabBarCoordinator(tabBarController: tabBarController)
+        
+        childCoordinators.append(mainTabBarCoordinator)
+        
+        mainTabBarCoordinator.start()
+        
+        window.rootViewController = tabBarController
+        
+        window.makeKeyAndVisible()
     }
 }

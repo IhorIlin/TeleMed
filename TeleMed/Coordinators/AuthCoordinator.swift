@@ -22,7 +22,10 @@ final class AuthCoordinator: Coordinator {
     }
     
     private func showLogin() {
-        let loginController = LoginViewController.instantiate()
+        let loginViewModel = LoginViewModel(authClient: DefaultAuthClient(networkClient: DefaultNetworkClient()),
+                                            keychain: KeychainService.shared)
+        
+        let loginController = LoginViewController(viewModel: loginViewModel)
         
         loginController.showSignUp = { [weak self] in
             self?.showSignUp()
@@ -32,11 +35,18 @@ final class AuthCoordinator: Coordinator {
             self?.showLogin()
         }
         
+        loginController.showHome = { [weak self] in
+            self?.onAuthSuccess?()
+        }
+        
         navigationController.pushViewController(loginController, animated: false)
     }
     
     private func showSignUp() {
-        let signUpController = SignUpViewController.instantiate()
+        let signUpViewModel = SignUpViewModel(authClient: DefaultAuthClient(networkClient: DefaultNetworkClient()),
+                                              keychain: KeychainService.shared)
+        
+        let signUpController = SignUpViewController(viewModel: signUpViewModel)
         
         signUpController.showLogin = { [weak self] in
             self?.navigationController.popViewController(animated: true)

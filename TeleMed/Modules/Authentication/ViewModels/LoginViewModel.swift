@@ -9,13 +9,20 @@ import Foundation
 import Combine
 
 final class LoginViewModel: ObservableObject {
-    @Published var email: String = ""
-    @Published var password: String = ""
+    enum Event {
+        case navigateToHome
+        case showError(String)
+    }
+    
+    @Published var email: String = "e@e.com"
+    @Published var password: String = "password1!"
     @Published private(set) var isFormValid: Bool = false
     
     private var authClient: AuthClient
     private var keychain: KeychainStore
     private var cancellables: Set<AnyCancellable> = []
+    
+    var subject = PassthroughSubject<Event, Never>()
     
     init(authClient: AuthClient, keychain: KeychainStore) {
         self.authClient = authClient
@@ -36,8 +43,10 @@ final class LoginViewModel: ObservableObject {
                 do {
                     try self?.keychain.saveAuthTokens(authToken: response.token, refreshToken: response.refreshToken)
                     print("authToken: \(response.token) \nrefreshToken: \(response.refreshToken)")
+                    self?.subject.send(.navigateToHome)
                 } catch {
                     // handle error !
+                    self?.subject.send(.showError(error.localizedDescription))
                     print(error.localizedDescription)
                 }
             }.store(in: &cancellables)
