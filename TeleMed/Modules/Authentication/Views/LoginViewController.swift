@@ -28,6 +28,7 @@ final class LoginViewController: UIViewController {
     
     var showSignUp: (() -> Void)?
     var showForgotPassword: (() -> Void)?
+    var showHome: (() -> Void)?
     
     init(viewModel: LoginViewModel) {
         self.viewModel = viewModel
@@ -97,6 +98,18 @@ private extension LoginViewController {
             }
             .assign(to: \.password, on: viewModel)
             .store(in: &cancellables)
+        
+        viewModel.subject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] event in
+                switch event {
+                case .navigateToHome:
+                    self?.showHome?()
+                case .showError:
+                    // Display alert with error message
+                    break
+                }
+            }.store(in: &cancellables)
     }
     
     func bindFormValidation() {

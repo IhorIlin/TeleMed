@@ -35,6 +35,10 @@ final class AuthCoordinator: Coordinator {
             self?.showLogin()
         }
         
+        loginController.showHome = { [weak self] in
+            self?.onAuthSuccess?()
+        }
+        
         navigationController.pushViewController(loginController, animated: false)
     }
     
