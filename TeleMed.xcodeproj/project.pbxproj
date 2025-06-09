@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		A45617D02DF386DB00DFF5D1 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = A45617CF2DF386DB00DFF5D1 /* SnapKit */; };
+		A45617DA2DF6E5BE00DFF5D1 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = A45617D92DF6E5BE00DFF5D1 /* SDWebImage */; };
+		A45617DC2DF6E5BE00DFF5D1 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = A45617DB2DF6E5BE00DFF5D1 /* SDWebImageMapKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -133,6 +135,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A45617DA2DF6E5BE00DFF5D1 /* SDWebImage in Frameworks */,
+				A45617DC2DF6E5BE00DFF5D1 /* SDWebImageMapKit in Frameworks */,
 				A45617D02DF386DB00DFF5D1 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -196,6 +200,8 @@
 			name = TeleMed;
 			packageProductDependencies = (
 				A45617CF2DF386DB00DFF5D1 /* SnapKit */,
+				A45617D92DF6E5BE00DFF5D1 /* SDWebImage */,
+				A45617DB2DF6E5BE00DFF5D1 /* SDWebImageMapKit */,
 			);
 			productName = TeleMed;
 			productReference = A48B50DA2DCF6F540082D211 /* TeleMed.app */;
@@ -281,6 +287,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				A45617CE2DF386DB00DFF5D1 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				A45617D82DF6E5BE00DFF5D1 /* XCRemoteSwiftPackageReference "SDWebImage" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A48B50DB2DCF6F540082D211 /* Products */;
@@ -831,6 +838,14 @@
 				minimumVersion = 5.7.1;
 			};
 		};
+		A45617D82DF6E5BE00DFF5D1 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImage.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.21.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -838,6 +853,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A45617CE2DF386DB00DFF5D1 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		A45617D92DF6E5BE00DFF5D1 /* SDWebImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A45617D82DF6E5BE00DFF5D1 /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImage;
+		};
+		A45617DB2DF6E5BE00DFF5D1 /* SDWebImageMapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A45617D82DF6E5BE00DFF5D1 /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImageMapKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
