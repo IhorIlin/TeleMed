@@ -15,7 +15,7 @@ final class LoginViewModel: ObservableObject {
     }
     
     @Published var email: String = "e@e.com"
-    @Published var password: String = "password1!"
+    @Published var password: String = "Password1!"
     @Published private(set) var isFormValid: Bool = false
     
     private var authClient: AuthClient

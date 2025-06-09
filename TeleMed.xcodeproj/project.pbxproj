@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A45617D02DF386DB00DFF5D1 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = A45617CF2DF386DB00DFF5D1 /* SnapKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		A48B50F12DCF6F560082D211 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -68,6 +72,7 @@
 				Common/Networking/Config/Staging.xcconfig,
 				Common/Networking/Endpoints/AuthEndpoint.swift,
 				Common/Networking/Endpoints/Endpoint.swift,
+				Common/Networking/Endpoints/UsersEndpoint.swift,
 				Common/Networking/Errors/NetworkClientError.swift,
 				Common/Protocols/Coordinator.swift,
 				Common/Protocols/SecureKeyValueStoring.swift,
@@ -128,6 +133,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A45617D02DF386DB00DFF5D1 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,6 +195,7 @@
 			);
 			name = TeleMed;
 			packageProductDependencies = (
+				A45617CF2DF386DB00DFF5D1 /* SnapKit */,
 			);
 			productName = TeleMed;
 			productReference = A48B50DA2DCF6F540082D211 /* TeleMed.app */;
@@ -272,6 +279,9 @@
 			);
 			mainGroup = A48B50D12DCF6F540082D211;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A45617CE2DF386DB00DFF5D1 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A48B50DB2DCF6F540082D211 /* Products */;
 			projectDirPath = "";
@@ -811,6 +821,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A45617CE2DF386DB00DFF5D1 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A45617CF2DF386DB00DFF5D1 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A45617CE2DF386DB00DFF5D1 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A48B50D22DCF6F540082D211 /* Project object */;
 }

@@ -6,16 +6,27 @@
 //
 
 import UIKit
+import SnapKit
 
 class ProfileViewController: UIViewController {
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        configureUI()
+        setupViews()
     }
     
-    private func configureUI() {
+    private func setupViews() {
         navigationItem.title = "Profile"
+        navigationItem.largeTitleDisplayMode = .always
+    }
+    
+    private func setupConstraints() {
+        
+    }
+    
+    private func bindViewModel() {
+        
     }
 }
