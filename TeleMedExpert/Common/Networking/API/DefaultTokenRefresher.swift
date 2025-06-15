@@ -27,9 +27,11 @@ final class DefaultTokenRefresher: TokenRefresher {
         defer { lock.unlock() }
         
         if isRefreshing {
+            print("Refresh skipped: already refreshing.")
             return refreshSubject.eraseToAnyPublisher()
         }
         
+        print("Refresh started.")
         isRefreshing = true
         
         do {
@@ -39,6 +41,7 @@ final class DefaultTokenRefresher: TokenRefresher {
             return networkClient.request(endpoint: endpoint)
                 .tryMap { [weak self] (response: RefreshTokenResponseDTO) in
                     try self?.keychainService.saveAuthTokens(authToken: response.token, refreshToken: response.refreshToken)
+                    print("Refresh token successfully saved.")
                 }
                 .mapError { error in
                     if let mappedError = error as? NetworkClientError {
@@ -54,8 +57,10 @@ final class DefaultTokenRefresher: TokenRefresher {
                     
                     switch completion {
                     case .failure(let error):
+                        print("Refresh completed with failure: \(error).")
                         self?.refreshSubject.send(completion: .failure(error))
                     case .finished:
+                        print("Refresh completed successfully.")
                         self?.refreshSubject.send()
                         self?.refreshSubject.send(completion: .finished)
                     }
@@ -64,6 +69,7 @@ final class DefaultTokenRefresher: TokenRefresher {
                 })
                 .eraseToAnyPublisher()
         } catch {
+            print("No refresh token found in Keychain.")
             return Fail(error: NetworkClientError.unauthorized).eraseToAnyPublisher()
         }
     }
