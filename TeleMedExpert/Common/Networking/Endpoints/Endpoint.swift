@@ -10,6 +10,6 @@ import Foundation
 protocol Endpoint {
     var url: URL { get }
     var method: String { get }
-    var headers: [String: String] { get }
+    var headers: [String: String] { get set }
     var body: Data? { get }
 }

@@ -23,7 +23,7 @@ final class AuthCoordinator: Coordinator {
     
     private func showLogin() {
         let loginViewModel = LoginViewModel(authClient: DefaultAuthClient(networkClient: DefaultNetworkClient()),
-                                            keychain: KeychainService.shared)
+                                            keychain: KeychainService())
         
         let loginController = LoginViewController(viewModel: loginViewModel)
         
@@ -44,7 +44,7 @@ final class AuthCoordinator: Coordinator {
     
     private func showSignUp() {
         let signUpViewModel = SignUpViewModel(authClient: DefaultAuthClient(networkClient: DefaultNetworkClient()),
-                                              keychain: KeychainService.shared)
+                                              keychain: KeychainService())
         
         let signUpController = SignUpViewController(viewModel: signUpViewModel)
         

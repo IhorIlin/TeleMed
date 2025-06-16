@@ -42,128 +42,106 @@ enum KeychainError: Error {
 }
 
 final class KeychainService: SecureKeyValueStoring {
-    private let keychainQueue = DispatchQueue(label: "com.telemed.keychain.queue")
-    
     private let serviceName = Bundle.main.bundleIdentifier ?? "KeychainService"
     
     func save<T>(_ value: T, for key: KeychainKey) throws where T: Decodable, T: Encodable {
-        try keychainQueue.sync {
-            let data = try encodeValue(value)
-            
-            var query = baseQuery(for: key)
-            query[kSecValueData as String] = data
-            
-            let status = SecItemAdd(query as CFDictionary, nil)
-            
-            switch status {
-            case errSecSuccess:
-                return
-            case errSecDuplicateItem:
-                try update(data: data, for: key)
-            default:
-                throw KeychainError.unhandledError(status: status)
-            }
+        let data = try encodeValue(value)
+        
+        var query = baseQuery(for: key)
+        query[kSecValueData as String] = data
+        
+        let status = SecItemAdd(query as CFDictionary, nil)
+        
+        switch status {
+        case errSecSuccess:
+            return
+        case errSecDuplicateItem:
+            try update(data: data, for: key)
+        default:
+            throw KeychainError.unhandledError(status: status)
         }
     }
     
     func load<T>(_ type: T.Type, for key: KeychainKey) throws -> T where T: Decodable, T: Encodable {
-        try keychainQueue.sync {
-            var query = baseQuery(for: key)
-            
-            query[kSecReturnData as String] = true
-            query[kSecMatchLimit as String] = kSecMatchLimitOne
-            
-            var result: AnyObject?
-            let status = SecItemCopyMatching(query as CFDictionary, &result)
-            
-            switch status {
-            case errSecSuccess:
-                guard let data = result as? Data else {
-                    throw KeychainError.unexpectedPasswordData
-                }
-                
-                return try decodeValue(data, as: type)
-            case errSecItemNotFound:
-                throw KeychainError.itemNotFound
-            default:
-                throw KeychainError.unhandledError(status: status)
+        var query = baseQuery(for: key)
+        
+        query[kSecReturnData as String] = true
+        query[kSecMatchLimit as String] = kSecMatchLimitOne
+        
+        var result: AnyObject?
+        let status = SecItemCopyMatching(query as CFDictionary, &result)
+        
+        switch status {
+        case errSecSuccess:
+            guard let data = result as? Data else {
+                throw KeychainError.unexpectedPasswordData
             }
+            
+            return try decodeValue(data, as: type)
+        case errSecItemNotFound:
+            throw KeychainError.itemNotFound
+        default:
+            throw KeychainError.unhandledError(status: status)
         }
     }
     
     func delete(for key: KeychainKey) throws {
-        try keychainQueue.sync {
-            let query = baseQuery(for: key)
-            
-            let status = SecItemDelete(query as CFDictionary)
-            
-            switch status {
-            case errSecSuccess, errSecItemNotFound:
-                return
-            default:
-                throw KeychainError.unhandledError(status: status)
-            }
+        let query = baseQuery(for: key)
+        
+        let status = SecItemDelete(query as CFDictionary)
+        
+        switch status {
+        case errSecSuccess, errSecItemNotFound:
+            return
+        default:
+            throw KeychainError.unhandledError(status: status)
         }
     }
     
     func exist(key: KeychainKey) -> Bool {
-        keychainQueue.sync {
-            var query = baseQuery(for: key)
-            
-            query[kSecReturnData as String] = false
-            query[kSecMatchLimit as String] = kSecMatchLimitOne
-            
-            let status = SecItemCopyMatching(query as CFDictionary, nil)
-            
-            return status == errSecSuccess
-        }
+        var query = baseQuery(for: key)
+        
+        query[kSecReturnData as String] = false
+        query[kSecMatchLimit as String] = kSecMatchLimitOne
+        
+        let status = SecItemCopyMatching(query as CFDictionary, nil)
+        
+        return status == errSecSuccess
     }
 }
 
 extension KeychainService: TokenStoring {
     func saveAuthTokens(authToken: String, refreshToken: String) throws {
-        try keychainQueue.sync {
-            try saveString(authToken, for: .authToken)
-            try saveString(refreshToken, for: .refreshToken)
-        }
+        try saveString(authToken, for: .authToken)
+        try saveString(refreshToken, for: .refreshToken)
     }
     
     func loadAuthTokens() throws -> (authToken: String, refreshToken: String) {
-        try keychainQueue.sync {
-            let authToken = try loadString(for: .authToken)
-            let refreshToken = try loadString(for: .refreshToken)
-            
-            return (authToken, refreshToken)
-        }
+        let authToken = try loadString(for: .authToken)
+        let refreshToken = try loadString(for: .refreshToken)
+        
+        return (authToken, refreshToken)
     }
     
     func clearAuthTokens() throws {
-        try keychainQueue.sync {
-            try delete(for: .authToken)
-            try delete(for: .refreshToken)
-        }
+        try delete(for: .authToken)
+        try delete(for: .refreshToken)
     }
 }
 
 // MARK: - Convenience methods -
 extension KeychainService {
     func saveString(_ string: String, for key: KeychainKey) throws {
-        try keychainQueue.sync {
-            try save(string, for: key)
-        }
+        try save(string, for: key)
     }
     
     func loadString(for key: KeychainKey) throws -> String {
-        try keychainQueue.sync {
-            return try load(String.self, for: key)
-        }
+        return try load(String.self, for: key)
     }
     
     func deleteAll() throws {
-        try keychainQueue.sync {
-            for key in KeychainKey.allCases {
-                try delete(for: key)
-            }
+        for key in KeychainKey.allCases {
+            try delete(for: key)
         }
     }
 }

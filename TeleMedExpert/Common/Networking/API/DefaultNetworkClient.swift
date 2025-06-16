@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 final class DefaultNetworkClient: NetworkClient {
-    func request<T>(endpoint: any Endpoint) -> AnyPublisher<T, NetworkClientError> where T: Decodable {
+    func request<T>(endpoint: Endpoint) -> AnyPublisher<T, NetworkClientError> where T: Decodable {
         var urlRequest = URLRequest(url: endpoint.url)
         
         urlRequest.httpMethod = endpoint.method

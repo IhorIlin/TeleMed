@@ -16,7 +16,19 @@ final class ProfileCoordinator: Coordinator {
     }
     
     func start() {
-        let profileController = ProfileViewController()
+        let keychainService = KeychainService()
+        let networkClient = DefaultNetworkClient()
+        
+        let tokenRefresher = DefaultTokenRefresher(networkClient: networkClient,
+                                                   keychainService: keychainService)
+        
+        let protectedNetworkClient = DefaultProtectedNetworkClient(networkClient: networkClient,
+                                                                   tokenRefresher: tokenRefresher,
+                                                                   keychainService: keychainService)
+        
+        let viewModel = ProfileViewModel(userClient: DefaultUserClient(protectedNetworkClient: protectedNetworkClient))
+        
+        let profileController = ProfileViewController(viewModel: viewModel)
         
         navigationController.pushViewController(profileController, animated: false)
         

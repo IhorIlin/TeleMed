@@ -8,13 +8,16 @@
 import Foundation
 import Combine
 
-final class DefaultUserClient: NetworkClient {
-    // TODO: inject refresh token network client
-    init() {
-        
+final class DefaultUserClient: UserClient {
+    private let protectedNetworkClient: ProtectedNetworkClient
+    
+    init(protectedNetworkClient: ProtectedNetworkClient) {
+        self.protectedNetworkClient = protectedNetworkClient
     }
     
-    func request<T>(endpoint: any Endpoint) -> AnyPublisher<T, NetworkClientError> where T : Decodable {
+    func getUserProfile() -> AnyPublisher<UserProfileResponseDTO, NetworkClientError> {
+        let endpoint = UsersEndpoint.getMe()
         
+        return protectedNetworkClient.request(endpoint: endpoint).eraseToAnyPublisher()
     }
 }
