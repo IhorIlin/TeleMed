@@ -35,7 +35,7 @@ class ProfileTableViewHeader: UIView {
     
     private func configureAvatarImageContainerView() {
         avatarImageContainerView.layer.cornerRadius = 50
-        avatarImageContainerView.layer.shadowColor = ColorPalette.Shadow.secondaryShadow.cgColor
+        avatarImageContainerView.layer.shadowColor = ColorPalette.Shadow.secondaryShadow?.cgColor
         avatarImageContainerView.layer.shadowRadius = 8
         avatarImageContainerView.layer.shadowOpacity = 1
         avatarImageContainerView.layer.shadowOffset = .zero
@@ -45,7 +45,7 @@ class ProfileTableViewHeader: UIView {
     
     private func configureUserAvatarImageView() {
         userAvatarImageView.layer.cornerRadius = 50
-        userAvatarImageView.layer.borderColor = ColorPalette.Border.borderActive.cgColor
+        userAvatarImageView.layer.borderColor = ColorPalette.Border.borderActive?.cgColor
         userAvatarImageView.layer.borderWidth = 2
         
         avatarImageContainerView.addSubview(userAvatarImageView)
