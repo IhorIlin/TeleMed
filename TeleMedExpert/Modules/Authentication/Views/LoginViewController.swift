@@ -160,7 +160,7 @@ private extension LoginViewController {
         containerView.backgroundColor = ColorPalette.Background.secondary
         
         containerView.layer.cornerRadius = 16
-        containerView.layer.shadowColor = ColorPalette.Shadow.primaryShadow.cgColor
+        containerView.layer.shadowColor = ColorPalette.Shadow.primaryShadow?.cgColor
         containerView.layer.shadowOffset = CGSize(width: 0, height: 4)
         containerView.layer.shadowOpacity = 1
         containerView.layer.shadowRadius = 8
@@ -178,6 +178,7 @@ private extension LoginViewController {
         
         mainTitleLabel.text = "Welcome Back 👋"
         mainTitleLabel.font = Font.TextStyle.titleLarge()
+        
         mainTitleLabel.textColor = ColorPalette.Text.primary
     }
     
@@ -229,7 +230,7 @@ private extension LoginViewController {
         emailTextField.keyboardType = .emailAddress
         emailTextField.layer.cornerRadius = 12
         emailTextField.layer.borderWidth = 1
-        emailTextField.layer.borderColor = ColorPalette.Border.borderPrimary.cgColor
+        emailTextField.layer.borderColor = ColorPalette.Border.borderPrimary?.cgColor
     }
     
     func configurePasswordLabel() {
@@ -265,7 +266,7 @@ private extension LoginViewController {
         passwordTextField.isSecureTextEntry = true
         passwordTextField.layer.cornerRadius = 12
         passwordTextField.layer.borderWidth = 1
-        passwordTextField.layer.borderColor = ColorPalette.Border.borderPrimary.cgColor
+        passwordTextField.layer.borderColor = ColorPalette.Border.borderPrimary?.cgColor
     }
     
     func configureForgotPasswordButton() {

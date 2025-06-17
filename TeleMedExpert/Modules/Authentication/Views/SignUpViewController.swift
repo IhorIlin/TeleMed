@@ -179,7 +179,7 @@ extension SignUpViewController {
         containerView.backgroundColor = ColorPalette.Background.secondary
         
         containerView.layer.cornerRadius = 16
-        containerView.layer.shadowColor = ColorPalette.Shadow.primaryShadow.cgColor
+        containerView.layer.shadowColor = ColorPalette.Shadow.primaryShadow?.cgColor
         containerView.layer.shadowOffset = CGSize(width: 0, height: 4)
         containerView.layer.shadowOpacity = 1
         containerView.layer.shadowRadius = 8
@@ -248,7 +248,7 @@ extension SignUpViewController {
         emailTextField.keyboardType = .emailAddress
         emailTextField.layer.cornerRadius = 12
         emailTextField.layer.borderWidth = 1
-        emailTextField.layer.borderColor = ColorPalette.Border.borderPrimary.cgColor
+        emailTextField.layer.borderColor = ColorPalette.Border.borderPrimary?.cgColor
     }
     
     func configurePasswordLabel() {
@@ -284,7 +284,7 @@ extension SignUpViewController {
         passwordTextField.isSecureTextEntry = true
         passwordTextField.layer.cornerRadius = 12
         passwordTextField.layer.borderWidth = 1
-        passwordTextField.layer.borderColor = ColorPalette.Border.borderPrimary.cgColor
+        passwordTextField.layer.borderColor = ColorPalette.Border.borderPrimary?.cgColor
     }
     
     func configureConfirmPasswordLabel() {
@@ -320,7 +320,7 @@ extension SignUpViewController {
         confirmPasswordTextField.isSecureTextEntry = true
         confirmPasswordTextField.layer.cornerRadius = 12
         confirmPasswordTextField.layer.borderWidth = 1
-        confirmPasswordTextField.layer.borderColor = ColorPalette.Border.borderPrimary.cgColor
+        confirmPasswordTextField.layer.borderColor = ColorPalette.Border.borderPrimary?.cgColor
     }
     
     func configureLoginButton() {
