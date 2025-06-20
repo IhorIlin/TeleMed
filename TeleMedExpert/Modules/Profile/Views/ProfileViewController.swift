@@ -7,11 +7,14 @@
 
 import UIKit
 import SnapKit
+import Combine
 
 class ProfileViewController: UIViewController {
-    
+    private var cancellables = Set<AnyCancellable>()
     private let tableView = UITableView()
     private let viewModel: ProfileViewModel
+    
+    var logoutAction: (() -> Void)?
     
     init(viewModel: ProfileViewModel) {
         self.viewModel = viewModel
@@ -31,6 +34,10 @@ class ProfileViewController: UIViewController {
         setupConstraints()
         
         bindViewModel()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         viewModel.loadUserProfileInfo()
     }
@@ -57,7 +64,17 @@ class ProfileViewController: UIViewController {
     }
     
     private func bindViewModel() {
-        
+        viewModel.subject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] event in
+                switch event {
+                case .logout:
+                    self?.logoutAction?()
+                case .showEditProfile: break
+                    // TODO: show edit profile screen
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -88,5 +105,11 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row == 4 {
+            viewModel.logout()
+        }
     }
 }
