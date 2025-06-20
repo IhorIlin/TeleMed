@@ -10,6 +10,7 @@
 		A45617D02DF386DB00DFF5D1 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = A45617CF2DF386DB00DFF5D1 /* SnapKit */; };
 		A45617DA2DF6E5BE00DFF5D1 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = A45617D92DF6E5BE00DFF5D1 /* SDWebImage */; };
 		A45617DC2DF6E5BE00DFF5D1 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = A45617DB2DF6E5BE00DFF5D1 /* SDWebImageMapKit */; };
+		A49C45802E05AFA90065B422 /* WebRTC in Frameworks */ = {isa = PBXBuildFile; productRef = A49C457F2E05AFA90065B422 /* WebRTC */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -146,6 +147,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A45617DA2DF6E5BE00DFF5D1 /* SDWebImage in Frameworks */,
+				A49C45802E05AFA90065B422 /* WebRTC in Frameworks */,
 				A45617DC2DF6E5BE00DFF5D1 /* SDWebImageMapKit in Frameworks */,
 				A45617D02DF386DB00DFF5D1 /* SnapKit in Frameworks */,
 			);
@@ -211,6 +213,7 @@
 				A45617CF2DF386DB00DFF5D1 /* SnapKit */,
 				A45617D92DF6E5BE00DFF5D1 /* SDWebImage */,
 				A45617DB2DF6E5BE00DFF5D1 /* SDWebImageMapKit */,
+				A49C457F2E05AFA90065B422 /* WebRTC */,
 			);
 			productName = TeleMed;
 			productReference = A48B50DA2DCF6F540082D211 /* TeleMedExpert.app */;
@@ -297,6 +300,7 @@
 			packageReferences = (
 				A45617CE2DF386DB00DFF5D1 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				A45617D82DF6E5BE00DFF5D1 /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				A49C457E2E05AFA90065B422 /* XCRemoteSwiftPackageReference "WebRTC" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A48B50DB2DCF6F540082D211 /* Products */;
@@ -838,6 +842,14 @@
 				minimumVersion = 5.21.0;
 			};
 		};
+		A49C457E2E05AFA90065B422 /* XCRemoteSwiftPackageReference "WebRTC" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stasel/WebRTC.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 137.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -855,6 +867,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A45617D82DF6E5BE00DFF5D1 /* XCRemoteSwiftPackageReference "SDWebImage" */;
 			productName = SDWebImageMapKit;
+		};
+		A49C457F2E05AFA90065B422 /* WebRTC */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A49C457E2E05AFA90065B422 /* XCRemoteSwiftPackageReference "WebRTC" */;
+			productName = WebRTC;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
