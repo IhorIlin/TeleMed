@@ -12,14 +12,15 @@ final class AppCoordinator: Coordinator {
     
     let window: UIWindow
     
-    var isLogedIn: Bool = false // Will be replaced with AuthClient
+    var sessionMonitor: SessionMonitor
     
     init(window: UIWindow) {
         self.window = window
+        sessionMonitor = SessionService(keychainService: KeychainService())
     }
     
     func start() {
-        if isLogedIn {
+        if sessionMonitor.isLogedIn {
             showMainTabBar()
         } else {
             showAuthFlow()
@@ -31,14 +32,9 @@ final class AppCoordinator: Coordinator {
         
         let authCoordinator = AuthCoordinator(navigationController: navigationController)
         
-        childCoordinators.append(authCoordinator)
+        authCoordinator.delegate = self
         
-        authCoordinator.onAuthSuccess = { [weak self] in
-            
-            self?.childCoordinators.removeAll()
-            
-            self?.showMainTabBar()
-        }
+        childCoordinators.append(authCoordinator)
         
         authCoordinator.start()
         
@@ -52,6 +48,8 @@ final class AppCoordinator: Coordinator {
         
         let mainTabBarCoordinator = TabBarCoordinator(tabBarController: tabBarController)
         
+        mainTabBarCoordinator.delegate = self
+        
         childCoordinators.append(mainTabBarCoordinator)
         
         mainTabBarCoordinator.start()
@@ -59,5 +57,23 @@ final class AppCoordinator: Coordinator {
         window.rootViewController = tabBarController
         
         window.makeKeyAndVisible()
+    }
+}
+
+extension AppCoordinator: AuthCoordinatorDelegate {
+    func userAuthenicatedSuccessfully() {
+        childCoordinators.removeAll()
+        
+        showMainTabBar()
+    }
+}
+
+extension AppCoordinator: TabBarCoordinatorDelegate {
+    func logout() {
+        sessionMonitor.logout()
+        
+        childCoordinators.removeAll()
+        
+        showAuthFlow()
     }
 }
