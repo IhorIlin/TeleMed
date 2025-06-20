@@ -24,10 +24,14 @@ final class ProfileViewModel: ObservableObject {
     func loadUserProfileInfo() {
         userClient.getUserProfile()
             .sink { completion in
-                
+                print(completion)
             } receiveValue: { response in
-                
+                print(response)
             }
             .store(in: &cancellables)
+    }
+    
+    func logout() {
+        subject.send(.logout)
     }
 }

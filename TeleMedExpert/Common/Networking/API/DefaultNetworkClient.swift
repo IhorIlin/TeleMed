@@ -21,12 +21,14 @@ final class DefaultNetworkClient: NetworkClient {
                 guard let response = response as? HTTPURLResponse else {
                     throw NetworkClientError.unknown
                 }
-                
-                guard (200...299).contains(response.statusCode) else {
+                switch response.statusCode {
+                case (200...299):
+                    return data
+                case 401:
+                    throw NetworkClientError.unauthorized
+                default:
                     throw NetworkClientError.serverError(statusCode: response.statusCode, data: data)
                 }
-                
-                return data
             }
             .decode(type: T.self, decoder: JSONDecoder())
             .mapError { error in

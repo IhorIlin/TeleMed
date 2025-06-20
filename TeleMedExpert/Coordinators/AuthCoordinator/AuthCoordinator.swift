@@ -11,7 +11,7 @@ final class AuthCoordinator: Coordinator {
     var navigationController: UINavigationController
     var childCoordinators: [Coordinator] = []
     
-    var onAuthSuccess: (() -> Void)?
+    weak var delegate: AuthCoordinatorDelegate?
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -36,7 +36,7 @@ final class AuthCoordinator: Coordinator {
         }
         
         loginController.showHome = { [weak self] in
-            self?.onAuthSuccess?()
+            self?.delegate?.userAuthenicatedSuccessfully()
         }
         
         navigationController.pushViewController(loginController, animated: false)
@@ -53,7 +53,7 @@ final class AuthCoordinator: Coordinator {
         }
         
         signUpController.showHome = { [weak self] in
-            self?.onAuthSuccess?()
+            self?.delegate?.userAuthenicatedSuccessfully()
         }
         
         navigationController.pushViewController(signUpController, animated: true)

@@ -11,6 +11,8 @@ final class TabBarCoordinator: Coordinator {
     let tabBarController: UITabBarController
     var childCoordinators: [Coordinator] = []
     
+    weak var delegate: TabBarCoordinatorDelegate?
+    
     init(tabBarController: UITabBarController) {
         self.tabBarController = tabBarController
     }
@@ -23,6 +25,7 @@ final class TabBarCoordinator: Coordinator {
         let dashboardCoordinator = DashboardCoordinator(navigationController: dashboardNavigationController)
         let appointmentsCoordinator = AppointmentsCoordinator(navigationController: appointmentsNavigationController)
         let profileCoordinator = ProfileCoordinator(navigationController: profileNavigationController)
+        profileCoordinator.delegate = self
         
         childCoordinators.append(dashboardCoordinator)
         childCoordinators.append(appointmentsCoordinator)
@@ -37,5 +40,12 @@ final class TabBarCoordinator: Coordinator {
         dashboardCoordinator.start()
         appointmentsCoordinator.start()
         profileCoordinator.start()
+    }
+}
+
+// MARK: - ProfileCoordinatorDelegate -
+extension TabBarCoordinator: ProfileCoordinatorDelegate {
+    func logout() {
+        delegate?.logout()
     }
 }

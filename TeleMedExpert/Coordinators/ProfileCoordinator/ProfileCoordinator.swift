@@ -11,6 +11,8 @@ final class ProfileCoordinator: Coordinator {
     var navigationController: UINavigationController
     var childCoordinators: [Coordinator] = []
     
+    weak var delegate: ProfileCoordinatorDelegate?
+    
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
@@ -29,6 +31,10 @@ final class ProfileCoordinator: Coordinator {
         let viewModel = ProfileViewModel(userClient: DefaultUserClient(protectedNetworkClient: protectedNetworkClient))
         
         let profileController = ProfileViewController(viewModel: viewModel)
+        
+        profileController.logoutAction = { [weak self] in
+            self?.delegate?.logout()
+        }
         
         navigationController.pushViewController(profileController, animated: false)
         
