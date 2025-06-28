@@ -63,13 +63,17 @@
 		A48B51952DD08C5A0082D211 /* Exceptions for "TeleMedExpert" folder in "TeleMedExpertTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"Common/Extensions/Data+Extension.swift",
+				"Common/Extensions/PushRegistry+Extension.swift",
 				"Common/Extensions/String+Extension.swift",
 				"Common/Extensions/UIColor+Extension.swift",
+				Common/Networking/API/DefaultAPNSClient.swift,
 				Common/Networking/API/DefaultAuthClient.swift,
 				Common/Networking/API/DefaultNetworkClient.swift,
 				Common/Networking/API/DefaultProtectedNetworkClient.swift,
 				Common/Networking/API/DefaultTokenRefresher.swift,
 				Common/Networking/API/DefaultUserClient.swift,
+				Common/Networking/API/Protocols/APNSClient.swift,
 				Common/Networking/API/Protocols/AuthClient.swift,
 				Common/Networking/API/Protocols/NetworkClient.swift,
 				Common/Networking/API/Protocols/ProtectedNetworkClient.swift,
@@ -80,10 +84,13 @@
 				Common/Networking/Config/Release.xcconfig,
 				Common/Networking/Config/Staging.xcconfig,
 				Common/Networking/Endpoints/AuthEndpoint.swift,
+				Common/Networking/Endpoints/DeviceTokenEndpoint.swift,
 				Common/Networking/Endpoints/Endpoint.swift,
 				Common/Networking/Endpoints/UsersEndpoint.swift,
 				Common/Networking/Errors/NetworkClientError.swift,
 				Common/Protocols/Coordinator.swift,
+				Common/Protocols/PushManaging.swift,
+				Common/Protocols/PushRegistryManaging.swift,
 				Common/Protocols/SecureKeyValueStoring.swift,
 				Common/Protocols/SessionMonitor.swift,
 				Common/Protocols/TokenStoring.swift,
@@ -383,11 +390,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TeleMedExpert/TeleMedExpert.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R7R5AE32ZE;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TeleMedExpert/SupportingFiles/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TeleMedExpert;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -414,11 +423,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TeleMedExpert/TeleMedExpert.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R7R5AE32ZE;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TeleMedExpert/SupportingFiles/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TeleMedExpert;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -716,11 +727,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TeleMedExpert/TeleMedExpert.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R7R5AE32ZE;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TeleMedExpert/SupportingFiles/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TeleMedExpert;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
