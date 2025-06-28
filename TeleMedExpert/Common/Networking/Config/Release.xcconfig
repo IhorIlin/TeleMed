@@ -10,4 +10,4 @@
 
 PROTOCOL=https:/
 
-BASE_URL=$PROTOCOL/localhost:8080
+BASE_URL=$PROTOCOL/telemedbackend.fly.dev

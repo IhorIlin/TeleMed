@@ -10,6 +10,7 @@
 		A45617D02DF386DB00DFF5D1 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = A45617CF2DF386DB00DFF5D1 /* SnapKit */; };
 		A45617DA2DF6E5BE00DFF5D1 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = A45617D92DF6E5BE00DFF5D1 /* SDWebImage */; };
 		A45617DC2DF6E5BE00DFF5D1 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = A45617DB2DF6E5BE00DFF5D1 /* SDWebImageMapKit */; };
+		A49C45802E05AFA90065B422 /* WebRTC in Frameworks */ = {isa = PBXBuildFile; productRef = A49C457F2E05AFA90065B422 /* WebRTC */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,13 +63,17 @@
 		A48B51952DD08C5A0082D211 /* Exceptions for "TeleMedExpert" folder in "TeleMedExpertTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"Common/Extensions/Data+Extension.swift",
+				"Common/Extensions/PushRegistry+Extension.swift",
 				"Common/Extensions/String+Extension.swift",
 				"Common/Extensions/UIColor+Extension.swift",
+				Common/Networking/API/DefaultAPNSClient.swift,
 				Common/Networking/API/DefaultAuthClient.swift,
 				Common/Networking/API/DefaultNetworkClient.swift,
 				Common/Networking/API/DefaultProtectedNetworkClient.swift,
 				Common/Networking/API/DefaultTokenRefresher.swift,
 				Common/Networking/API/DefaultUserClient.swift,
+				Common/Networking/API/Protocols/APNSClient.swift,
 				Common/Networking/API/Protocols/AuthClient.swift,
 				Common/Networking/API/Protocols/NetworkClient.swift,
 				Common/Networking/API/Protocols/ProtectedNetworkClient.swift,
@@ -79,10 +84,13 @@
 				Common/Networking/Config/Release.xcconfig,
 				Common/Networking/Config/Staging.xcconfig,
 				Common/Networking/Endpoints/AuthEndpoint.swift,
+				Common/Networking/Endpoints/DeviceTokenEndpoint.swift,
 				Common/Networking/Endpoints/Endpoint.swift,
 				Common/Networking/Endpoints/UsersEndpoint.swift,
 				Common/Networking/Errors/NetworkClientError.swift,
 				Common/Protocols/Coordinator.swift,
+				Common/Protocols/PushManaging.swift,
+				Common/Protocols/PushRegistryManaging.swift,
 				Common/Protocols/SecureKeyValueStoring.swift,
 				Common/Protocols/SessionMonitor.swift,
 				Common/Protocols/TokenStoring.swift,
@@ -146,6 +154,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A45617DA2DF6E5BE00DFF5D1 /* SDWebImage in Frameworks */,
+				A49C45802E05AFA90065B422 /* WebRTC in Frameworks */,
 				A45617DC2DF6E5BE00DFF5D1 /* SDWebImageMapKit in Frameworks */,
 				A45617D02DF386DB00DFF5D1 /* SnapKit in Frameworks */,
 			);
@@ -211,6 +220,7 @@
 				A45617CF2DF386DB00DFF5D1 /* SnapKit */,
 				A45617D92DF6E5BE00DFF5D1 /* SDWebImage */,
 				A45617DB2DF6E5BE00DFF5D1 /* SDWebImageMapKit */,
+				A49C457F2E05AFA90065B422 /* WebRTC */,
 			);
 			productName = TeleMed;
 			productReference = A48B50DA2DCF6F540082D211 /* TeleMedExpert.app */;
@@ -297,6 +307,7 @@
 			packageReferences = (
 				A45617CE2DF386DB00DFF5D1 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				A45617D82DF6E5BE00DFF5D1 /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				A49C457E2E05AFA90065B422 /* XCRemoteSwiftPackageReference "WebRTC" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A48B50DB2DCF6F540082D211 /* Products */;
@@ -379,11 +390,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TeleMedExpert/TeleMedExpert.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R7R5AE32ZE;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TeleMedExpert/SupportingFiles/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TeleMedExpert;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -410,11 +423,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TeleMedExpert/TeleMedExpert.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R7R5AE32ZE;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TeleMedExpert/SupportingFiles/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TeleMedExpert;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -712,11 +727,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TeleMedExpert/TeleMedExpert.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R7R5AE32ZE;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TeleMedExpert/SupportingFiles/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TeleMedExpert;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -838,6 +855,14 @@
 				minimumVersion = 5.21.0;
 			};
 		};
+		A49C457E2E05AFA90065B422 /* XCRemoteSwiftPackageReference "WebRTC" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stasel/WebRTC.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 137.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -855,6 +880,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A45617D82DF6E5BE00DFF5D1 /* XCRemoteSwiftPackageReference "SDWebImage" */;
 			productName = SDWebImageMapKit;
+		};
+		A49C457F2E05AFA90065B422 /* WebRTC */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A49C457E2E05AFA90065B422 /* XCRemoteSwiftPackageReference "WebRTC" */;
+			productName = WebRTC;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

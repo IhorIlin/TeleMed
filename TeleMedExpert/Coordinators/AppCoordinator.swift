@@ -11,11 +11,13 @@ final class AppCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
     
     let window: UIWindow
+    let pushService: any PushManaging
     
     var sessionMonitor: SessionMonitor
     
-    init(window: UIWindow) {
+    init(window: UIWindow, pushService: PushManaging) {
         self.window = window
+        self.pushService = pushService
         sessionMonitor = SessionService(keychainService: KeychainService())
     }
     
@@ -46,7 +48,7 @@ final class AppCoordinator: Coordinator {
     func showMainTabBar() {
         let tabBarController = MainTabBarViewController()
         
-        let mainTabBarCoordinator = TabBarCoordinator(tabBarController: tabBarController)
+        let mainTabBarCoordinator = TabBarCoordinator(tabBarController: tabBarController, pushService: pushService)
         
         mainTabBarCoordinator.delegate = self
         
