@@ -9,24 +9,18 @@ import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    var dependencies: AppDependencies!
     
-    var window: UIWindow?
-    var appCoordinator: AppCoordinator?
-
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        self.window = UIWindow(frame: UIScreen.main.bounds)
-        
-        guard let window = self.window else { return false }
-        
-        appCoordinator = AppCoordinator(window: window)
-        appCoordinator?.start()
-        
+        dependencies = AppDependencies()
+ 
         return true
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        
+        print("Device token : \(String(describing: String(data: deviceToken, encoding: .utf8)))")
+        dependencies.pushService.registerRegularToken(deviceToken)
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {

@@ -63,6 +63,8 @@
 		A48B51952DD08C5A0082D211 /* Exceptions for "TeleMedExpert" folder in "TeleMedExpertTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"Common/Extensions/Data+Extension.swift",
+				"Common/Extensions/PushRegistry+Extension.swift",
 				"Common/Extensions/String+Extension.swift",
 				"Common/Extensions/UIColor+Extension.swift",
 				Common/Networking/API/DefaultAPNSClient.swift,
@@ -87,6 +89,8 @@
 				Common/Networking/Endpoints/UsersEndpoint.swift,
 				Common/Networking/Errors/NetworkClientError.swift,
 				Common/Protocols/Coordinator.swift,
+				Common/Protocols/PushManaging.swift,
+				Common/Protocols/PushRegistryManaging.swift,
 				Common/Protocols/SecureKeyValueStoring.swift,
 				Common/Protocols/SessionMonitor.swift,
 				Common/Protocols/TokenStoring.swift,
