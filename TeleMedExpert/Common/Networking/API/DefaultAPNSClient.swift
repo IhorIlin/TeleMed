@@ -15,13 +15,13 @@ final class DefaultAPNSClient: APNSClient {
         self.protectedNetworkClient = protectedNetworkClient
     }
     
-    func registerAPNsDeviceToken(with request: RegisterDeviceTokenDTO) -> AnyPublisher<EmptyResponse, NetworkClientError> {
+    func registerAPNsDeviceToken(with request: RegisterDeviceTokenDTO) -> AnyPublisher<RegisterDeviceTokenResponse, NetworkClientError> {
         let endpoint = DeviceTokenEndpoint.registerDeviceToken(request)
         
         return protectedNetworkClient.request(endpoint: endpoint).eraseToAnyPublisher()
     }
     
-    func registerVoIPDeviceToken(with request: RegisterDeviceTokenDTO) -> AnyPublisher<EmptyResponse, NetworkClientError> {
+    func registerVoIPDeviceToken(with request: RegisterDeviceTokenDTO) -> AnyPublisher<RegisterDeviceTokenResponse, NetworkClientError> {
         let endpoint = DeviceTokenEndpoint.registerDeviceToken(request)
         
         return protectedNetworkClient.request(endpoint: endpoint).eraseToAnyPublisher()

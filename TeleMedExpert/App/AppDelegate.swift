@@ -19,12 +19,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        print("Device token : \(String(describing: String(data: deviceToken, encoding: .utf8)))")
+        print("Device token : \(deviceToken.hexString)")
         dependencies.pushService.registerRegularToken(deviceToken)
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        
+        dependencies.pushService.handleRemoteNotification(userInfo)
     }
 }
 

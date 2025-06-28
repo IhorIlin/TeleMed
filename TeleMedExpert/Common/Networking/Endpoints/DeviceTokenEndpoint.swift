@@ -24,7 +24,7 @@ struct DeviceTokenEndpoint: Endpoint {
             preconditionFailure("Invalid URL for path: \(path)")
         }
 
-        var body = try? JSONSerialization.data(withJSONObject: payload as Any)
+        let body = try? JSONEncoder().encode(payload)
 
         return UsersEndpoint(
             url: fullURL,

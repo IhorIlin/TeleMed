@@ -7,4 +7,7 @@
 
 import Foundation
 
-struct EmptyResponse: Codable {}
+struct RegisterDeviceTokenResponse: Codable {
+    let token: String
+    let success: Bool
+}

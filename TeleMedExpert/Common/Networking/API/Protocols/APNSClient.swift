@@ -9,6 +9,6 @@ import Combine
 import Foundation
 
 protocol APNSClient {
-    func registerAPNsDeviceToken(with request: RegisterDeviceTokenDTO) -> AnyPublisher<EmptyResponse, NetworkClientError>
-    func registerVoIPDeviceToken(with request: RegisterDeviceTokenDTO) -> AnyPublisher<EmptyResponse, NetworkClientError>
+    func registerAPNsDeviceToken(with request: RegisterDeviceTokenDTO) -> AnyPublisher<RegisterDeviceTokenResponse, NetworkClientError>
+    func registerVoIPDeviceToken(with request: RegisterDeviceTokenDTO) -> AnyPublisher<RegisterDeviceTokenResponse, NetworkClientError>
 }
