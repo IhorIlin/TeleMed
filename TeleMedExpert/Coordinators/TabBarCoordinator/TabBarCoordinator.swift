@@ -6,15 +6,19 @@
 //
 
 import UIKit
+import Combine
 
 final class TabBarCoordinator: Coordinator {
     let tabBarController: UITabBarController
     var childCoordinators: [Coordinator] = []
-    
+    let pushService: any PushManaging
     weak var delegate: TabBarCoordinatorDelegate?
     
-    init(tabBarController: UITabBarController) {
+    private var cancellables = Set<AnyCancellable>()
+    
+    init(tabBarController: UITabBarController, pushService: any PushManaging) {
         self.tabBarController = tabBarController
+        self.pushService = pushService
     }
     
     func start() {
@@ -40,6 +44,15 @@ final class TabBarCoordinator: Coordinator {
         dashboardCoordinator.start()
         appointmentsCoordinator.start()
         profileCoordinator.start()
+        
+        // test stuff
+        pushService.requestNotificationPermission()
+            .sink { completion in
+                print("Failure")
+            } receiveValue: { _ in
+                print("Success")
+            }.store(in: &cancellables)
+
     }
 }
 
