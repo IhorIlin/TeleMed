@@ -14,6 +14,10 @@
 		<string>Inter-Medium.ttf</string>
 		<string>Inter-Light.ttf</string>
 	</array>
+    <key>NSCameraUsageDescription</key>
+    <string>We use your camera for secure video consultations with your doctor.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>We use your microphone for voice and video calls with your doctor.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
