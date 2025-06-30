@@ -8,6 +8,8 @@
 import UIKit
 
 class DashboardViewController: UIViewController {
+    
+    var startCallCallback: (() -> Void)?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,5 +19,18 @@ class DashboardViewController: UIViewController {
     
     private func configureUI() {
         navigationItem.title = "Dashboard"
+        
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(startCall))
+        
+        view.addGestureRecognizer(gesture)
+    }
+    
+    @objc
+    func startCall() {
+        startCallCallback?()
+    }
+    
+    deinit {
+        print("DashboardViewController deinited")
     }
 }

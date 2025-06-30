@@ -104,6 +104,7 @@
 				Coordinators/AuthCoordinator/AuthCoordinator.swift,
 				Coordinators/AuthCoordinator/AuthCoordinatorDelegate.swift,
 				Coordinators/DashboardCoordinator/DashboardCoordinator.swift,
+				Coordinators/DashboardCoordinator/DashboardCoordinatorDelegate.swift,
 				Coordinators/ProfileCoordinator/ProfileCoordinator.swift,
 				Coordinators/ProfileCoordinator/ProfileCoordinatorDelegate.swift,
 				Coordinators/TabBarCoordinator/TabBarCoordinator.swift,

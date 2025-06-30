@@ -29,6 +29,8 @@ final class TabBarCoordinator: Coordinator {
         let dashboardCoordinator = DashboardCoordinator(navigationController: dashboardNavigationController)
         let appointmentsCoordinator = AppointmentsCoordinator(navigationController: appointmentsNavigationController)
         let profileCoordinator = ProfileCoordinator(navigationController: profileNavigationController)
+        
+        dashboardCoordinator.delegate = self
         profileCoordinator.delegate = self
         
         childCoordinators.append(dashboardCoordinator)
@@ -47,12 +49,25 @@ final class TabBarCoordinator: Coordinator {
         
         // test stuff
         pushService.requestNotificationPermission()
+            .receive(on: DispatchQueue.main)
             .sink { completion in
-                print("Failure")
-            } receiveValue: { _ in
-                print("Success")
-            }.store(in: &cancellables)
-
+                switch completion {
+                case .finished:
+                    print("✅ Push permission flow finished.")
+                case .failure(let error):
+                    print("❌ Failed to request push permission: \(error)")
+                    switch error {
+                    case .denied:
+                        // Show ui with explanation how to enable push notification in settings
+                        break
+                    default:
+                        break
+                    }
+                }
+            } receiveValue: {
+                print("✅ Push permission granted.")
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -60,5 +75,15 @@ final class TabBarCoordinator: Coordinator {
 extension TabBarCoordinator: ProfileCoordinatorDelegate {
     func logout() {
         delegate?.logout()
+    }
+}
+
+// MARK: - DashboardCoordinatorDelegate -
+extension TabBarCoordinator: DashboardCoordinatorDelegate {
+    func startLocalCall() {
+        let viewModel = CallViewModel(webrtcManager: WebRTCManager())
+        let callController = CallViewController(viewModel: viewModel)
+        
+        self.tabBarController.present(callController, animated: true)
     }
 }
