@@ -96,6 +96,7 @@
 				Common/Protocols/SecureKeyValueStoring.swift,
 				Common/Protocols/SessionMonitor.swift,
 				Common/Protocols/TokenStoring.swift,
+				Common/Protocols/WebRTCManaging.swift,
 				Common/Utilities/ColorPalette.swift,
 				Common/Utilities/Font.swift,
 				Coordinators/AppCoordinator.swift,
