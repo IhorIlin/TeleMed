@@ -38,4 +38,10 @@ enum ColorPalette {
         static let borderPrimary = UIColor(named: "BorderPrimary")
         static let borderActive = UIColor(named: "BorderActive")
     }
+    
+    // MARK: - CallScreen
+    enum CallScreen {
+        static let background          = UIColor(named: "CallScreenBackground")
+        static let containerBackground = UIColor(named: "CallScreenContainerBackground")
+    }
 }

@@ -84,6 +84,8 @@ extension TabBarCoordinator: DashboardCoordinatorDelegate {
         let viewModel = CallViewModel(webrtcManager: WebRTCManager())
         let callController = CallViewController(viewModel: viewModel)
         
+        callController.modalPresentationStyle = .fullScreen
+        
         self.tabBarController.present(callController, animated: true)
     }
 }
