@@ -11,6 +11,7 @@
 		A45617DA2DF6E5BE00DFF5D1 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = A45617D92DF6E5BE00DFF5D1 /* SDWebImage */; };
 		A45617DC2DF6E5BE00DFF5D1 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = A45617DB2DF6E5BE00DFF5D1 /* SDWebImageMapKit */; };
 		A49C45802E05AFA90065B422 /* WebRTC in Frameworks */ = {isa = PBXBuildFile; productRef = A49C457F2E05AFA90065B422 /* WebRTC */; };
+		A49C48E22E1291610065B422 /* CallKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A49C48E12E1291610065B422 /* CallKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +35,7 @@
 		A48B50DA2DCF6F540082D211 /* TeleMedExpert.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TeleMedExpert.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A48B50F02DCF6F560082D211 /* TeleMedExpertTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TeleMedExpertTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A48B50FA2DCF6F560082D211 /* TeleMedExpertUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TeleMedExpertUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A49C48E12E1291610065B422 /* CallKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CallKit.framework; path = System/Library/Frameworks/CallKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -153,6 +155,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A49C48E22E1291610065B422 /* CallKit.framework in Frameworks */,
 				A45617DA2DF6E5BE00DFF5D1 /* SDWebImage in Frameworks */,
 				A49C45802E05AFA90065B422 /* WebRTC in Frameworks */,
 				A45617DC2DF6E5BE00DFF5D1 /* SDWebImageMapKit in Frameworks */,
@@ -183,6 +186,7 @@
 				A48B50DC2DCF6F540082D211 /* TeleMedExpert */,
 				A48B50F32DCF6F560082D211 /* TeleMedExpertTests */,
 				A48B50FD2DCF6F560082D211 /* TeleMedExpertUITests */,
+				A49C48E02E1291610065B422 /* Frameworks */,
 				A48B50DB2DCF6F540082D211 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -195,6 +199,14 @@
 				A48B50FA2DCF6F560082D211 /* TeleMedExpertUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A49C48E02E1291610065B422 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A49C48E12E1291610065B422 /* CallKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
