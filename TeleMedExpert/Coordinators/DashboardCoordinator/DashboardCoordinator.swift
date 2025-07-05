@@ -18,7 +18,19 @@ final class DashboardCoordinator: Coordinator {
     }
     
     func start() {
-        let dashboardController = DashboardViewController()
+        let keychainService = KeychainService()
+        let networkClient = DefaultNetworkClient()
+        
+        let tokenRefresher = DefaultTokenRefresher(networkClient: networkClient,
+                                                   keychainService: keychainService)
+        
+        let protectedNetworkClient = DefaultProtectedNetworkClient(networkClient: networkClient,
+                                                                   tokenRefresher: tokenRefresher,
+                                                                   keychainService: keychainService)
+        
+        let viewModel = DashboardViewModel(userClient: DefaultUserClient(protectedNetworkClient: protectedNetworkClient))
+        
+        let dashboardController = DashboardViewController(viewModel: viewModel)
         
         dashboardController.startCallCallback = { [weak self] in
             self?.delegate?.startLocalCall()
