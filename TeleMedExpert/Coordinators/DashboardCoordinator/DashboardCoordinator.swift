@@ -32,10 +32,10 @@ final class DashboardCoordinator: Coordinator {
         
         let dashboardController = DashboardViewController(viewModel: viewModel)
         
-        dashboardController.startCallCallback = { [weak self] in
-            self?.delegate?.startLocalCall()
+        dashboardController.startCallCallback = { [weak self] userId in
+            self?.delegate?.startLocalCall(userId: userId)
         }
-        
+            
         navigationController.pushViewController(dashboardController, animated: false)
         
         navigationController.tabBarItem = UITabBarItem.init(title: "Dashboard", image: UIImage(systemName: "house"), tag: 0)

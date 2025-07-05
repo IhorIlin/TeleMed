@@ -14,7 +14,7 @@ class DashboardViewController: UIViewController {
     
     private var tableView = UITableView()
     
-    var startCallCallback: (() -> Void)?
+    var startCallCallback: ((UUID) -> Void)?
     
     private var cancellables = Set<AnyCancellable>()
 
@@ -56,15 +56,11 @@ class DashboardViewController: UIViewController {
     private func configureUI() {
         navigationItem.title = "Dashboard"
         
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(startCall))
-        
-        view.addGestureRecognizer(gesture)
-        
         configureTableView()
     }
     
     private func configureTableView() {
-        tableView.register(UINib(nibName: String(describing: DashboardTableViewCell.self), bundle: nil),
+        tableView.register(DashboardTableViewCell.self,
                            forCellReuseIdentifier: String(describing: DashboardTableViewCell.self))
         
         tableView.delegate = self
@@ -86,8 +82,8 @@ class DashboardViewController: UIViewController {
     
     // TODO: - Adopt to call for specific user from table list -
     @objc
-    func startCall() {
-        startCallCallback?()
+    func startCall(userId: UUID) {
+        startCallCallback?(userId)
     }
     
     deinit {
@@ -102,7 +98,7 @@ extension DashboardViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: DashboardTableViewCell.self)) as? DashboardTableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: DashboardTableViewCell.self), for: indexPath) as? DashboardTableViewCell {
             cell.configureCell(model: users[indexPath.row])
             
             return cell
@@ -116,8 +112,8 @@ extension DashboardViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row == 4 {
-            
-        }
+        let selectedUser = users[indexPath.row]
+        
+        startCallCallback?(selectedUser.userId)
     }
 }

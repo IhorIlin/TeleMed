@@ -20,7 +20,7 @@ struct UsersEndpoint: Endpoint {
     }
     
     static func getUsers() -> UsersEndpoint {
-        let path = "/users"
+        let path = "/users/all"
         
         return makeEndpoint(path: path, method: "GET", payload: nil)
     }
