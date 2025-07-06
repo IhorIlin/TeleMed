@@ -9,5 +9,5 @@ import Foundation
 
 protocol DashboardCoordinatorDelegate: AnyObject {
     // for test local call - remove in production
-    func startLocalCall()
+    func startLocalCall(userId: UUID)
 }

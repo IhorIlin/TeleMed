@@ -80,7 +80,7 @@ extension TabBarCoordinator: ProfileCoordinatorDelegate {
 
 // MARK: - DashboardCoordinatorDelegate -
 extension TabBarCoordinator: DashboardCoordinatorDelegate {
-    func startLocalCall() {
+    func startLocalCall(userId: UUID) {
         let viewModel = CallViewModel(webrtcManager: WebRTCManager())
         let callController = CallViewController(viewModel: viewModel)
         
