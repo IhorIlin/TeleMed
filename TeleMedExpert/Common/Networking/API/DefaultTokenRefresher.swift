@@ -10,13 +10,13 @@ import Combine
 
 final class DefaultTokenRefresher: TokenRefresher {
     private let networkClient: NetworkClient
-    private let keychainService: KeychainService
+    private let keychainService: KeychainStore
     
     private var refreshSubject = PassthroughSubject<Void, NetworkClientError>()
     private var isRefreshing = false
     private var lock = NSLock()
     
-    init(networkClient: NetworkClient, keychainService: KeychainService) {
+    init(networkClient: NetworkClient, keychainService: KeychainStore) {
         self.networkClient = networkClient
         self.keychainService = keychainService
     }

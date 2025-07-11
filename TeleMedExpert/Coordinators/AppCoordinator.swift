@@ -10,19 +10,28 @@ import UIKit
 final class AppCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
     
-    let window: UIWindow
-    let pushService: any PushManaging
+    private let window: UIWindow
+    private let dependencies: AppDependencies
     
-    var sessionMonitor: SessionMonitor
+    private var pushService: PushManaging {
+        dependencies.pushService
+    }
     
-    init(window: UIWindow, pushService: PushManaging) {
+    private var socketManager: SocketManaging {
+        dependencies.socketManager
+    }
+    
+    private var sessionService: SessionMonitor {
+        dependencies.sessionService
+    }
+    
+    init(window: UIWindow, dependencies: AppDependencies) {
         self.window = window
-        self.pushService = pushService
-        sessionMonitor = SessionService(keychainService: KeychainService())
+        self.dependencies = dependencies
     }
     
     func start() {
-        if sessionMonitor.isLogedIn {
+        if sessionService.isLoggedIn {
             showMainTabBar()
         } else {
             showAuthFlow()
@@ -32,7 +41,7 @@ final class AppCoordinator: Coordinator {
     func showAuthFlow() {
         let navigationController = UINavigationController()
         
-        let authCoordinator = AuthCoordinator(navigationController: navigationController)
+        let authCoordinator = AuthCoordinator(navigationController: navigationController, dependencies: dependencies)
         
         authCoordinator.delegate = self
         
@@ -46,9 +55,11 @@ final class AppCoordinator: Coordinator {
     }
     
     func showMainTabBar() {
-        let tabBarController = MainTabBarViewController()
+        let viewModel = MainTabBarViewModel(pushService: pushService, socketManager: socketManager)
         
-        let mainTabBarCoordinator = TabBarCoordinator(tabBarController: tabBarController, pushService: pushService)
+        let tabBarController = MainTabBarViewController(viewModel: viewModel)
+        
+        let mainTabBarCoordinator = TabBarCoordinator(tabBarController: tabBarController, dependencies: dependencies)
         
         mainTabBarCoordinator.delegate = self
         
@@ -72,7 +83,7 @@ extension AppCoordinator: AuthCoordinatorDelegate {
 
 extension AppCoordinator: TabBarCoordinatorDelegate {
     func logout() {
-        sessionMonitor.logout()
+        sessionService.logout()
         
         childCoordinators.removeAll()
         

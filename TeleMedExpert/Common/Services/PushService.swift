@@ -85,7 +85,7 @@ final class PushService: NSObject, PushManaging {
     }
     
     func handleVoIPPayload(_ payload: PKPushPayload) {
-        print("VoIP payload content: \(payload)")
+        print("VoIP payload content: \(payload.dictionaryPayload)")
     }
     
     func handleRemoteNotification(_ userInfo: [AnyHashable : Any]) {

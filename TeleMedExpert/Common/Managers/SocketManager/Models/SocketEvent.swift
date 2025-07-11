@@ -8,6 +8,7 @@
 import Foundation
 
 enum SocketEvent: String, Codable {
+    case ping
     case offer
     case answer
     case iceCandidate

@@ -11,7 +11,7 @@ struct SocketConfiguration {
     private(set) var url: URL
     
     static func socketEndpoint() -> SocketConfiguration {
-        let path = "ws"
+        let path = "/ws"
         
         return makeEndpoint(path: path)
     }

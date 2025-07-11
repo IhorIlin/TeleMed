@@ -24,12 +24,14 @@ final class SignUpViewModel: ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     
-    private var authClient: AuthClient
-    private var keychain: KeychainStore
+    private let authClient: AuthClient
+    private let keychain: KeychainStore
+    private let sessionService: SessionMonitor
     
-    init(authClient: AuthClient, keychain: KeychainStore) {
+    init(authClient: AuthClient, keychain: KeychainStore, sessionService: SessionMonitor) {
         self.authClient = authClient
         self.keychain = keychain
+        self.sessionService = sessionService
         
         setupValidation()
     }

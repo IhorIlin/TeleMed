@@ -18,15 +18,19 @@ final class LoginViewModel: ObservableObject {
     @Published var password: String = "Password1!"
     @Published private(set) var isFormValid: Bool = false
     
-    private var authClient: AuthClient
-    private var keychain: KeychainStore
+    private let authClient: AuthClient
+    private let keychain: KeychainStore
+    private let sessionService: SessionMonitor
+    
     private var cancellables: Set<AnyCancellable> = []
     
     private(set) var subject = PassthroughSubject<Event, Never>()
     
-    init(authClient: AuthClient, keychain: KeychainStore) {
+    init(authClient: AuthClient, keychain: KeychainStore, sessionService: SessionMonitor) {
         self.authClient = authClient
         self.keychain = keychain
+        self.sessionService = sessionService
+        
         setupValidation()
     }
     
@@ -58,5 +62,9 @@ final class LoginViewModel: ObservableObject {
                 email.isValidEmail && password.isValidPassword
             }
             .assign(to: &$isFormValid)
+    }
+    
+    private func saveCurrentUser(_ user: CurrentUser) {
+        
     }
 }

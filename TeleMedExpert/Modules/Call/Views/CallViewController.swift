@@ -41,6 +41,8 @@ class CallViewController: UIViewController {
         super.viewDidLoad()
 
         configureUI()
+        
+        viewModel.initiateCall()
     }
     
     private func configureUI() {

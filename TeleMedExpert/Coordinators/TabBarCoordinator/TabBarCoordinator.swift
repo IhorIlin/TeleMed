@@ -10,15 +10,23 @@ import Combine
 
 final class TabBarCoordinator: Coordinator {
     let tabBarController: UITabBarController
+    let dependencies: AppDependencies
     var childCoordinators: [Coordinator] = []
-    let pushService: any PushManaging
     weak var delegate: TabBarCoordinatorDelegate?
+    
+    private var socketManager: SocketManaging {
+        dependencies.socketManager
+    }
+    
+    private var callClient: CallClient {
+        dependencies.callClient
+    }
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(tabBarController: UITabBarController, pushService: any PushManaging) {
+    init(tabBarController: UITabBarController, dependencies: AppDependencies) {
         self.tabBarController = tabBarController
-        self.pushService = pushService
+        self.dependencies = dependencies
     }
     
     func start() {
@@ -46,28 +54,6 @@ final class TabBarCoordinator: Coordinator {
         dashboardCoordinator.start()
         appointmentsCoordinator.start()
         profileCoordinator.start()
-        
-        // test stuff
-        pushService.requestNotificationPermission()
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    print("✅ Push permission flow finished.")
-                case .failure(let error):
-                    print("❌ Failed to request push permission: \(error)")
-                    switch error {
-                    case .denied:
-                        // Show ui with explanation how to enable push notification in settings
-                        break
-                    default:
-                        break
-                    }
-                }
-            } receiveValue: {
-                print("✅ Push permission granted.")
-            }
-            .store(in: &cancellables)
     }
 }
 
@@ -81,7 +67,11 @@ extension TabBarCoordinator: ProfileCoordinatorDelegate {
 // MARK: - DashboardCoordinatorDelegate -
 extension TabBarCoordinator: DashboardCoordinatorDelegate {
     func startLocalCall(userId: UUID) {
-        let viewModel = CallViewModel(webrtcManager: WebRTCManager())
+        let viewModel = CallViewModel(callDTO: StartCallRequestDTO(calleeId: userId, callType: .video),
+                                      webRTCManager: WebRTCManager(),
+                                      socketManager: socketManager,
+                                      callClient: callClient)
+        
         let callController = CallViewController(viewModel: viewModel)
         
         callController.modalPresentationStyle = .fullScreen

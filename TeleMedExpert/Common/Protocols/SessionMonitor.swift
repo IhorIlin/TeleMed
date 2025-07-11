@@ -7,7 +7,14 @@
 
 import Foundation
 
-protocol SessionMonitor {
-    var isLogedIn: Bool { get }
+import Combine
+import Foundation
+
+protocol SessionMonitor: AnyObject {
+    var currentUser: CurrentUser? { get }
+    var currentUserPublisher: AnyPublisher<CurrentUser?, Never> { get }
+    var isLoggedIn: Bool { get }
+    
+    func setCurrentUser(_ user: CurrentUser)
     func logout()
 }

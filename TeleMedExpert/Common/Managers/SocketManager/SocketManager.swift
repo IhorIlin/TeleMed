@@ -75,6 +75,8 @@ final class SocketManager: SocketManaging {
                 print("WebSocket receive error: \(error)")
                 
                 self?.disconnect()
+                
+                self?.scheduleReconnect()
             case .success(let message):
                 if case .string(let text) = message,
                    let data = text.data(using: .utf8),
@@ -114,5 +116,22 @@ final class SocketManager: SocketManaging {
         request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
         return request
+    }
+    
+    private func scheduleReconnect(delay: TimeInterval = 2) {
+        print("🔄 Scheduling reconnect in \(delay) seconds")
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+            Task {
+                do {
+                    try await self?.connect()
+                    print("✅ Reconnected WebSocket")
+                } catch {
+                    print("❌ Reconnect failed: \(error)")
+                    // Optionally back off further:
+                    self?.scheduleReconnect(delay: min(delay * 2, 60))
+                }
+            }
+        }
     }
 }

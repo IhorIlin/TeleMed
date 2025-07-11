@@ -10,11 +10,12 @@ import SnapKit
 import Combine
 
 class ProfileViewController: UIViewController {
-    private var cancellables = Set<AnyCancellable>()
     private let tableView = UITableView()
     private let viewModel: ProfileViewModel
     
     var logoutAction: (() -> Void)?
+    
+    private var cancellables = Set<AnyCancellable>()
     
     init(viewModel: ProfileViewModel) {
         self.viewModel = viewModel
@@ -24,6 +25,10 @@ class ProfileViewController: UIViewController {
     
     required init?(coder: NSCoder) {
         preconditionFailure("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        print("ProfileViewController deinited")
     }
 
     override func viewDidLoad() {

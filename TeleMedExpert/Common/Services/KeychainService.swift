@@ -41,7 +41,7 @@ enum KeychainError: Error {
     }
 }
 
-final class KeychainService: SecureKeyValueStoring {
+final class KeychainService: KeychainStore {
     private let serviceName = Bundle.main.bundleIdentifier ?? "KeychainService"
     
     func save<T>(_ value: T, for key: KeychainKey) throws where T: Decodable, T: Encodable {
@@ -110,7 +110,8 @@ final class KeychainService: SecureKeyValueStoring {
     }
 }
 
-extension KeychainService: TokenStoring {
+// MARK: - TokenStoring -
+extension KeychainService {
     func saveAuthTokens(authToken: String, refreshToken: String) throws {
         try saveString(authToken, for: .authToken)
         try saveString(refreshToken, for: .refreshToken)
@@ -127,10 +128,7 @@ extension KeychainService: TokenStoring {
         try delete(for: .authToken)
         try delete(for: .refreshToken)
     }
-}
-
-// MARK: - Convenience methods -
-extension KeychainService {
+    
     func saveString(_ string: String, for key: KeychainKey) throws {
         try save(string, for: key)
     }
