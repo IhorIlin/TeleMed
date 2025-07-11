@@ -14,6 +14,7 @@ final class CallViewModel: NSObject, ObservableObject {
     private let webRTCManager: WebRTCManaging
     private let socketManager: SocketManaging
     private let callClient: CallClient
+    private let sessionService: SessionMonitor
     
     var remoteVideoPublisher: AnyPublisher<RTCVideoTrack?, Never> {
         remoteVideoSubject.eraseToAnyPublisher()
@@ -23,11 +24,16 @@ final class CallViewModel: NSObject, ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(callDTO: StartCallRequestDTO, webRTCManager: WebRTCManaging, socketManager: SocketManaging, callClient: CallClient) {
+    init(callDTO: StartCallRequestDTO,
+         webRTCManager: WebRTCManaging,
+         socketManager: SocketManaging,
+         callClient: CallClient,
+         sessionService: SessionMonitor) {
         self.callDTO = callDTO
         self.webRTCManager = webRTCManager
         self.socketManager = socketManager
         self.callClient = callClient
+        self.sessionService = sessionService
         
         super.init()
         
@@ -112,7 +118,11 @@ extension CallViewModel {
                     guard let sdp = sdpString else { return }
                     
                     do {
-                        let offer = OfferPayload(callerId: UUID(uuidString: "")!, calleeId: self.callDTO.calleeId, callType: .video, sdp: sdp)
+                        let offer = OfferPayload(callerId: self.sessionService.currentUser.id,
+                                                 calleeId: self.callDTO.calleeId,
+                                                 callType: .video,
+                                                 sdp: sdp)
+                        
                         try self.socketManager.send(SocketMessage(event: .offer, data: offer))
                     } catch {
                         print("❌ Failed to send offer: \(error)")

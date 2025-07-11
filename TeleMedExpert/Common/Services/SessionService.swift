@@ -12,9 +12,9 @@ final class SessionService: SessionMonitor {
     private let keychainService: KeychainStore
     private let storage: UserDefaults
     
-    @Published private(set) var currentUser: CurrentUser?
+    @Published private(set) var currentUser: CurrentUser
     
-    var currentUserPublisher: AnyPublisher<CurrentUser?, Never> {
+    var currentUserPublisher: AnyPublisher<CurrentUser, Never> {
         $currentUser.eraseToAnyPublisher()
     }
     
@@ -31,6 +31,15 @@ final class SessionService: SessionMonitor {
     init(keychainService: KeychainStore, storage: UserDefaults = .standard) {
         self.keychainService = keychainService
         self.storage = storage
+        self.currentUser = CurrentUser(id: UUID(),
+                                       email: "",
+                                       role: .patient,
+                                       firstName: "",
+                                       lastName: "",
+                                       avatarUrl: "",
+                                       address: "",
+                                       phoneNumber: "",
+                                       createdAt: "")
     }
     
     func setCurrentUser(_ user: CurrentUser) {
@@ -59,7 +68,6 @@ final class SessionService: SessionMonitor {
         do {
             try keychainService.clearAuthTokens()
             storage.removeObject(forKey: "CurrentUser")
-            currentUser = nil
         } catch {
             // TODO: Handle error
         }

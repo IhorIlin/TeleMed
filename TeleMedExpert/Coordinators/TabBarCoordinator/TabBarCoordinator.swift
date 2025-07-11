@@ -22,6 +22,10 @@ final class TabBarCoordinator: Coordinator {
         dependencies.callClient
     }
     
+    private var sessionService: SessionMonitor {
+        dependencies.sessionService
+    }
+    
     private var cancellables = Set<AnyCancellable>()
     
     init(tabBarController: UITabBarController, dependencies: AppDependencies) {
@@ -70,7 +74,8 @@ extension TabBarCoordinator: DashboardCoordinatorDelegate {
         let viewModel = CallViewModel(callDTO: StartCallRequestDTO(calleeId: userId, callType: .video),
                                       webRTCManager: WebRTCManager(),
                                       socketManager: socketManager,
-                                      callClient: callClient)
+                                      callClient: callClient,
+                                      sessionService: sessionService)
         
         let callController = CallViewController(viewModel: viewModel)
         

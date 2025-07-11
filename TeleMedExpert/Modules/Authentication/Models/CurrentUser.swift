@@ -8,15 +8,15 @@
 import Foundation
 
 final class CurrentUser: Codable {
-    let id: UUID
-    let email: String
-    let role: UserRole
-    let firstName: String
-    let lastName: String
-    let avatarUrl: String?
-    let address: String?
-    let phoneNumber: String?
-    let createdAt: String
+    var id: UUID
+    var email: String
+    var role: UserRole
+    var firstName: String
+    var lastName: String
+    var avatarUrl: String?
+    var address: String?
+    var phoneNumber: String?
+    var createdAt: String
     
     init(id: UUID,
          email: String,
