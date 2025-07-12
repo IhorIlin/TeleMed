@@ -18,15 +18,19 @@ final class LoginViewModel: ObservableObject {
     @Published var password: String = "Password1!"
     @Published private(set) var isFormValid: Bool = false
     
-    private var authClient: AuthClient
-    private var keychain: KeychainStore
+    private let authClient: AuthClient
+    private let keychain: KeychainStore
+    private let sessionService: SessionMonitor
+    
     private var cancellables: Set<AnyCancellable> = []
     
     private(set) var subject = PassthroughSubject<Event, Never>()
     
-    init(authClient: AuthClient, keychain: KeychainStore) {
+    init(authClient: AuthClient, keychain: KeychainStore, sessionService: SessionMonitor) {
         self.authClient = authClient
         self.keychain = keychain
+        self.sessionService = sessionService
+        
         setupValidation()
     }
     
@@ -40,15 +44,7 @@ final class LoginViewModel: ObservableObject {
                     print("failure: \(networkClientError.localizedDescription)")
                 }
             } receiveValue: { [weak self] response in
-                do {
-                    try self?.keychain.saveAuthTokens(authToken: response.token, refreshToken: response.refreshToken)
-                    print("authToken: \(response.token) \nrefreshToken: \(response.refreshToken)")
-                    self?.subject.send(.navigateToHome)
-                } catch {
-                    // handle error !
-                    self?.subject.send(.showError(error.localizedDescription))
-                    print(error.localizedDescription)
-                }
+                self?.handleResponse(response)
             }.store(in: &cancellables)
     }
     
@@ -58,5 +54,22 @@ final class LoginViewModel: ObservableObject {
                 email.isValidEmail && password.isValidPassword
             }
             .assign(to: &$isFormValid)
+    }
+    
+    private func handleResponse(_ response: AuthResponse) {
+        do {
+            try keychain.saveAuthTokens(authToken: response.token.token, refreshToken: response.token.refreshToken)
+            print("authToken: \(response.token.token) \nrefreshToken: \(response.token.refreshToken)")
+            
+            sessionService.currentUser.id = response.userId
+            sessionService.currentUser.email = response.email
+            sessionService.currentUser.role = response.role
+            
+            self.subject.send(.navigateToHome)
+        } catch {
+            self.subject.send(.showError(error.localizedDescription))
+            
+            print(error.localizedDescription)
+        }
     }
 }

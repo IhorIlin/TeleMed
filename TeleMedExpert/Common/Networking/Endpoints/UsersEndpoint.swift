@@ -19,6 +19,12 @@ struct UsersEndpoint: Endpoint {
         return makeEndpoint(path: path, method: "GET", payload: nil)
     }
     
+    static func getUsers() -> UsersEndpoint {
+        let path = "/users/all"
+        
+        return makeEndpoint(path: path, method: "GET", payload: nil)
+    }
+    
     private static func makeEndpoint(path: String, method: String, payload: [String: Any]?) -> UsersEndpoint {
         let baseURL = NetworkConfig.baseURL
         guard let fullURL = URL(string: baseURL + path) else {

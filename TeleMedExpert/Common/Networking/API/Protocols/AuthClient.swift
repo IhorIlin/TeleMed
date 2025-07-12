@@ -9,6 +9,6 @@ import Foundation
 import Combine
 
 protocol AuthClient {
-    func login(with request: LoginRequestDTO) -> AnyPublisher<LoginResponseDTO, NetworkClientError>
-    func register(with request: RegisterRequestDTO) -> AnyPublisher<RegisterResponseDTO, NetworkClientError>
+    func login(with request: LoginRequestDTO) -> AnyPublisher<AuthResponse, NetworkClientError>
+    func register(with request: RegisterRequestDTO) -> AnyPublisher<AuthResponse, NetworkClientError>
 }

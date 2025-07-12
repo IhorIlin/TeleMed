@@ -8,6 +8,6 @@
 // Configuration settings file format documentation can be found at:
 // https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
 
-PROTOCOL=https:/
-
-BASE_URL=$PROTOCOL/telemedbackend.fly.dev
+DIVIDER=:/
+BASE_URL=https$DIVIDER/telemed-expert.org
+SOCKET_URL=wss$DIVIDER/telemed-expert.org

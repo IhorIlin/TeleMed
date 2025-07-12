@@ -10,15 +10,31 @@ import Combine
 
 final class TabBarCoordinator: Coordinator {
     let tabBarController: UITabBarController
+    let dependencies: AppDependencies
     var childCoordinators: [Coordinator] = []
-    let pushService: any PushManaging
     weak var delegate: TabBarCoordinatorDelegate?
+    
+    private var socketManager: SocketManaging {
+        dependencies.socketManager
+    }
+    
+    private var callClient: CallClient {
+        dependencies.callClient
+    }
+    
+    private var sessionService: SessionMonitor {
+        dependencies.sessionService
+    }
+    
+    private var callManager: CallManaging {
+        dependencies.callManager
+    }
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(tabBarController: UITabBarController, pushService: any PushManaging) {
+    init(tabBarController: UITabBarController, dependencies: AppDependencies) {
         self.tabBarController = tabBarController
-        self.pushService = pushService
+        self.dependencies = dependencies
     }
     
     func start() {
@@ -29,6 +45,8 @@ final class TabBarCoordinator: Coordinator {
         let dashboardCoordinator = DashboardCoordinator(navigationController: dashboardNavigationController)
         let appointmentsCoordinator = AppointmentsCoordinator(navigationController: appointmentsNavigationController)
         let profileCoordinator = ProfileCoordinator(navigationController: profileNavigationController)
+        
+        dashboardCoordinator.delegate = self
         profileCoordinator.delegate = self
         
         childCoordinators.append(dashboardCoordinator)
@@ -43,16 +61,7 @@ final class TabBarCoordinator: Coordinator {
         
         dashboardCoordinator.start()
         appointmentsCoordinator.start()
-        profileCoordinator.start()
-        
-        // test stuff
-        pushService.requestNotificationPermission()
-            .sink { completion in
-                print("Failure")
-            } receiveValue: { _ in
-                print("Success")
-            }.store(in: &cancellables)
-
+        profileCoordinator.start() 
     }
 }
 
@@ -60,5 +69,22 @@ final class TabBarCoordinator: Coordinator {
 extension TabBarCoordinator: ProfileCoordinatorDelegate {
     func logout() {
         delegate?.logout()
+    }
+}
+
+// MARK: - DashboardCoordinatorDelegate -
+extension TabBarCoordinator: DashboardCoordinatorDelegate {
+    func startLocalCall(userId: UUID) {
+        let viewModel = CallViewModel(callDTO: StartCallRequestDTO(calleeId: userId, callType: .video),
+                                      webRTCManager: WebRTCManager(),
+                                      socketManager: socketManager,
+                                      callClient: callClient,
+                                      sessionService: sessionService)
+        
+        let callController = CallViewController(viewModel: viewModel)
+        
+        callController.modalPresentationStyle = .fullScreen
+        
+        self.tabBarController.present(callController, animated: true)
     }
 }

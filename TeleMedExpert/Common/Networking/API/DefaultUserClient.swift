@@ -20,4 +20,10 @@ final class DefaultUserClient: UserClient {
         
         return protectedNetworkClient.request(endpoint: endpoint).eraseToAnyPublisher()
     }
+    
+    func getUsers() -> AnyPublisher<[UserProfileResponseDTO], NetworkClientError> {
+        let endpoint = UsersEndpoint.getUsers()
+        
+        return protectedNetworkClient.request(endpoint: endpoint).eraseToAnyPublisher()
+    }
 }

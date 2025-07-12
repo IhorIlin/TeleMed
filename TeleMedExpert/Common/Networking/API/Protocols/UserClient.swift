@@ -9,4 +9,5 @@ import Combine
 
 protocol UserClient {
     func getUserProfile() -> AnyPublisher<UserProfileResponseDTO, NetworkClientError>
+    func getUsers() -> AnyPublisher<[UserProfileResponseDTO], NetworkClientError> 
 }

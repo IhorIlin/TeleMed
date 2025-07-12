@@ -20,6 +20,7 @@ enum PushPermissionError: Error {
 }
 
 protocol PushManaging {
+    var pushPublisher: AnyPublisher<VoIPNotificationPayload, Never> { get }
     func requestNotificationPermission() -> AnyPublisher<Void, PushPermissionError>
     func registerRegularToken(_ token: Data)
     func registerVoIPToken(_ token: Data)

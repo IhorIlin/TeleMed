@@ -10,13 +10,13 @@ import Combine
 
 final class DefaultTokenRefresher: TokenRefresher {
     private let networkClient: NetworkClient
-    private let keychainService: KeychainService
+    private let keychainService: KeychainStore
     
     private var refreshSubject = PassthroughSubject<Void, NetworkClientError>()
     private var isRefreshing = false
     private var lock = NSLock()
     
-    init(networkClient: NetworkClient, keychainService: KeychainService) {
+    init(networkClient: NetworkClient, keychainService: KeychainStore) {
         self.networkClient = networkClient
         self.keychainService = keychainService
     }
@@ -39,8 +39,9 @@ final class DefaultTokenRefresher: TokenRefresher {
             let endpoint = AuthEndpoint.refreshToken(refreshToken: refreshToken)
             
             return networkClient.request(endpoint: endpoint)
-                .tryMap { [weak self] (response: RefreshTokenResponseDTO) in
-                    try self?.keychainService.saveAuthTokens(authToken: response.token, refreshToken: response.refreshToken)
+                .tryMap { [weak self] (response: AuthResponse) in
+                    try self?.keychainService.saveAuthTokens(authToken: response.token.token,
+                                                             refreshToken: response.token.refreshToken)
                     print("Refresh token successfully saved.")
                 }
                 .mapError { error in

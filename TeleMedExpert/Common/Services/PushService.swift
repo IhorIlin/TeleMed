@@ -15,6 +15,11 @@ import CallKit
 final class PushService: NSObject, PushManaging {
     private let apnsClient: any APNSClient
     private var pushRegistry: any PushRegistryManaging
+    private let pushSubject = PassthroughSubject<VoIPNotificationPayload, Never>()
+    
+    var pushPublisher: AnyPublisher<VoIPNotificationPayload, Never> {
+        pushSubject.eraseToAnyPublisher()
+    }
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -85,7 +90,22 @@ final class PushService: NSObject, PushManaging {
     }
     
     func handleVoIPPayload(_ payload: PKPushPayload) {
-        print("VoIP payload content: \(payload)")
+        guard let rootDict = payload.dictionaryPayload as? [String: Any],
+              let payloadDict = rootDict["payload"] as? [String: Any] else {
+            print("❌ Invalid payload structure")
+            return
+        }
+        
+        do {
+            let data = try JSONSerialization.data(withJSONObject: payloadDict, options: [])
+            let model = try JSONDecoder().decode(VoIPNotificationPayload.self, from: data)
+            
+            pushSubject.send(model)
+            print("✅ VoIP payload converted: \(model)")
+            
+        } catch {
+            print("❌ Failed to decode VoIP payload: \(error)")
+        }
     }
     
     func handleRemoteNotification(_ userInfo: [AnyHashable : Any]) {
