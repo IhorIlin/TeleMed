@@ -24,12 +24,14 @@ final class SignUpViewModel: ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     
-    private var authClient: AuthClient
-    private var keychain: KeychainStore
+    private let authClient: AuthClient
+    private let keychain: KeychainStore
+    private let sessionService: SessionMonitor
     
-    init(authClient: AuthClient, keychain: KeychainStore) {
+    init(authClient: AuthClient, keychain: KeychainStore, sessionService: SessionMonitor) {
         self.authClient = authClient
         self.keychain = keychain
+        self.sessionService = sessionService
         
         setupValidation()
     }
@@ -39,13 +41,7 @@ final class SignUpViewModel: ObservableObject {
             .sink { completion in
                 print("Finished register!")
             } receiveValue: { [weak self] response in
-                do {
-                    try self?.keychain.saveAuthTokens(authToken: response.token, refreshToken: response.refreshToken)
-                    self?.subject.send(.navigateToHome)
-                } catch {
-                    self?.subject.send(.showError(error.localizedDescription))
-                    print("Error: \(error.localizedDescription)")
-                }
+                self?.handleResponse(response)
             }.store(in: &cancellables)
     }
     
@@ -55,5 +51,22 @@ final class SignUpViewModel: ObservableObject {
                 return email.isValidEmail && password.isValidPassword && password == confirmPassword
             }
             .assign(to: &$isFormValid)
+    }
+    
+    private func handleResponse(_ response: AuthResponse) {
+        do {
+            try keychain.saveAuthTokens(authToken: response.token.token, refreshToken: response.token.refreshToken)
+            print("authToken: \(response.token.token) \nrefreshToken: \(response.token.refreshToken)")
+            
+            sessionService.currentUser.id = response.userId
+            sessionService.currentUser.email = response.email
+            sessionService.currentUser.role = response.role
+            
+            self.subject.send(.navigateToHome)
+        } catch {
+            self.subject.send(.showError(error.localizedDescription))
+            
+            print(error.localizedDescription)
+        }
     }
 }

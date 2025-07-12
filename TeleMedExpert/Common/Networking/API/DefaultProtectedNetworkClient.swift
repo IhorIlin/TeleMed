@@ -11,9 +11,9 @@ import Combine
 final class DefaultProtectedNetworkClient: ProtectedNetworkClient {
     private let networkClient: NetworkClient
     private let tokenRefresher: TokenRefresher
-    private let keychainService: KeychainService
+    private let keychainService: KeychainStore
     
-    init(networkClient: NetworkClient, tokenRefresher: TokenRefresher, keychainService: KeychainService) {
+    init(networkClient: NetworkClient, tokenRefresher: TokenRefresher, keychainService: KeychainStore) {
         self.networkClient = networkClient
         self.tokenRefresher = tokenRefresher
         self.keychainService = keychainService

@@ -15,4 +15,12 @@ enum NetworkConfig {
         
         return baseURL
     }
+    
+    static var socketURL: String {
+        guard let socketURL = Bundle.main.infoDictionary?["SOCKET_URL"] as? String else {
+            fatalError("❌ SOCKET_URL not set in Info.plist")
+        }
+        
+        return socketURL
+    }
 }

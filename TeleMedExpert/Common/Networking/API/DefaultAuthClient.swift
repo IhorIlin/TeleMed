@@ -15,13 +15,13 @@ final class DefaultAuthClient: AuthClient {
         self.networkClient = networkClient
     }
     
-    func login(with request: LoginRequestDTO) -> AnyPublisher<LoginResponseDTO, NetworkClientError> {
+    func login(with request: LoginRequestDTO) -> AnyPublisher<AuthResponse, NetworkClientError> {
         let endpoint = AuthEndpoint.login(email: request.email, password: request.password)
         
         return networkClient.request(endpoint: endpoint)
     }
     
-    func register(with request: RegisterRequestDTO) -> AnyPublisher<RegisterResponseDTO, NetworkClientError> {
+    func register(with request: RegisterRequestDTO) -> AnyPublisher<AuthResponse, NetworkClientError> {
         let endpoint = AuthEndpoint.signUp(email: request.email, password: request.password, role: request.role.rawValue)
         
         return networkClient.request(endpoint: endpoint)

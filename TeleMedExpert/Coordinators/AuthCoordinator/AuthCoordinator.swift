@@ -9,12 +9,26 @@ import UIKit
 
 final class AuthCoordinator: Coordinator {
     var navigationController: UINavigationController
+    private let dependencies: AppDependencies
     var childCoordinators: [Coordinator] = []
     
     weak var delegate: AuthCoordinatorDelegate?
     
-    init(navigationController: UINavigationController) {
+    private var keychainService: KeychainStore {
+        dependencies.keychainService
+    }
+    
+    private var authClient: AuthClient {
+        dependencies.authClient
+    }
+    
+    private var sessionService: SessionMonitor {
+        dependencies.sessionService
+    }
+    
+    init(navigationController: UINavigationController, dependencies: AppDependencies) {
         self.navigationController = navigationController
+        self.dependencies = dependencies
     }
     
     func start() {
@@ -22,8 +36,9 @@ final class AuthCoordinator: Coordinator {
     }
     
     private func showLogin() {
-        let loginViewModel = LoginViewModel(authClient: DefaultAuthClient(networkClient: DefaultNetworkClient()),
-                                            keychain: KeychainService())
+        let loginViewModel = LoginViewModel(authClient: authClient,
+                                            keychain: keychainService,
+                                            sessionService: sessionService)
         
         let loginController = LoginViewController(viewModel: loginViewModel)
         
@@ -43,8 +58,9 @@ final class AuthCoordinator: Coordinator {
     }
     
     private func showSignUp() {
-        let signUpViewModel = SignUpViewModel(authClient: DefaultAuthClient(networkClient: DefaultNetworkClient()),
-                                              keychain: KeychainService())
+        let signUpViewModel = SignUpViewModel(authClient: authClient,
+                                              keychain: keychainService,
+                                              sessionService: sessionService)
         
         let signUpController = SignUpViewController(viewModel: signUpViewModel)
         

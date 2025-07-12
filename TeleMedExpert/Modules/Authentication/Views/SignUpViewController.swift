@@ -61,18 +61,6 @@ final class SignUpViewController: UIViewController {
         showLogin?()
     }
     
-    @objc
-    private func roleChanged(_ sender: UISegmentedControl) {
-        switch sender.selectedSegmentIndex {
-        case 0:
-            viewModel.userRole = .patient
-        case 1:
-            viewModel.userRole = .doctor
-        default:
-            break
-        }
-    }
-    
     @objc func endEditing() {
         view.endEditing(true)
     }
@@ -158,6 +146,7 @@ extension SignUpViewController {
         configurePasswordLabel()
         configureConfirmPasswordTextField()
         configureConfirmPasswordLabel()
+        configureSegmentedControl()
         configureSignUpButton()
         configureLoginButton()
     }
@@ -323,6 +312,28 @@ extension SignUpViewController {
         confirmPasswordTextField.layer.borderColor = ColorPalette.Border.borderPrimary?.cgColor
     }
     
+    func configureSegmentedControl() {
+        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        
+        containerView.addSubview(segmentedControl)
+        
+        containerView.addConstraints([
+            NSLayoutConstraint(item: segmentedControl, attribute: .top, relatedBy: .equal, toItem: confirmPasswordTextField, attribute: .bottom, multiplier: 1, constant: 20),
+            NSLayoutConstraint(item: segmentedControl, attribute: .centerX, relatedBy: .equal, toItem: containerView, attribute: .centerX, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: segmentedControl, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0, constant: 35)
+        ])
+        
+        segmentedControl.insertSegment(withTitle: "patient", at: 0, animated: false)
+        segmentedControl.insertSegment(withTitle: "doctor", at: 1, animated: false)
+        segmentedControl.selectedSegmentIndex = 0
+        
+        segmentedControl.publisher(for: \.selectedSegmentIndex)
+            .sink { [weak self] index in
+                self?.viewModel.userRole = index == 0 ? .patient : .doctor
+            }
+            .store(in: &cancellables)
+    }
+    
     func configureLoginButton() {
         loginButton.translatesAutoresizingMaskIntoConstraints = false
         
@@ -346,7 +357,7 @@ extension SignUpViewController {
         containerView.addSubview(signUpButton)
         
         containerView.addConstraints([
-            NSLayoutConstraint(item: signUpButton, attribute: .top, relatedBy: .equal, toItem: confirmPasswordTextField, attribute: .bottom, multiplier: 1, constant: 60),
+            NSLayoutConstraint(item: signUpButton, attribute: .top, relatedBy: .equal, toItem: segmentedControl, attribute: .bottom, multiplier: 1, constant: 60),
             NSLayoutConstraint(item: signUpButton, attribute: .leading, relatedBy: .equal, toItem: confirmPasswordTextField, attribute: .leading, multiplier: 1, constant: 0),
             NSLayoutConstraint(item: signUpButton, attribute: .trailing, relatedBy: .equal, toItem: confirmPasswordTextField, attribute: .trailing, multiplier: 1, constant: 0),
             NSLayoutConstraint(item: signUpButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 50),

@@ -21,7 +21,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         guard let dependencies = (UIApplication.shared.delegate as? AppDelegate)?.dependencies else { return }
         
-        appCoordinator = AppCoordinator(window: window, pushService: dependencies.pushService)
+        appCoordinator = AppCoordinator(window: window, dependencies: dependencies)
+        
         appCoordinator?.start()
     }
 }
