@@ -19,6 +19,7 @@ final class AppDependencies {
     let apnsClient: APNSClient
     let keychainService: KeychainStore
     let callClient: CallClient
+    let callManager: CallManaging
     
     init() {
         networkClient = DefaultNetworkClient()
@@ -40,5 +41,6 @@ final class AppDependencies {
         sessionService = SessionService(keychainService: keychainService)
         
         callClient = DefaultCallClient(protectedNetworkClient: protectedNetworkClient)
+        callManager = CallKitManager()
     }
 }

@@ -94,6 +94,7 @@
 				Common/Networking/Endpoints/Endpoint.swift,
 				Common/Networking/Endpoints/UsersEndpoint.swift,
 				Common/Networking/Errors/NetworkClientError.swift,
+				Common/Protocols/CallManaging.swift,
 				Common/Protocols/Coordinator.swift,
 				Common/Protocols/PushManaging.swift,
 				Common/Protocols/PushRegistryManaging.swift,

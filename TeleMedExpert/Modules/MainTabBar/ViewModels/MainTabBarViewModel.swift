@@ -11,12 +11,16 @@ import Foundation
 final class MainTabBarViewModel: ObservableObject {
     private let pushService: PushManaging
     private let socketManager: SocketManaging
+    private let callManager: CallManaging
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(pushService: PushManaging, socketManager: SocketManaging) {
+    init(pushService: PushManaging, socketManager: SocketManaging, callManager: CallManaging) {
         self.pushService = pushService
         self.socketManager = socketManager
+        self.callManager = callManager
+        
+        bindPushNotifications()
     }
     
     func registerPushNotifications() {
@@ -49,5 +53,16 @@ final class MainTabBarViewModel: ObservableObject {
         } catch {
             print("\(#function) error: \(error.localizedDescription)")
         }
+    }
+}
+
+// MARK: - VoIPNotification handling -
+extension MainTabBarViewModel {
+    private func bindPushNotifications() {
+        pushService.pushPublisher
+            .sink { [weak self] notification in
+                self?.callManager.reportIncomingCall(payload: notification)
+            }
+            .store(in: &cancellables)
     }
 }

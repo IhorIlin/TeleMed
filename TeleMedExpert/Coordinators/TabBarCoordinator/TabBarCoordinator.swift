@@ -26,6 +26,10 @@ final class TabBarCoordinator: Coordinator {
         dependencies.sessionService
     }
     
+    private var callManager: CallManaging {
+        dependencies.callManager
+    }
+    
     private var cancellables = Set<AnyCancellable>()
     
     init(tabBarController: UITabBarController, dependencies: AppDependencies) {
@@ -57,7 +61,7 @@ final class TabBarCoordinator: Coordinator {
         
         dashboardCoordinator.start()
         appointmentsCoordinator.start()
-        profileCoordinator.start()
+        profileCoordinator.start() 
     }
 }
 
