@@ -14,7 +14,7 @@ final class LoginViewModel: ObservableObject {
         case showError(String)
     }
     
-    @Published var email: String = "e@e.com"
+    @Published var email: String = ""
     @Published var password: String = "Password1!"
     @Published private(set) var isFormValid: Bool = false
     
