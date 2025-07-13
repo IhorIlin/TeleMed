@@ -15,8 +15,8 @@ final class SignUpViewModel: ObservableObject {
     }
     
     @Published var email: String = ""
-    @Published var password: String = ""
-    @Published var confirmPassword: String = ""
+    @Published var password: String = "Password1!"
+    @Published var confirmPassword: String = "Password1!"
     @Published var userRole: UserRole = .patient
     @Published var isFormValid: Bool = false
     
