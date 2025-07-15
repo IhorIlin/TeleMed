@@ -32,10 +32,10 @@ final class SocketManager: SocketManaging {
     }
     
     func connect() async throws {
-        // Refresh token if needed
         try await refreshTokenIfNeeded()
         
         let token = try getAccessToken()
+
         let request = buildRequest(withToken: token)
         
         let session = URLSession(configuration: .default)
@@ -78,12 +78,9 @@ final class SocketManager: SocketManaging {
                 
                 self?.scheduleReconnect()
             case .success(let message):
-                if case .string(let text) = message,
-                   let data = text.data(using: .utf8),
-                   
-                    let decoded = try? JSONDecoder().decode(SocketMessage<AnyCodable>.self, from: data) {
-                    
-                    self?.messageSubject.send(decoded)
+                if case .data(let data) = message,
+                   let decodedMessage = try? JSONDecoder().decode(SocketMessage<AnyCodable>.self, from: data) {
+                       self?.messageSubject.send(decodedMessage)
                 }
                 self?.listen() // Listen again
             }
@@ -91,18 +88,22 @@ final class SocketManager: SocketManaging {
     }
     
     private func refreshTokenIfNeeded() async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            tokenRefresher
-                .refreshTokenIfNeeded()
-                .sink(receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let error):
-                        continuation.resume(throwing: error)
-                    case .finished:
-                        continuation.resume()
-                    }
-                }, receiveValue: { })
-                .store(in: &cancellables)
+        let token = try getAccessToken()
+        
+        if token.isJWTExpired {
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                tokenRefresher
+                    .refreshTokenIfNeeded()
+                    .sink(receiveCompletion: { completion in
+                        switch completion {
+                        case .failure(let error):
+                            continuation.resume(throwing: error)
+                        case .finished:
+                            continuation.resume()
+                        }
+                    }, receiveValue: { })
+                    .store(in: &cancellables)
+            }
         }
     }
     

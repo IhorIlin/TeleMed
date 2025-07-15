@@ -9,7 +9,7 @@ import UIKit
 import Combine
 
 final class TabBarCoordinator: Coordinator {
-    let tabBarController: UITabBarController
+    let tabBarController: MainTabBarViewController
     let dependencies: AppDependencies
     var childCoordinators: [Coordinator] = []
     weak var delegate: TabBarCoordinatorDelegate?
@@ -32,7 +32,7 @@ final class TabBarCoordinator: Coordinator {
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(tabBarController: UITabBarController, dependencies: AppDependencies) {
+    init(tabBarController: MainTabBarViewController, dependencies: AppDependencies) {
         self.tabBarController = tabBarController
         self.dependencies = dependencies
     }
@@ -42,9 +42,9 @@ final class TabBarCoordinator: Coordinator {
         let appointmentsNavigationController = UINavigationController()
         let profileNavigationController = UINavigationController()
         
-        let dashboardCoordinator = DashboardCoordinator(navigationController: dashboardNavigationController)
-        let appointmentsCoordinator = AppointmentsCoordinator(navigationController: appointmentsNavigationController)
-        let profileCoordinator = ProfileCoordinator(navigationController: profileNavigationController)
+        let dashboardCoordinator = DashboardCoordinator(navigationController: dashboardNavigationController, dependencies: dependencies)
+        let appointmentsCoordinator = AppointmentsCoordinator(navigationController: appointmentsNavigationController, dependencies: dependencies)
+        let profileCoordinator = ProfileCoordinator(navigationController: profileNavigationController, dependencies: dependencies)
         
         dashboardCoordinator.delegate = self
         profileCoordinator.delegate = self

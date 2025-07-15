@@ -9,26 +9,22 @@ import UIKit
 
 final class DashboardCoordinator: Coordinator {
     var navigationController: UINavigationController
+    private var dependencies: AppDependencies
     var childCoordinators: [Coordinator] = []
     
     weak var delegate: DashboardCoordinatorDelegate?
     
-    init(navigationController: UINavigationController) {
+    private var userClient: UserClient {
+        dependencies.userClient
+    }
+    
+    init(navigationController: UINavigationController, dependencies: AppDependencies) {
         self.navigationController = navigationController
+        self.dependencies = dependencies
     }
     
     func start() {
-        let keychainService = KeychainService()
-        let networkClient = DefaultNetworkClient()
-        
-        let tokenRefresher = DefaultTokenRefresher(networkClient: networkClient,
-                                                   keychainService: keychainService)
-        
-        let protectedNetworkClient = DefaultProtectedNetworkClient(networkClient: networkClient,
-                                                                   tokenRefresher: tokenRefresher,
-                                                                   keychainService: keychainService)
-        
-        let viewModel = DashboardViewModel(userClient: DefaultUserClient(protectedNetworkClient: protectedNetworkClient))
+        let viewModel = DashboardViewModel(userClient: userClient)
         
         let dashboardController = DashboardViewController(viewModel: viewModel)
         
