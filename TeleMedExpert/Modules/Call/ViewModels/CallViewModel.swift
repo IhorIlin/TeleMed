@@ -10,11 +10,12 @@ import Foundation
 import WebRTC
 
 final class CallViewModel: NSObject, ObservableObject {
-    private let callDTO: StartCallRequestDTO
+    private var callDTO: StartCallRequestDTO
     private let webRTCManager: WebRTCManaging
     private let socketManager: SocketManaging
     private let callClient: CallClient
     private let sessionService: SessionMonitor
+    private let callManager: CallManaging
     
     var remoteVideoPublisher: AnyPublisher<RTCVideoTrack?, Never> {
         remoteVideoSubject.eraseToAnyPublisher()
@@ -28,16 +29,20 @@ final class CallViewModel: NSObject, ObservableObject {
          webRTCManager: WebRTCManaging,
          socketManager: SocketManaging,
          callClient: CallClient,
-         sessionService: SessionMonitor) {
+         sessionService: SessionMonitor,
+         callManager: CallManaging) {
         self.callDTO = callDTO
         self.webRTCManager = webRTCManager
         self.socketManager = socketManager
         self.callClient = callClient
         self.sessionService = sessionService
+        self.callManager = callManager
         
         super.init()
         
         bindSocket()
+        
+        bindCallManager()
     }
     
     func testStartCallPreview(in view: RTCVideoRenderer) {
@@ -50,6 +55,8 @@ final class CallViewModel: NSObject, ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
                 switch message.event {
+                case .redyToOffer:
+                    self?.sendOffer()
                 case .answer:
                     self?.handleAnswer(message: message)
                 case .offer:
@@ -62,6 +69,20 @@ final class CallViewModel: NSObject, ObservableObject {
                     self?.handleError(message: message)
                 case .ping:
                     self?.handlePing(message: message)
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func bindCallManager() {
+        callManager.publisher
+            .sink { [weak self] action in
+                switch action {
+                case .ringing:
+                    break
+                case .accepted(let payload):
+                    self?.sendReadyToOffer(payload: payload)
+                case .declined(let payload):
                     break
                 }
             }
@@ -72,15 +93,35 @@ final class CallViewModel: NSObject, ObservableObject {
 // MARK: - Signalling -
 extension CallViewModel {
     private func handleOffer(message: SocketMessage<AnyCodable>) {
+        guard let sdp = message.data.decode(OfferPayload.self)?.sdp else {
+            print("\(#function) can't decode OfferPayload")
+            return
+        }
         
+        webRTCManager.set(remoteOffer: sdp) { [weak self] success in
+            print("setRemoteOffer - \(success)")
+            self?.sendAnswer()
+        }
     }
     
     private func handleAnswer(message: SocketMessage<AnyCodable>) {
+        guard let sdp = message.data.decode(AnswerPayload.self)?.sdp else {
+            print("\(#function) can't decode AnswerPayload")
+            return
+        }
         
+        webRTCManager.set(remoteAnswer: sdp) { success in
+            print("setRemoteOffer - \(success)")
+        }
     }
     
     private func handleIceCandidate(message: SocketMessage<AnyCodable>) {
+        guard let iceCandidate = message.data.decode(IceCandidatePayload.self) else {
+            print("\(#function) can't decode IceCandidatePayload")
+            return
+        }
         
+        webRTCManager.addIceCandidate(iceCandidate)
     }
     
     private func handleEndCall(message: SocketMessage<AnyCodable>) {
@@ -108,29 +149,60 @@ extension CallViewModel {
                     print("Call create error: \(error.localizedDescription)")
                 }
             } receiveValue: { [weak self] response in
-                guard let self else { return }
-                
+                self?.callDTO.callId = response.callId
                 print("Call record created: callId = \(response.callId)")
-                
-                self.webRTCManager.createPeerConnection(delegate: self)
-                
-                self.webRTCManager.createOffer { sdpString in
-                    guard let sdp = sdpString else { return }
-                    
-                    do {
-                        let offer = OfferPayload(callerId: self.sessionService.currentUser.id,
-                                                 calleeId: self.callDTO.calleeId,
-                                                 callType: .video,
-                                                 sdp: sdp)
-                        
-                        try self.socketManager.send(SocketMessage(event: .offer, data: offer))
-                    } catch {
-                        print("❌ Failed to send offer: \(error)")
-                    }
-                    
-                }
             }
             .store(in: &cancellables)
+    }
+    
+    private func sendOffer() {
+        self.webRTCManager.createPeerConnection(delegate: self)
+        
+        self.webRTCManager.createOffer { [weak self] sdpString in
+            guard let self, let callId = self.callDTO.callId, let sdp = sdpString else { return }
+            
+            do {
+                let offer = OfferPayload(callerId: self.sessionService.currentUser.id,
+                                         calleeId: self.callDTO.calleeId,
+                                         callId: callId,
+                                         callType: .video,
+                                         sdp: sdp)
+                
+                try self.socketManager.send(SocketMessage(event: .offer, data: offer))
+            } catch {
+                print("❌ Failed to send offer: \(error)")
+            }
+        }
+    }
+    
+    private func sendReadyToOffer(payload: VoIPNotificationPayload) {
+        webRTCManager.createPeerConnection(delegate: self)
+        let payload = ReadyToOfferPayload(callId: payload.callId,
+                                          callerId: payload.callerId,
+                                          calleeId: payload.calleeId,
+                                          callType: payload.callType)
+        
+        let message = SocketMessage(event: .redyToOffer, data: payload)
+        do {
+            try socketManager.send(message)
+        } catch {
+            print("❌ Failed to send readyToOffer: \(error)")
+        }
+    }
+    
+    private func sendAnswer() {
+        webRTCManager.createAnswer { [weak self] answer in
+            guard let sdp = answer, let self else { return }
+            
+            let payload = AnswerPayload(callerId: callManager.callerId, calleeId: callManager.calleeId, callType: callDTO.callType, sdp: sdp)
+            let message = SocketMessage(event: .answer, data: payload)
+            
+            do {
+                try self.socketManager.send(message)
+            } catch {
+                print("❌ Failed to send answer: \(error)")
+            }
+        }
     }
 }
 
@@ -171,8 +243,19 @@ extension CallViewModel: RTCPeerConnectionDelegate {
     func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
         print("✅ ICE Candidate discovered: \(candidate.sdp)")
         
-        // TODO: send ICE to backend via WebSocket
-//        let payload = IceCandidatePayload(senderId: <#T##UUID#>, receiverId: <#T##UUID#>, candidate: <#T##String#>, sdpMid: <#T##String?#>, sdpMLineIndex: <#T##Int?#>)
+        let iceCandidatePayload = IceCandidatePayload(senderId: sessionService.currentUser.id,
+                                                      receiverId: callDTO.calleeId != sessionService.currentUser.id ? callDTO.calleeId : sessionService.currentUser.id,
+                                                      candidate: candidate.sdp,
+                                                      sdpMid: candidate.sdpMid,
+                                                      sdpMLineIndex: Int(candidate.sdpMLineIndex))
+        
+        let message = SocketMessage(event: .iceCandidate, data: iceCandidatePayload)
+        
+        do {
+            try socketManager.send(message)
+        } catch {
+            print("Send ice candidate error - \(error.localizedDescription)")
+        }
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange stateChanged: RTCSignalingState) {

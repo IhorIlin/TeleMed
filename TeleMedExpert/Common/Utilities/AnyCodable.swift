@@ -68,3 +68,15 @@ public struct AnyCodable: Codable {
         }
     }
 }
+
+extension AnyCodable {
+    func decode<T: Decodable>(_ type: T.Type) -> T? {
+        do {
+            let data = try JSONEncoder().encode(self)
+            return try JSONDecoder().decode(T.self, from: data)
+        } catch {
+            print("❌ Failed to decode \(T.self): \(error)")
+            return nil
+        }
+    }
+}

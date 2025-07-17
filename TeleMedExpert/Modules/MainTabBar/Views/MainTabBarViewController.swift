@@ -10,6 +10,8 @@ import UIKit
 final class MainTabBarViewController: UITabBarController {
     private let viewModel: MainTabBarViewModel
     
+    var handleIncomingCall: ((StartCallRequestDTO) -> Void)?
+    
     init(viewModel: MainTabBarViewModel) {
         self.viewModel = viewModel
         
@@ -38,5 +40,9 @@ final class MainTabBarViewController: UITabBarController {
 extension MainTabBarViewController {
     private func connectWebSocket() async {
         await viewModel.connectWS()
+    }
+    
+    private func bindViewModel() {
+        
     }
 }

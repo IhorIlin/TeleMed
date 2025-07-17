@@ -81,6 +81,7 @@ final class SocketManager: SocketManaging {
                 if case .data(let data) = message,
                    let decodedMessage = try? JSONDecoder().decode(SocketMessage<AnyCodable>.self, from: data) {
                        self?.messageSubject.send(decodedMessage)
+                    print(decodedMessage.data.value)
                 }
                 self?.listen() // Listen again
             }

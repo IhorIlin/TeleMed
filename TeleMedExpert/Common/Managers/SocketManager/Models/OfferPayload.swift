@@ -10,6 +10,7 @@ import Foundation
 struct OfferPayload: Codable {
     let callerId: UUID
     let calleeId: UUID
+    let callId: UUID
     let callType: CallType
     let sdp: String
 }

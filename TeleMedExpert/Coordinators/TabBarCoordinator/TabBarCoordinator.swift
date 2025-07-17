@@ -79,7 +79,8 @@ extension TabBarCoordinator: DashboardCoordinatorDelegate {
                                       webRTCManager: WebRTCManager(),
                                       socketManager: socketManager,
                                       callClient: callClient,
-                                      sessionService: sessionService)
+                                      sessionService: sessionService,
+                                      callManager: callManager)
         
         let callController = CallViewController(viewModel: viewModel)
         

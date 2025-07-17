@@ -9,10 +9,19 @@ import Combine
 import Foundation
 
 final class MainTabBarViewModel: ObservableObject {
+    enum Event {
+        case handleIncomingCall(StartCallRequestDTO)
+    }
+    
     private let pushService: PushManaging
     private let socketManager: SocketManaging
     private let callManager: CallManaging
     
+    var eventPublisher: AnyPublisher<StartCallRequestDTO, Never> {
+        subject.eraseToAnyPublisher()
+    }
+    
+    private var subject = PassthroughSubject<StartCallRequestDTO, Never>()
     private var cancellables = Set<AnyCancellable>()
     
     init(pushService: PushManaging, socketManager: SocketManaging, callManager: CallManaging) {
@@ -62,6 +71,8 @@ extension MainTabBarViewModel {
         pushService.pushPublisher
             .sink { [weak self] notification in
                 self?.callManager.reportIncomingCall(payload: notification)
+//                let startCallDTO = StartCallRequestDTO(calleeId: notification., callType: <#T##CallType#>)
+//                self?.subject.send()
             }
             .store(in: &cancellables)
     }

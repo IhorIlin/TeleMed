@@ -9,9 +9,31 @@ import Foundation
 
 import Foundation
 import CallKit
+import Combine
+
+enum CallAction {
+    case ringing
+    case accepted(VoIPNotificationPayload)
+    case declined(VoIPNotificationPayload)
+}
 
 final class CallKitManager: NSObject, CallManaging {
     private let provider: CXProvider
+    private let subject = PassthroughSubject<CallAction, Never>()
+    private var voipPayload: VoIPNotificationPayload!
+    
+    var calleeId: UUID {
+        voipPayload.calleeId
+    }
+    
+    var callerId: UUID {
+        voipPayload.callerId
+    }
+    
+    var publisher: AnyPublisher<CallAction, Never> {
+        subject.eraseToAnyPublisher()
+    }
+    
 
     override init() {
         let config = CXProviderConfiguration()
@@ -27,6 +49,8 @@ final class CallKitManager: NSObject, CallManaging {
     }
 
     func reportIncomingCall(payload: VoIPNotificationPayload) {
+        voipPayload = payload
+        
         let uuid = payload.callId
 
         let update = CXCallUpdate()
@@ -39,6 +63,7 @@ final class CallKitManager: NSObject, CallManaging {
                 print("❌ CallKit report error: \(error)")
             } else {
                 print("✅ CallKit incoming call reported")
+                self.subject.send(.ringing)
             }
         }
     }
@@ -66,12 +91,14 @@ extension CallKitManager: CXProviderDelegate {
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
         print("✅ User answered the call.")
         action.fulfill()
-        // inform WebRTC or backend to proceed
+        guard let payload = voipPayload else { return }
+        subject.send(.accepted(payload))
     }
 
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
         print("✅ User ended the call.")
         action.fulfill()
-        // inform WebRTC or backend to hang up
+        guard let payload = voipPayload else { return }
+        subject.send(.declined(payload))
     }
 }
