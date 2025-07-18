@@ -20,13 +20,13 @@ final class LoginViewModel: ObservableObject {
     
     private let authClient: AuthClient
     private let keychain: KeychainStore
-    private let sessionService: SessionMonitor
+    private let sessionService: SessionService
     
     private var cancellables: Set<AnyCancellable> = []
     
     private(set) var subject = PassthroughSubject<Event, Never>()
     
-    init(authClient: AuthClient, keychain: KeychainStore, sessionService: SessionMonitor) {
+    init(authClient: AuthClient, keychain: KeychainStore, sessionService: SessionService) {
         self.authClient = authClient
         self.keychain = keychain
         self.sessionService = sessionService

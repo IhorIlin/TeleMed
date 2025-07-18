@@ -14,7 +14,7 @@ final class TabBarCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
     weak var delegate: TabBarCoordinatorDelegate?
     
-    private var socketManager: SocketManaging {
+    private var socketManager: SocketManager {
         dependencies.socketManager
     }
     
@@ -22,12 +22,12 @@ final class TabBarCoordinator: Coordinator {
         dependencies.callClient
     }
     
-    private var sessionService: SessionMonitor {
+    private var sessionService: SessionService {
         dependencies.sessionService
     }
     
-    private var callManager: CallManaging {
-        dependencies.callManager
+    private var callKitManager: CallKitManager {
+        dependencies.callKitManager
     }
     
     private var cancellables = Set<AnyCancellable>()
@@ -76,11 +76,11 @@ extension TabBarCoordinator: ProfileCoordinatorDelegate {
 extension TabBarCoordinator: DashboardCoordinatorDelegate {
     func startLocalCall(userId: UUID) {
         let viewModel = CallViewModel(callDTO: StartCallRequestDTO(calleeId: userId, callType: .video),
-                                      webRTCManager: WebRTCManager(),
+                                      webRTCManager: DefaultWebRTCManager(),
                                       socketManager: socketManager,
                                       callClient: callClient,
                                       sessionService: sessionService,
-                                      callManager: callManager)
+                                      callKitManager: callKitManager)
         
         let callController = CallViewController(viewModel: viewModel)
         

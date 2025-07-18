@@ -13,20 +13,20 @@ final class AppCoordinator: Coordinator {
     private let window: UIWindow
     private let dependencies: AppDependencies
     
-    private var pushService: PushManaging {
+    private var pushService: PushService {
         dependencies.pushService
     }
     
-    private var socketManager: SocketManaging {
+    private var socketManager: SocketManager {
         dependencies.socketManager
     }
     
-    private var sessionService: SessionMonitor {
+    private var sessionService: SessionService {
         dependencies.sessionService
     }
     
-    private var callManager: CallManaging {
-        dependencies.callManager
+    private var callKitManager: CallKitManager {
+        dependencies.callKitManager
     }
     
     init(window: UIWindow, dependencies: AppDependencies) {
@@ -59,7 +59,7 @@ final class AppCoordinator: Coordinator {
     }
     
     func showMainTabBar() {
-        let viewModel = MainTabBarViewModel(pushService: pushService, socketManager: socketManager, callManager: callManager)
+        let viewModel = MainTabBarViewModel(pushService: pushService, socketManager: socketManager, callKitManager: callKitManager)
         
         let tabBarController = MainTabBarViewController(viewModel: viewModel)
         

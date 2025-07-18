@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class SocketManager: SocketManaging {
+final class DefaultSocketManager: SocketManager {
     private let configuration: SocketConfiguration
     private let tokenRefresher: TokenRefresher
     private let keychainService: KeychainStore

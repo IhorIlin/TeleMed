@@ -1,5 +1,5 @@
 //
-//  WebRTCManager.swift
+//  DefaultWebRTCManager.swift
 //  TeleMedExpert
 //
 //  Created by Ihor Ilin on 30.06.2025.
@@ -10,23 +10,13 @@ import WebRTC
 import UIKit
 import Combine
 
-final class WebRTCManager: NSObject, WebRTCManaging {
-    
-    // MARK: - Publishers
-    
-    var localVideoPublisher: AnyPublisher<RTCVideoTrack?, Never> {
-        localVideoSubject.eraseToAnyPublisher()
-    }
-    
-    // MARK: - Properties
-    
-    private let localVideoSubject = CurrentValueSubject<RTCVideoTrack?, Never>(nil)
-    
+final class DefaultWebRTCManager: NSObject, WebRTCManager {
     private let factory: RTCPeerConnectionFactory
     private var peerConnection: RTCPeerConnection?
     
     private var localVideoTrack: RTCVideoTrack?
     private var localAudioTrack: RTCAudioTrack?
+    
     private var videoCapturer: RTCCameraVideoCapturer?
     
     private let iceServers: [RTCIceServer] = [
@@ -51,8 +41,6 @@ final class WebRTCManager: NSObject, WebRTCManaging {
         let videoTrack = factory.videoTrack(with: videoSource, trackId: "ARDAMSv0")
         self.localVideoTrack = videoTrack
         videoTrack.add(view)
-        
-        localVideoSubject.send(videoTrack)
         
         guard
             let device = RTCCameraVideoCapturer.captureDevices().first,

@@ -13,9 +13,9 @@ final class MainTabBarViewModel: ObservableObject {
         case handleIncomingCall(StartCallRequestDTO)
     }
     
-    private let pushService: PushManaging
-    private let socketManager: SocketManaging
-    private let callManager: CallManaging
+    private let pushService: PushService
+    private let socketManager: SocketManager
+    private let callKitManager: CallKitManager
     
     var eventPublisher: AnyPublisher<StartCallRequestDTO, Never> {
         subject.eraseToAnyPublisher()
@@ -24,10 +24,10 @@ final class MainTabBarViewModel: ObservableObject {
     private var subject = PassthroughSubject<StartCallRequestDTO, Never>()
     private var cancellables = Set<AnyCancellable>()
     
-    init(pushService: PushManaging, socketManager: SocketManaging, callManager: CallManaging) {
+    init(pushService: PushService, socketManager: SocketManager, callKitManager: CallKitManager) {
         self.pushService = pushService
         self.socketManager = socketManager
-        self.callManager = callManager
+        self.callKitManager = callKitManager
         
         bindPushNotifications()
     }
@@ -70,9 +70,7 @@ extension MainTabBarViewModel {
     private func bindPushNotifications() {
         pushService.pushPublisher
             .sink { [weak self] notification in
-                self?.callManager.reportIncomingCall(payload: notification)
-//                let startCallDTO = StartCallRequestDTO(calleeId: notification., callType: <#T##CallType#>)
-//                self?.subject.send()
+                self?.callKitManager.reportIncomingCall(payload: notification)
             }
             .store(in: &cancellables)
     }

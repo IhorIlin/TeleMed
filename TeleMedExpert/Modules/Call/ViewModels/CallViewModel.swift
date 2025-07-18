@@ -11,11 +11,11 @@ import WebRTC
 
 final class CallViewModel: NSObject, ObservableObject {
     private var callDTO: StartCallRequestDTO
-    private let webRTCManager: WebRTCManaging
-    private let socketManager: SocketManaging
+    private let webRTCManager: WebRTCManager
+    private let socketManager: SocketManager
     private let callClient: CallClient
-    private let sessionService: SessionMonitor
-    private let callManager: CallManaging
+    private let sessionService: SessionService
+    private let callKitManager: CallKitManager
     
     var remoteVideoPublisher: AnyPublisher<RTCVideoTrack?, Never> {
         remoteVideoSubject.eraseToAnyPublisher()
@@ -26,23 +26,23 @@ final class CallViewModel: NSObject, ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     init(callDTO: StartCallRequestDTO,
-         webRTCManager: WebRTCManaging,
-         socketManager: SocketManaging,
+         webRTCManager: WebRTCManager,
+         socketManager: SocketManager,
          callClient: CallClient,
-         sessionService: SessionMonitor,
-         callManager: CallManaging) {
+         sessionService: SessionService,
+         callKitManager: CallKitManager) {
         self.callDTO = callDTO
         self.webRTCManager = webRTCManager
         self.socketManager = socketManager
         self.callClient = callClient
         self.sessionService = sessionService
-        self.callManager = callManager
+        self.callKitManager = callKitManager
         
         super.init()
         
         bindSocket()
         
-        bindCallManager()
+        bindCallKitManager()
     }
     
     func testStartCallPreview(in view: RTCVideoRenderer) {
@@ -74,15 +74,15 @@ final class CallViewModel: NSObject, ObservableObject {
             .store(in: &cancellables)
     }
     
-    private func bindCallManager() {
-        callManager.publisher
+    private func bindCallKitManager() {
+        callKitManager.publisher
             .sink { [weak self] action in
                 switch action {
                 case .ringing:
                     break
-                case .accepted(let payload):
-                    self?.sendReadyToOffer(payload: payload)
-                case .declined(let payload):
+                case .accepted:
+                    break
+                case .declined:
                     break
                 }
             }
@@ -194,7 +194,7 @@ extension CallViewModel {
         webRTCManager.createAnswer { [weak self] answer in
             guard let sdp = answer, let self else { return }
             
-            let payload = AnswerPayload(callerId: callManager.callerId, calleeId: callManager.calleeId, callType: callDTO.callType, sdp: sdp)
+            let payload = AnswerPayload(callerId: callDTO.calleeId, calleeId: callDTO.calleeId, callType: callDTO.callType, sdp: sdp)
             let message = SocketMessage(event: .answer, data: payload)
             
             do {

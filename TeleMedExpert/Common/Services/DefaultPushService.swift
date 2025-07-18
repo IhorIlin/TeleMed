@@ -1,5 +1,5 @@
 //
-//  PushService.swift
+//  DefaultPushService.swift
 //  TeleMedExpert
 //
 //  Created by Ihor Ilin on 28.06.2025.
@@ -12,7 +12,7 @@ import UserNotifications
 import UIKit
 import CallKit
 
-final class PushService: NSObject, PushManaging {
+final class DefaultPushService: NSObject, PushService {
     private let apnsClient: any APNSClient
     private var pushRegistry: any PushRegistryManaging
     private let pushSubject = PassthroughSubject<VoIPNotificationPayload, Never>()
@@ -114,7 +114,7 @@ final class PushService: NSObject, PushManaging {
 }
 
 // MARK: - PKPushRegistryDelegate -
-extension PushService: PKPushRegistryDelegate {
+extension DefaultPushService: PKPushRegistryDelegate {
     func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
         registerVoIPToken(pushCredentials.token)
     }

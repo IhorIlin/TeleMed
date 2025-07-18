@@ -13,28 +13,18 @@ import Combine
 
 enum CallAction {
     case ringing
-    case accepted(VoIPNotificationPayload)
-    case declined(VoIPNotificationPayload)
+    case accepted
+    case declined
 }
 
-final class CallKitManager: NSObject, CallManaging {
+final class DefaultCallKitManager: NSObject, CallKitManager {
     private let provider: CXProvider
     private let subject = PassthroughSubject<CallAction, Never>()
-    private var voipPayload: VoIPNotificationPayload!
-    
-    var calleeId: UUID {
-        voipPayload.calleeId
-    }
-    
-    var callerId: UUID {
-        voipPayload.callerId
-    }
     
     var publisher: AnyPublisher<CallAction, Never> {
         subject.eraseToAnyPublisher()
     }
     
-
     override init() {
         let config = CXProviderConfiguration()
         config.includesCallsInRecents = true
@@ -49,16 +39,13 @@ final class CallKitManager: NSObject, CallManaging {
     }
 
     func reportIncomingCall(payload: VoIPNotificationPayload) {
-        voipPayload = payload
-        
-        let uuid = payload.callId
-
         let update = CXCallUpdate()
+        
         update.remoteHandle = CXHandle(type: .generic, value: payload.callerName)
         update.hasVideo = payload.callType == .video
         update.localizedCallerName = payload.callerName
 
-        provider.reportNewIncomingCall(with: uuid, update: update) { error in
+        provider.reportNewIncomingCall(with: payload.callId, update: update) { error in
             if let error = error {
                 print("❌ CallKit report error: \(error)")
             } else {
@@ -83,22 +70,24 @@ final class CallKitManager: NSObject, CallManaging {
     }
 }
 
-extension CallKitManager: CXProviderDelegate {
+extension DefaultCallKitManager: CXProviderDelegate {
     func providerDidReset(_ provider: CXProvider) {
         print("CallKit provider reset.")
     }
 
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
         print("✅ User answered the call.")
+        
         action.fulfill()
-        guard let payload = voipPayload else { return }
-        subject.send(.accepted(payload))
+        
+        subject.send(.accepted)
     }
 
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
         print("✅ User ended the call.")
+        
         action.fulfill()
-        guard let payload = voipPayload else { return }
-        subject.send(.declined(payload))
+        
+        subject.send(.declined)
     }
 }

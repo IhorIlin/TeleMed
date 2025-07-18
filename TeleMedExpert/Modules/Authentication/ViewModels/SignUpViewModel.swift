@@ -26,9 +26,9 @@ final class SignUpViewModel: ObservableObject {
     
     private let authClient: AuthClient
     private let keychain: KeychainStore
-    private let sessionService: SessionMonitor
+    private let sessionService: SessionService
     
-    init(authClient: AuthClient, keychain: KeychainStore, sessionService: SessionMonitor) {
+    init(authClient: AuthClient, keychain: KeychainStore, sessionService: SessionService) {
         self.authClient = authClient
         self.keychain = keychain
         self.sessionService = sessionService
