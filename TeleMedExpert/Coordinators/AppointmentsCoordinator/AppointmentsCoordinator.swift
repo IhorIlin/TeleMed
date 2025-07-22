@@ -9,10 +9,12 @@ import UIKit
 
 final class AppointmentsCoordinator: Coordinator {
     var navigationController: UINavigationController
+    private let dependencies: AppDependencies
     var childCoordinators: [Coordinator] = []
     
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, dependencies: AppDependencies) {
         self.navigationController = navigationController
+        self.dependencies = dependencies
     }
     
     func start() {

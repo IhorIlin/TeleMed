@@ -15,7 +15,12 @@ final class DashboardViewModel: ObservableObject {
     
     private let userClient: any UserClient
     
-    private(set) var subject = PassthroughSubject<Event, Never>()
+    var publisher: AnyPublisher<Event, Never> {
+        subject.eraseToAnyPublisher()
+    }
+    
+    private let subject = PassthroughSubject<Event, Never>()
+    
     private var cancellables = Set<AnyCancellable>()
     
     init(userClient: any UserClient) {

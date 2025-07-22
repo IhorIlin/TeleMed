@@ -1,5 +1,5 @@
 //
-//  SessionService.swift
+//  DefaultSessionService.swift
 //  TeleMedExpert
 //
 //  Created by Ihor Ilin on 20.06.2025.
@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class SessionService: SessionMonitor {
+final class DefaultSessionService: SessionService {
     private let keychainService: KeychainStore
     private let storage: UserDefaults
     

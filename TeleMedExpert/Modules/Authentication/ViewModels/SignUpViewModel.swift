@@ -15,8 +15,8 @@ final class SignUpViewModel: ObservableObject {
     }
     
     @Published var email: String = ""
-    @Published var password: String = ""
-    @Published var confirmPassword: String = ""
+    @Published var password: String = "Password1!"
+    @Published var confirmPassword: String = "Password1!"
     @Published var userRole: UserRole = .patient
     @Published var isFormValid: Bool = false
     
@@ -26,9 +26,9 @@ final class SignUpViewModel: ObservableObject {
     
     private let authClient: AuthClient
     private let keychain: KeychainStore
-    private let sessionService: SessionMonitor
+    private let sessionService: SessionService
     
-    init(authClient: AuthClient, keychain: KeychainStore, sessionService: SessionMonitor) {
+    init(authClient: AuthClient, keychain: KeychainStore, sessionService: SessionService) {
         self.authClient = authClient
         self.keychain = keychain
         self.sessionService = sessionService

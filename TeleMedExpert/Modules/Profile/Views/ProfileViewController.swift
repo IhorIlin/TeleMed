@@ -69,7 +69,7 @@ class ProfileViewController: UIViewController {
     }
     
     private func bindViewModel() {
-        viewModel.subject
+        viewModel.publisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] event in
                 switch event {

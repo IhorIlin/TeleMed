@@ -9,26 +9,22 @@ import UIKit
 
 final class ProfileCoordinator: Coordinator {
     var navigationController: UINavigationController
+    private let dependencies: AppDependencies
     var childCoordinators: [Coordinator] = []
     
     weak var delegate: ProfileCoordinatorDelegate?
     
-    init(navigationController: UINavigationController) {
+    private var userClient: UserClient {
+        dependencies.userClient
+    }
+    
+    init(navigationController: UINavigationController, dependencies: AppDependencies) {
         self.navigationController = navigationController
+        self.dependencies = dependencies
     }
     
     func start() {
-        let keychainService = KeychainService()
-        let networkClient = DefaultNetworkClient()
-        
-        let tokenRefresher = DefaultTokenRefresher(networkClient: networkClient,
-                                                   keychainService: keychainService)
-        
-        let protectedNetworkClient = DefaultProtectedNetworkClient(networkClient: networkClient,
-                                                                   tokenRefresher: tokenRefresher,
-                                                                   keychainService: keychainService)
-        
-        let viewModel = ProfileViewModel(userClient: DefaultUserClient(protectedNetworkClient: protectedNetworkClient))
+        let viewModel = ProfileViewModel(userClient: userClient)
         
         let profileController = ProfileViewController(viewModel: viewModel)
         

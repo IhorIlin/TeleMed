@@ -14,19 +14,19 @@ final class LoginViewModel: ObservableObject {
         case showError(String)
     }
     
-    @Published var email: String = "e@e.com"
+    @Published var email: String = ""
     @Published var password: String = "Password1!"
     @Published private(set) var isFormValid: Bool = false
     
     private let authClient: AuthClient
     private let keychain: KeychainStore
-    private let sessionService: SessionMonitor
+    private let sessionService: SessionService
     
     private var cancellables: Set<AnyCancellable> = []
     
     private(set) var subject = PassthroughSubject<Event, Never>()
     
-    init(authClient: AuthClient, keychain: KeychainStore, sessionService: SessionMonitor) {
+    init(authClient: AuthClient, keychain: KeychainStore, sessionService: SessionService) {
         self.authClient = authClient
         self.keychain = keychain
         self.sessionService = sessionService

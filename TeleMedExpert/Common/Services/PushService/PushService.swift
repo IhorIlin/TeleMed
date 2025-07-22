@@ -1,5 +1,5 @@
 //
-//  PushManaging.swift
+//  PushService.swift
 //  TeleMedExpert
 //
 //  Created by Ihor Ilin on 28.06.2025.
@@ -19,8 +19,9 @@ enum PushPermissionError: Error {
     case systemError(Error)
 }
 
-protocol PushManaging {
-    var pushPublisher: AnyPublisher<VoIPNotificationPayload, Never> { get }
+protocol PushService {
+    var voipPushPublisher: AnyPublisher<VoIPNotificationPayload, Never> { get }
+    var regularPushPublisher: AnyPublisher<RegularNotificationPayload, Never> { get }
     func requestNotificationPermission() -> AnyPublisher<Void, PushPermissionError>
     func registerRegularToken(_ token: Data)
     func registerVoIPToken(_ token: Data)

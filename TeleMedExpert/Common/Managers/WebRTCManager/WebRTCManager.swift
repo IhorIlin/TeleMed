@@ -8,8 +8,7 @@
 import Combine
 import WebRTC
 
-protocol WebRTCManaging {
-    var localVideoPublisher: AnyPublisher<RTCVideoTrack?, Never> { get }
+protocol WebRTCManager {
     func startLocalVideo(in view: RTCVideoRenderer)
     func stopLocalVideo()
     func startLocalAudio()

@@ -15,7 +15,7 @@ final class DefaultCallClient: CallClient {
         self.protectedNetworkClient = protectedNetworkClient
     }
     
-    func startCall(dto: StartCallRequestDTO) -> AnyPublisher<StartCallResponseDTO, NetworkClientError> {
+    func startCall(dto: StartCallRequest) -> AnyPublisher<StartCallResponse, NetworkClientError> {
         let enpoint = CallEndpoint.startCall(dto: dto)
         
         return protectedNetworkClient.request(endpoint: enpoint).eraseToAnyPublisher()
