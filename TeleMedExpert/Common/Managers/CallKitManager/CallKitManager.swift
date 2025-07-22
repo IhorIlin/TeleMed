@@ -10,6 +10,6 @@ import CallKit
 import Combine
 
 protocol CallKitManager {
-    var publisher: AnyPublisher<CallAction, Never> { get }
+    var publisher: AnyPublisher<CallEvent, Never> { get }
     func reportIncomingCall(payload: VoIPNotificationPayload)
 }

@@ -29,7 +29,7 @@ final class DashboardCoordinator: Coordinator {
         let dashboardController = DashboardViewController(viewModel: viewModel)
         
         dashboardController.startCallCallback = { [weak self] userId in
-            self?.delegate?.startLocalCall(userId: userId)
+            self?.delegate?.startCall(userId: userId)
         }
             
         navigationController.pushViewController(dashboardController, animated: false)

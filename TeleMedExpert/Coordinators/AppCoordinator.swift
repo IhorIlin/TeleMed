@@ -29,6 +29,10 @@ final class AppCoordinator: Coordinator {
         dependencies.callKitManager
     }
     
+    private var callEngine: CallEngine {
+        dependencies.callEngine
+    }
+    
     init(window: UIWindow, dependencies: AppDependencies) {
         self.window = window
         self.dependencies = dependencies
@@ -59,7 +63,7 @@ final class AppCoordinator: Coordinator {
     }
     
     func showMainTabBar() {
-        let viewModel = MainTabBarViewModel(pushService: pushService, socketManager: socketManager, callKitManager: callKitManager)
+        let viewModel = MainTabBarViewModel(callEngine: callEngine, pushService: pushService, socketManager: socketManager)
         
         let tabBarController = MainTabBarViewController(viewModel: viewModel)
         

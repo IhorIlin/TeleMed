@@ -6,11 +6,14 @@
 //
 
 import UIKit
+import Combine
 
 final class MainTabBarViewController: UITabBarController {
     private let viewModel: MainTabBarViewModel
     
-    var handleIncomingCall: ((StartCallRequestDTO) -> Void)?
+    var handleIncomingCall: (() -> Void)?
+    
+    private var cancellables = Set<AnyCancellable>()
     
     init(viewModel: MainTabBarViewModel) {
         self.viewModel = viewModel
@@ -26,6 +29,8 @@ final class MainTabBarViewController: UITabBarController {
         super.viewDidLoad()
         
         viewModel.registerPushNotifications()
+        
+        bindViewModel()
         
         Task {
             await connectWebSocket()
@@ -43,6 +48,13 @@ extension MainTabBarViewController {
     }
     
     private func bindViewModel() {
-        
+        viewModel.eventPublisher
+            .sink { [unowned self] event in
+                switch event {
+                case .handleIncomingCall:
+                    self.handleIncomingCall?()
+                }
+            }
+            .store(in: &cancellables)
     }
 }

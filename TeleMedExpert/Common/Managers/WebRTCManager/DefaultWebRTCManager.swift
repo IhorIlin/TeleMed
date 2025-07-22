@@ -9,6 +9,7 @@ import Foundation
 import WebRTC
 import UIKit
 import Combine
+import AVFoundation
 
 final class DefaultWebRTCManager: NSObject, WebRTCManager {
     private let factory: RTCPeerConnectionFactory
@@ -20,6 +21,12 @@ final class DefaultWebRTCManager: NSObject, WebRTCManager {
     private var videoCapturer: RTCCameraVideoCapturer?
     
     private let iceServers: [RTCIceServer] = [
+        RTCIceServer(
+                urlStrings: ["turn:135.181.151.209:3478"],
+                username: "testuser",
+                credential: "testpassword",
+                tlsCertPolicy: .insecureNoCheck
+            ),
         RTCIceServer(urlStrings: ["stun:stun.l.google.com:19302"])
     ]
     
@@ -40,6 +47,7 @@ final class DefaultWebRTCManager: NSObject, WebRTCManager {
         
         let videoTrack = factory.videoTrack(with: videoSource, trackId: "ARDAMSv0")
         self.localVideoTrack = videoTrack
+        self.localVideoTrack?.isEnabled = true
         videoTrack.add(view)
         
         guard
@@ -59,6 +67,8 @@ final class DefaultWebRTCManager: NSObject, WebRTCManager {
     }
     
     func startLocalAudio() {
+        self.configureAudioSession()
+        
         let audioTrack = factory.audioTrack(withTrackId: "ARDAMSa0")
         self.localAudioTrack = audioTrack
     }
@@ -68,6 +78,17 @@ final class DefaultWebRTCManager: NSObject, WebRTCManager {
     func createPeerConnection(delegate: RTCPeerConnectionDelegate) {
         let config = RTCConfiguration()
         config.iceServers = iceServers
+        
+        // 2. NAT traversal settings
+        config.sdpSemantics = .unifiedPlan
+        config.iceTransportPolicy = .relay // use both STUN and TURN
+        config.bundlePolicy = .maxBundle
+        config.rtcpMuxPolicy = .require
+        config.continualGatheringPolicy = .gatherContinually
+
+        // 3. Connectivity & performance
+        config.tcpCandidatePolicy = .enabled
+        config.keyType = .ECDSA
         
         let constraints = RTCMediaConstraints(
             mandatoryConstraints: nil,
@@ -104,8 +125,14 @@ final class DefaultWebRTCManager: NSObject, WebRTCManager {
     
     func createOffer(completion: @escaping (String?) -> Void) {
         let constraints = RTCMediaConstraints(
-            mandatoryConstraints: ["OfferToReceiveAudio": "true", "OfferToReceiveVideo": "true"],
-            optionalConstraints: nil
+            mandatoryConstraints: [
+                    "minWidth": "640",
+                    "minHeight": "480",
+                    "maxWidth": "1280",
+                    "maxHeight": "720",
+                    "maxFrameRate": "30"
+                ],
+                optionalConstraints: nil
         )
         
         peerConnection?.offer(for: constraints) { [weak self] sdp, error in
@@ -119,6 +146,11 @@ final class DefaultWebRTCManager: NSObject, WebRTCManager {
                 completion(nil)
                 return
             }
+            
+            // ✅ Debug SDP content
+                    print("📝 Created offer SDP:")
+                    print("  - Contains video: \(sdp.sdp.contains("m=video"))")
+                    print("  - Video codecs: \(sdp.sdp.contains("H264") || sdp.sdp.contains("VP8") || sdp.sdp.contains("VP9"))")
             
             self?.peerConnection?.setLocalDescription(sdp) { error in
                 if let error = error {
@@ -135,6 +167,7 @@ final class DefaultWebRTCManager: NSObject, WebRTCManager {
     
     func set(remoteOffer sdpString: String, completion: @escaping (Bool) -> Void) {
         let remoteSDP = RTCSessionDescription(type: .offer, sdp: sdpString)
+        
         peerConnection?.setRemoteDescription(remoteSDP) { error in
             if let error = error {
                 print("❌ Failed to set remote offer: \(error)")
@@ -148,9 +181,14 @@ final class DefaultWebRTCManager: NSObject, WebRTCManager {
     
     func createAnswer(completion: @escaping (String?) -> Void) {
         let constraints = RTCMediaConstraints(
-            mandatoryConstraints: ["OfferToReceiveAudio": "true", "OfferToReceiveVideo": "true"],
-            optionalConstraints: nil
-        )
+            mandatoryConstraints: [
+                    "minWidth": "640",
+                    "minHeight": "480",
+                    "maxWidth": "1280",
+                    "maxHeight": "720",
+                    "maxFrameRate": "30"
+                ],
+                optionalConstraints: nil        )
         
         peerConnection?.answer(for: constraints) { [weak self] sdp, error in
             if let error = error {
@@ -179,6 +217,7 @@ final class DefaultWebRTCManager: NSObject, WebRTCManager {
     
     func set(remoteAnswer sdpString: String, completion: @escaping (Bool) -> Void) {
         let remoteSDP = RTCSessionDescription(type: .answer, sdp: sdpString)
+        
         peerConnection?.setRemoteDescription(remoteSDP) { error in
             if let error = error {
                 print("❌ Failed to set remote answer: \(error)")
@@ -208,5 +247,15 @@ final class DefaultWebRTCManager: NSObject, WebRTCManager {
             print("✅ Added ICE candidate.")
         }
     }
-}
 
+    func configureAudioSession() {
+        let session = AVAudioSession.sharedInstance()
+        do {
+            try session.setCategory(.playAndRecord, mode: .videoChat, options: [.allowBluetooth, .defaultToSpeaker])
+            try session.setActive(true)
+            print("✅ AVAudioSession configured.")
+        } catch {
+            print("❌ Failed to configure AVAudioSession: \(error)")
+        }
+    }
+}

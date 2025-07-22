@@ -59,9 +59,23 @@ final class TabBarCoordinator: Coordinator {
             profileNavigationController
         ]
         
+        tabBarController.handleIncomingCall = {
+            self.handleIncomingCall()
+        }
+        
         dashboardCoordinator.start()
         appointmentsCoordinator.start()
         profileCoordinator.start() 
+    }
+    
+    private func handleIncomingCall() {
+        let viewModel = CallViewModel(callEngine: dependencies.callEngine, callConfiguration: nil)
+        
+        let callController = CallViewController(viewModel: viewModel)
+        
+        callController.modalPresentationStyle = .fullScreen
+        
+        self.tabBarController.present(callController, animated: true)
     }
 }
 
@@ -74,13 +88,10 @@ extension TabBarCoordinator: ProfileCoordinatorDelegate {
 
 // MARK: - DashboardCoordinatorDelegate -
 extension TabBarCoordinator: DashboardCoordinatorDelegate {
-    func startLocalCall(userId: UUID) {
-        let viewModel = CallViewModel(callDTO: StartCallRequestDTO(calleeId: userId, callType: .video),
-                                      webRTCManager: DefaultWebRTCManager(),
-                                      socketManager: socketManager,
-                                      callClient: callClient,
-                                      sessionService: sessionService,
-                                      callKitManager: callKitManager)
+    func startCall(userId: UUID) {
+        let callConfiguration = CallConfiguration(calleeId: userId, callType: .video)
+        
+        let viewModel = CallViewModel(callEngine: dependencies.callEngine, callConfiguration: callConfiguration)
         
         let callController = CallViewController(viewModel: viewModel)
         

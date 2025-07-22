@@ -9,5 +9,5 @@ import Foundation
 import Combine
 
 protocol CallClient {
-    func startCall(dto: StartCallRequestDTO) -> AnyPublisher<StartCallResponseDTO, NetworkClientError>
+    func startCall(dto: StartCallRequest) -> AnyPublisher<StartCallResponse, NetworkClientError>
 }

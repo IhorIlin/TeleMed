@@ -13,7 +13,7 @@ struct CallEndpoint: Endpoint {
     var headers: [String : String]
     var body: Data?
     
-    static func startCall(dto: StartCallRequestDTO) -> CallEndpoint {
+    static func startCall(dto: StartCallRequest) -> CallEndpoint {
         let path = "/calls/create"
         
         return makeEndpoint(path: path, method: "POST", payload: dto)

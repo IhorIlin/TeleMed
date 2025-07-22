@@ -6,22 +6,24 @@
 //
 
 import Foundation
-
-import Foundation
+import UIKit
 import CallKit
 import Combine
 
-enum CallAction {
+enum CallEvent {
     case ringing
+    case ringingInApp
     case accepted
     case declined
+    case ended
 }
 
 final class DefaultCallKitManager: NSObject, CallKitManager {
     private let provider: CXProvider
-    private let subject = PassthroughSubject<CallAction, Never>()
+    private let subject = PassthroughSubject<CallEvent, Never>()
+    private var payload: VoIPNotificationPayload?
     
-    var publisher: AnyPublisher<CallAction, Never> {
+    var publisher: AnyPublisher<CallEvent, Never> {
         subject.eraseToAnyPublisher()
     }
     
@@ -39,6 +41,13 @@ final class DefaultCallKitManager: NSObject, CallKitManager {
     }
 
     func reportIncomingCall(payload: VoIPNotificationPayload) {
+        if UIApplication.shared.applicationState == .active {
+            subject.send(.ringingInApp)
+            return
+        }
+        
+        self.payload = payload
+        
         let update = CXCallUpdate()
         
         update.remoteHandle = CXHandle(type: .generic, value: payload.callerName)
@@ -65,6 +74,8 @@ final class DefaultCallKitManager: NSObject, CallKitManager {
                 print("❌ Failed to end call: \(error)")
             } else {
                 print("✅ Call ended via CallKit")
+                
+                self.subject.send(.ended)
             }
         }
     }

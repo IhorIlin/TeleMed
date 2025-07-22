@@ -7,10 +7,12 @@
 
 import Foundation
 import WebRTC
+import Combine
 
 protocol CallEngine {
-    func startCall()
-    func receiveCall()
+    var eventPublisher: AnyPublisher<CallEngineEvent, Never> { get }
+    var delegate: CallEngineDelegate? { get set }
+    func startCall(_ configuration: CallConfiguration)
     // Call screen UI related methods
     func acceptCall()
     func declineCall()

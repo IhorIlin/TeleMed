@@ -9,6 +9,6 @@ import Foundation
 import WebRTC
 
 protocol CallEngineDelegate: AnyObject {
-    func localVideoView() -> RTCVideoRenderer
-    func remoteVideoView() -> RTCVideoRenderer
+    func localVideoRenderer() -> RTCVideoRenderer
+    func remoteVideoRenderer() -> RTCVideoRenderer
 }
