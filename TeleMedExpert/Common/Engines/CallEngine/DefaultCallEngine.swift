@@ -12,6 +12,8 @@ import WebRTC
 enum CallEngineEvent {
     case incomingCall
     case incomingCallInApp
+    case callDeclined
+    case callEnded
 }
 
 final class DefaultCallEngine: NSObject, CallEngine {
@@ -20,9 +22,9 @@ final class DefaultCallEngine: NSObject, CallEngine {
     private let socketManager: SocketManager
     private let pushService: PushService
     private let callKitManager: CallKitManager
-    private var call: Call?
     
-    private var pendingRemoteTrack: RTCVideoTrack?
+    private var call: Call?
+    private var remoteVideoTrack: RTCVideoTrack?
     
     weak var delegate: CallEngineDelegate?
     
@@ -78,6 +80,10 @@ final class DefaultCallEngine: NSObject, CallEngine {
         
     }
     
+    func endCall() {
+        
+    }
+    
     func switchCamera() {
         
     }
@@ -118,15 +124,12 @@ extension DefaultCallEngine {
                 case .ringingInApp:
                     self?.subject.send(.incomingCallInApp)
                 case .accepted:
-                    
                     self?.setupPeerConnectionAndMedia()
-                    
                     self?.sendReadyToOffer()
-                
                 case .declined:
-                    break
+                    self?.declineCall()
                 case .ended:
-                    break
+                    self?.endCall()
                 }
             }
             .store(in: &cancellables)
@@ -215,6 +218,23 @@ extension DefaultCallEngine {
         }
     }
     
+    private func sendEndCall(reason: EndCallReason) {
+        guard let call = call else { return }
+        
+        let payload = EndCallPayload(callId: call.callId,
+                                     senderId: call.senderId(),
+                                     receiverId: call.receiverId(),
+                                     reason: reason)
+        
+        let message = SocketMessage(event: .endCall, data: payload)
+        
+        do {
+            try socketManager.send(message)
+        } catch {
+            print("❌ Failed to send endCall: \(error)")
+        }
+    }
+    
     private func handleAnswer(message: SocketMessage<AnyCodable>) {
         guard let sdp = message.data.decode(AnswerPayload.self)?.sdp else {
             preconditionFailure("\(#function) can't decode AnswerPayload")
@@ -294,13 +314,13 @@ extension DefaultCallEngine: RTCPeerConnectionDelegate {
             return
         }
         
-        self.pendingRemoteTrack = remoteTrack
+        self.remoteVideoTrack = remoteTrack
         
-//        DispatchQueue.main.async {
-//            remoteTrack.add(remoteView)
-//            remoteTrack.isEnabled = true
-//            print("✅ Remote video track added to remote view.")
-//        }
+        DispatchQueue.main.async {
+            remoteTrack.add(remoteView)
+            remoteTrack.isEnabled = true
+            print("✅ Remote video track added to remote view.")
+        }
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove stream: RTCMediaStream) {
@@ -313,36 +333,6 @@ extension DefaultCallEngine: RTCPeerConnectionDelegate {
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
         print("\(#function) : \(newState)")
-        switch newState {
-        case .checking:
-            print("checking")
-        case .closed:
-            print("closed")
-        case .completed:
-            print("completed")
-        case .connected:
-            print("connected")
-            print("✅ ICE connected")
-                    if let remoteTrack = self.pendingRemoteTrack,
-                       let remoteView = delegate?.remoteVideoRenderer() {
-                        DispatchQueue.main.async {
-                            remoteTrack.add(remoteView)
-                            remoteTrack.isEnabled = true
-                            print("✅ Remote video track added to remote view (after connected).")
-                        }
-                        //self.pendingRemoteTrack = nil
-                    }
-        case .disconnected:
-            print("disconnected")
-        case .failed:
-            print("failed")
-        case .new:
-            print("new")
-        case .count:
-            print("count")
-        @unknown default:
-            break
-        }
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceGatheringState) {

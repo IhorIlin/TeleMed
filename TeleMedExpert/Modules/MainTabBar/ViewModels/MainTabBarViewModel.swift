@@ -71,6 +71,10 @@ final class MainTabBarViewModel: ObservableObject {
                 switch event {
                 case .incomingCallInApp, .incomingCall:
                     self?.subject.send(.handleIncomingCall)
+                case .callDeclined:
+                    break
+                case .callEnded:
+                    break
                 }
             }
             .store(in: &cancellables)

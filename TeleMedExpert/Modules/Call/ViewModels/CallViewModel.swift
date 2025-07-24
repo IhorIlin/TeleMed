@@ -46,6 +46,10 @@ extension CallViewModel {
         callEngine.acceptCall()
     }
     
+    func endCall() {
+        callEngine.endCall()
+    }
+    
     func declineCall() {
         callEngine.declineCall()
     }
