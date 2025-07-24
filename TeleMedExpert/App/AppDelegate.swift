@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import WebRTC
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -14,7 +13,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // RTCSetMinDebugLogLevel(.verbose)
         dependencies = AppDependencies()
  
         return true
@@ -22,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         print("Device token : \(deviceToken.hexString)")
+        
         dependencies.pushService.registerRegularToken(deviceToken)
     }
     

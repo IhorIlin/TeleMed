@@ -95,7 +95,7 @@ class CallViewController: UIViewController {
         remoteVideoView.translatesAutoresizingMaskIntoConstraints = false
         
         remoteVideoView.delegate = self
-        remoteVideoView.videoContentMode = .scaleAspectFit
+        remoteVideoView.videoContentMode = .scaleAspectFill
         
         remoteVideoView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -274,6 +274,8 @@ extension CallViewController {
     }
     
     @objc func endCallButtonPressed(sender: UIButton) {
+        viewModel.endCall()
+        
         self.dismiss(animated: true)
     }
     

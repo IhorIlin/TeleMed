@@ -79,17 +79,6 @@ final class DefaultWebRTCManager: NSObject, WebRTCManager {
         let config = RTCConfiguration()
         config.iceServers = iceServers
         
-        // 2. NAT traversal settings
-        config.sdpSemantics = .unifiedPlan
-        config.iceTransportPolicy = .relay // use both STUN and TURN
-        config.bundlePolicy = .maxBundle
-        config.rtcpMuxPolicy = .require
-        config.continualGatheringPolicy = .gatherContinually
-
-        // 3. Connectivity & performance
-        config.tcpCandidatePolicy = .enabled
-        config.keyType = .ECDSA
-        
         let constraints = RTCMediaConstraints(
             mandatoryConstraints: nil,
             optionalConstraints: nil
@@ -125,14 +114,8 @@ final class DefaultWebRTCManager: NSObject, WebRTCManager {
     
     func createOffer(completion: @escaping (String?) -> Void) {
         let constraints = RTCMediaConstraints(
-            mandatoryConstraints: [
-                    "minWidth": "640",
-                    "minHeight": "480",
-                    "maxWidth": "1280",
-                    "maxHeight": "720",
-                    "maxFrameRate": "30"
-                ],
-                optionalConstraints: nil
+            mandatoryConstraints: ["OfferToReceiveAudio": "true", "OfferToReceiveVideo": "true"],
+            optionalConstraints: nil
         )
         
         peerConnection?.offer(for: constraints) { [weak self] sdp, error in
@@ -146,11 +129,6 @@ final class DefaultWebRTCManager: NSObject, WebRTCManager {
                 completion(nil)
                 return
             }
-            
-            // ✅ Debug SDP content
-                    print("📝 Created offer SDP:")
-                    print("  - Contains video: \(sdp.sdp.contains("m=video"))")
-                    print("  - Video codecs: \(sdp.sdp.contains("H264") || sdp.sdp.contains("VP8") || sdp.sdp.contains("VP9"))")
             
             self?.peerConnection?.setLocalDescription(sdp) { error in
                 if let error = error {
@@ -181,14 +159,9 @@ final class DefaultWebRTCManager: NSObject, WebRTCManager {
     
     func createAnswer(completion: @escaping (String?) -> Void) {
         let constraints = RTCMediaConstraints(
-            mandatoryConstraints: [
-                    "minWidth": "640",
-                    "minHeight": "480",
-                    "maxWidth": "1280",
-                    "maxHeight": "720",
-                    "maxFrameRate": "30"
-                ],
-                optionalConstraints: nil        )
+            mandatoryConstraints: ["OfferToReceiveAudio": "true", "OfferToReceiveVideo": "true"],
+            optionalConstraints: nil
+        )
         
         peerConnection?.answer(for: constraints) { [weak self] sdp, error in
             if let error = error {
