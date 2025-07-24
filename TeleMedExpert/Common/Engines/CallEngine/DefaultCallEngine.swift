@@ -18,13 +18,12 @@ enum CallEngineEvent {
 
 final class DefaultCallEngine: NSObject, CallEngine {
     private let callClient: CallClient
-    private let webRTCManager: WebRTCManager
     private let socketManager: SocketManager
     private let pushService: PushService
     private let callKitManager: CallKitManager
     
     private var call: Call?
-    private var remoteVideoTrack: RTCVideoTrack?
+    private var webRTCManager: WebRTCManager?
     
     weak var delegate: CallEngineDelegate?
     
@@ -36,26 +35,30 @@ final class DefaultCallEngine: NSObject, CallEngine {
     private var cancellables = Set<AnyCancellable>()
     
     init(callClient: CallClient,
-         webRTCManager: WebRTCManager,
          socketManager: SocketManager,
          pushService: PushService,
          callKitManager: CallKitManager) {
         self.callClient = callClient
-        self.webRTCManager = webRTCManager
         self.socketManager = socketManager
         self.pushService = pushService
         self.callKitManager = callKitManager
         
         super.init()
         
-        self.bindPushService()
-        self.bindCallKitManager()
-        self.bindSocketManager()
+        bindPushService()
+        bindCallKitManager()
+        bindSocketManager()
     }
     
     func startCall(_ configuration: CallConfiguration) {
         let dto = StartCallRequest(calleeId: configuration.calleeId,
                                    callType: configuration.callType)
+        
+        let configuration = WebRTCConfiguration(isMicrophoneEnabled: true,
+                                                isCameraEnabled: true,
+                                                isAudioOnly: configuration.callType == .audio ? true : false)
+        
+        initWebRTCManager(with: configuration)
         
         callClient.startCall(dto: dto)
             .sink { completion in
@@ -66,12 +69,19 @@ final class DefaultCallEngine: NSObject, CallEngine {
                                  calleeId: response.calleeId,
                                  callType: response.callType,
                                  isIncoming: false)
+
             }
             .store(in: &cancellables)
     }
     
     func acceptCall() {
-        setupPeerConnectionAndMedia()
+        let configuration = WebRTCConfiguration(isMicrophoneEnabled: true,
+                                                isCameraEnabled: true,
+                                                isAudioOnly: call?.callType == .audio ? true : false)
+        
+        initWebRTCManager(with: configuration)
+        
+        webRTCManager?.setupPeerConnectionAndMedia()
         
         sendReadyToOffer()
     }
@@ -81,19 +91,34 @@ final class DefaultCallEngine: NSObject, CallEngine {
     }
     
     func endCall() {
+        sendEndCall(reason: .userLeft)
         
+        call = nil
+        
+        webRTCManager?.terminate()
+        
+        webRTCManager = nil
     }
     
     func switchCamera() {
-        
+        webRTCManager?.switchCamera()
     }
     
     func onOffMicrophone() {
-        
+        webRTCManager?.toggleMicrophone()
     }
     
     func onOffCamera() {
+        webRTCManager?.toggleCamera()
+    }
+    
+    private func initWebRTCManager(with configuration: WebRTCConfiguration) {
+        webRTCManager = DefaultWebRTCManager(configuration: configuration)
         
+        webRTCManager?.localVideoView = delegate?.localVideoRenderer()
+        webRTCManager?.remoteVideoView = delegate?.remoteVideoRenderer()
+        
+        bindWebRTCManager()
     }
 }
 
@@ -124,7 +149,14 @@ extension DefaultCallEngine {
                 case .ringingInApp:
                     self?.subject.send(.incomingCallInApp)
                 case .accepted:
-                    self?.setupPeerConnectionAndMedia()
+                    let configuration = WebRTCConfiguration(isMicrophoneEnabled: true,
+                                                            isCameraEnabled: true,
+                                                            isAudioOnly: self?.call?.callType == .audio ? true : false)
+                    
+                    self?.initWebRTCManager(with: configuration)
+                    
+                    self?.webRTCManager?.setupPeerConnectionAndMedia()
+                    
                     self?.sendReadyToOffer()
                 case .declined:
                     self?.declineCall()
@@ -140,7 +172,8 @@ extension DefaultCallEngine {
             .sink { [weak self] message in
                 switch message.event {
                 case .redyToOffer:
-                    self?.setupPeerConnectionAndMedia()
+                    self?.webRTCManager?.setupPeerConnectionAndMedia()
+                    
                     self?.sendOffer()
                 case .answer:
                     self?.handleAnswer(message: message)
@@ -154,6 +187,19 @@ extension DefaultCallEngine {
                     self?.handleError(message: message)
                 case .ping:
                     self?.handlePing(message: message)
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func bindWebRTCManager() {
+        webRTCManager?.eventPublisher
+            .sink { event in
+                switch event {
+                case .iceDiscovered(let candidate):
+                    self.sendIceCandidate(candidate: candidate)
+                case .error(let error):
+                    break
                 }
             }
             .store(in: &cancellables)
@@ -180,7 +226,7 @@ extension DefaultCallEngine {
     }
     
     private func sendOffer() {
-        webRTCManager.createOffer { [weak self] sdpString in
+        webRTCManager?.createOffer { [weak self] sdpString in
             guard let self, let currentCall = self.call, let sdp = sdpString else { return }
             
             let offer = OfferPayload(callId: currentCall.callId,
@@ -200,7 +246,7 @@ extension DefaultCallEngine {
     }
     
     private func sendAnswer() {
-        webRTCManager.createAnswer { [weak self] answer in
+        webRTCManager?.createAnswer { [weak self] answer in
             guard let sdp = answer, let self, let currentCall = call else { return }
             
             let payload = AnswerPayload(callerId: currentCall.callerId,
@@ -235,113 +281,7 @@ extension DefaultCallEngine {
         }
     }
     
-    private func handleAnswer(message: SocketMessage<AnyCodable>) {
-        guard let sdp = message.data.decode(AnswerPayload.self)?.sdp else {
-            preconditionFailure("\(#function) can't decode AnswerPayload")
-        }
-        
-        webRTCManager.set(remoteAnswer: sdp) { success in
-            print("setRemoteOffer - \(success)")
-        }
-    }
-    
-    private func handleOffer(message: SocketMessage<AnyCodable>) {
-        guard let sdp = message.data.decode(OfferPayload.self)?.sdp else {
-            print("\(#function) can't decode OfferPayload")
-            return
-        }
-        
-        webRTCManager.set(remoteOffer: sdp) { [weak self] success in
-            print("setRemoteOffer - \(success)")
-            self?.sendAnswer()
-        }
-    }
-    
-    private func handleEndCall(message: SocketMessage<AnyCodable>) {
-        
-    }
-    
-    private func handleIceCandidate(message: SocketMessage<AnyCodable>) {
-        guard let iceCandidate = message.data.decode(IceCandidatePayload.self) else {
-            print("\(#function) can't decode IceCandidatePayload")
-            return
-        }
-        
-        webRTCManager.addIceCandidate(iceCandidate)
-    }
-    
-    private func handleError(message: SocketMessage<AnyCodable>) {
-        
-    }
-    
-    private func handlePing(message: SocketMessage<AnyCodable>) {
-        print("Socket event = \(message.event) message = \(message.data.value)")
-    }
-}
-
-// MARK: - WebRTCManager peerConnection and media setup -
-extension DefaultCallEngine {
-    private func setupPeerConnectionAndMedia() {
-        // Create peer connection if not already created
-        webRTCManager.createPeerConnection(delegate: self)
-        
-        guard let view = delegate?.localVideoRenderer() else {
-            print("❌ No local track or local view available")
-            return 
-        }
-        
-        // Start local media
-        webRTCManager.startLocalVideo(in: view)
-        webRTCManager.startLocalAudio()
-
-        // Add tracks to peer connection
-        webRTCManager.addLocalTracks()
-    }
-}
-
-// MARK: -  -
-extension DefaultCallEngine: RTCPeerConnectionDelegate {
-    func peerConnection(_ peerConnection: RTCPeerConnection, didChange stateChanged: RTCSignalingState) {
-        print("\(#function) : \(stateChanged)")
-    }
-    
-    func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
-        print("\(#function) : \(stream)")
-        
-        guard let remoteTrack = stream.videoTracks.first,
-              let remoteView = delegate?.remoteVideoRenderer() else {
-            print("❌ No remote track or remote view available")
-            return
-        }
-        
-        self.remoteVideoTrack = remoteTrack
-        
-        DispatchQueue.main.async {
-            remoteTrack.add(remoteView)
-            remoteTrack.isEnabled = true
-            print("✅ Remote video track added to remote view.")
-        }
-    }
-    
-    func peerConnection(_ peerConnection: RTCPeerConnection, didRemove stream: RTCMediaStream) {
-        print("\(#function) : \(stream)")
-    }
-    
-    func peerConnectionShouldNegotiate(_ peerConnection: RTCPeerConnection) {
-        print("\(#function) : \(peerConnection)")
-    }
-    
-    func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceConnectionState) {
-        print("\(#function) : \(newState)")
-    }
-    
-    func peerConnection(_ peerConnection: RTCPeerConnection, didChange newState: RTCIceGatheringState) {
-        print("\(#function) : \(newState)")
-    }
-    
-    func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
-        print("✅ ICE Candidate discovered: \(candidate.sdp)")
-        
+    private func sendIceCandidate(candidate: RTCIceCandidate) {
         guard let call = self.call else { return }
         
         let iceCandidatePayload = IceCandidatePayload(senderId: call.senderId(),
@@ -359,11 +299,50 @@ extension DefaultCallEngine: RTCPeerConnectionDelegate {
         }
     }
     
-    func peerConnection(_ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]) {
-        print("\(#function) : \(candidates)")
+    private func handleAnswer(message: SocketMessage<AnyCodable>) {
+        guard let sdp = message.data.decode(AnswerPayload.self)?.sdp else {
+            preconditionFailure("\(#function) can't decode AnswerPayload")
+        }
+        
+        webRTCManager?.set(remoteAnswer: sdp) { success in
+            print("setRemoteOffer - \(success)")
+        }
     }
     
-    func peerConnection(_ peerConnection: RTCPeerConnection, didOpen dataChannel: RTCDataChannel) {
-        print("\(#function) : \(dataChannel)")
+    private func handleOffer(message: SocketMessage<AnyCodable>) {
+        guard let sdp = message.data.decode(OfferPayload.self)?.sdp else {
+            print("\(#function) can't decode OfferPayload")
+            return
+        }
+        
+        webRTCManager?.set(remoteOffer: sdp) { [weak self] success in
+            print("setRemoteOffer - \(success)")
+            self?.sendAnswer()
+        }
+    }
+    
+    private func handleEndCall(message: SocketMessage<AnyCodable>) {
+        call = nil
+        
+        webRTCManager?.terminate()
+        
+        webRTCManager = nil
+    }
+    
+    private func handleIceCandidate(message: SocketMessage<AnyCodable>) {
+        guard let iceCandidate = message.data.decode(IceCandidatePayload.self) else {
+            print("\(#function) can't decode IceCandidatePayload")
+            return
+        }
+        
+        webRTCManager?.addIceCandidate(iceCandidate)
+    }
+    
+    private func handleError(message: SocketMessage<AnyCodable>) {
+        
+    }
+    
+    private func handlePing(message: SocketMessage<AnyCodable>) {
+        print("Socket event = \(message.event) message = \(message.data.value)")
     }
 }
