@@ -31,6 +31,10 @@ final class DashboardCoordinator: Coordinator {
         dashboardController.startCallCallback = { [weak self] userId in
             self?.delegate?.startCall(userId: userId)
         }
+        
+        dashboardController.logout = { [weak self] in
+            self?.delegate?.logout()
+        }
             
         navigationController.pushViewController(dashboardController, animated: false)
         

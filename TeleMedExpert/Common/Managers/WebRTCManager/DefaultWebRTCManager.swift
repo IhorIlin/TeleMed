@@ -218,6 +218,7 @@ final class DefaultWebRTCManager: NSObject, WebRTCManager {
         localVideoView = nil
         remoteVideoView = nil
         remoteVideoTrack = nil
+        localAudioTrack = nil
         videoCapturer = nil
         
         stopLocalAudio()
@@ -409,21 +410,6 @@ extension DefaultWebRTCManager: RTCPeerConnectionDelegate {
         print("✅ ICE Candidate discovered: \(candidate.sdp)")
         
         subject.send(.iceDiscovered(candidate))
-//        guard let call = self.call else { return }
-//        
-//        let iceCandidatePayload = IceCandidatePayload(senderId: call.senderId(),
-//                                                      receiverId: call.receiverId(),
-//                                                      candidate: candidate.sdp,
-//                                                      sdpMid: candidate.sdpMid,
-//                                                      sdpMLineIndex: Int(candidate.sdpMLineIndex))
-//        
-//        let message = SocketMessage(event: .iceCandidate, data: iceCandidatePayload)
-//        
-//        do {
-//            try socketManager.send(message)
-//        } catch {
-//            print("Send ice candidate error - \(error.localizedDescription)")
-//        }
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove candidates: [RTCIceCandidate]) {

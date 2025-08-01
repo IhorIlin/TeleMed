@@ -51,8 +51,8 @@ class CallViewController: UIViewController {
         view.backgroundColor = ColorPalette.CallScreen.background
         
         configureRemoteVideoView()
-        configurelocalVideoContainer()
-        configurelocalVideoView()
+        configureLocalVideoContainer()
+        configureLocalVideoView()
         configureTopContainerView()
         configureCallerNameLabel()
         configureCallTimeLabel()
@@ -64,12 +64,16 @@ class CallViewController: UIViewController {
         configureBottomStackView()
     }
     
-    private func configurelocalVideoContainer() {
+    private func configureLocalVideoContainer() {
         view.addSubview(localVideoContainer)
         
         localVideoContainer.translatesAutoresizingMaskIntoConstraints = false
         localVideoContainer.layer.cornerRadius = 8
         localVideoContainer.layer.masksToBounds = true
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(switchCameraPressed(sender:)))
+       
+        localVideoContainer.addGestureRecognizer(tapGesture)
         
         localVideoContainer.snp.makeConstraints { make in
             make.bottom.equalToSuperview().inset(170)
@@ -79,7 +83,7 @@ class CallViewController: UIViewController {
         }
     }
     
-    private func configurelocalVideoView() {
+    private func configureLocalVideoView() {
         localVideoContainer.addSubview(localVideoView)
         
         localVideoView.translatesAutoresizingMaskIntoConstraints = false
@@ -285,6 +289,10 @@ extension CallViewController {
     
     @objc func cameraButtonPressed(sender: UIButton) {
         viewModel.manageCamera()
+    }
+    
+    @objc func switchCameraPressed(sender: UITapGestureRecognizer) {
+        viewModel.switchCamera()
     }
 }
 

@@ -63,7 +63,7 @@ extension CallViewModel {
     }
     
     func switchCamera() {
-        
+        callEngine.switchCamera()
     }
 }
 

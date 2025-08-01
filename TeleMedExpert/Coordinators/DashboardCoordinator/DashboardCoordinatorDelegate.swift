@@ -9,4 +9,5 @@ import Foundation
 
 protocol DashboardCoordinatorDelegate: AnyObject {
     func startCall(userId: UUID)
+    func logout()
 }

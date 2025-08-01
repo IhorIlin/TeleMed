@@ -93,6 +93,10 @@ final class DefaultCallEngine: NSObject, CallEngine {
     func endCall() {
         sendEndCall(reason: .userLeft)
         
+        if let callId = call?.callId {
+            callKitManager.endCall(uuid: callId)
+        }
+        
         call = nil
         
         webRTCManager?.terminate()
@@ -161,7 +165,7 @@ extension DefaultCallEngine {
                 case .declined:
                     self?.declineCall()
                 case .ended:
-                    self?.endCall()
+                    break
                 }
             }
             .store(in: &cancellables)
@@ -322,6 +326,10 @@ extension DefaultCallEngine {
     }
     
     private func handleEndCall(message: SocketMessage<AnyCodable>) {
+        if let callId = call?.callId {
+            callKitManager.endCall(uuid: callId)
+        }
+        
         call = nil
         
         webRTCManager?.terminate()
