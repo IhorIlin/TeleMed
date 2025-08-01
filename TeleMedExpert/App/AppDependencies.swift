@@ -9,9 +9,9 @@ import Foundation
 import PushKit
 
 final class AppDependencies {
-    let pushService: PushManaging
-    let socketManager: SocketManaging
-    let sessionService: SessionMonitor
+    let pushService: PushService
+    let socketManager: SocketManager
+    let sessionService: SessionService
     let networkClient: NetworkClient
     let tokenRefresher: TokenRefresher
     let authClient: AuthClient
@@ -19,7 +19,9 @@ final class AppDependencies {
     let apnsClient: APNSClient
     let keychainService: KeychainStore
     let callClient: CallClient
-    let callManager: CallManaging
+    let callKitManager: CallKitManager
+    let userClient: UserClient
+    let callEngine: CallEngine
     
     init() {
         networkClient = DefaultNetworkClient()
@@ -32,15 +34,20 @@ final class AppDependencies {
                                                                keychainService: keychainService)
         
         apnsClient = DefaultAPNSClient(protectedNetworkClient: protectedNetworkClient)
-        pushService = PushService(apnsClient: apnsClient, pushRegistry: PKPushRegistry(queue: .main))
+        pushService = DefaultPushService(apnsClient: apnsClient, pushRegistry: PKPushRegistry(queue: .main))
         
-        socketManager = SocketManager(configuration: SocketConfiguration.socketEndpoint(),
-                                      tokenRefresher: tokenRefresher,
-                                      keychainService: keychainService)
+        socketManager = DefaultSocketManager(configuration: SocketConfiguration.socketEndpoint(),
+                                             tokenRefresher: tokenRefresher,
+                                             keychainService: keychainService)
         
-        sessionService = SessionService(keychainService: keychainService)
+        sessionService = DefaultSessionService(keychainService: keychainService)
         
         callClient = DefaultCallClient(protectedNetworkClient: protectedNetworkClient)
-        callManager = CallKitManager()
+        callKitManager = DefaultCallKitManager()
+        userClient = DefaultUserClient(protectedNetworkClient: protectedNetworkClient)
+        callEngine = DefaultCallEngine(callClient: callClient,
+                                       socketManager: socketManager,
+                                       pushService: pushService,
+                                       callKitManager: callKitManager)
     }
 }

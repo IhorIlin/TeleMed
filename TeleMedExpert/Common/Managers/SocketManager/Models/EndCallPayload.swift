@@ -8,7 +8,8 @@
 import Foundation
 
 struct EndCallPayload: Codable {
+    let callId: UUID
     let senderId: UUID
     let receiverId: UUID
-    let reason: EndCallReason?
+    let reason: EndCallReason
 }

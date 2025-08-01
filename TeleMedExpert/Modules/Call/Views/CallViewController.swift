@@ -8,13 +8,14 @@
 import UIKit
 import WebRTC
 import SnapKit
+import Combine
 
 class CallViewController: UIViewController {
     private let topContainerView = UIView()
     private let callerNameLabel = UILabel()
     private let callTimeLabel = UILabel()
     
-    private let remoteVideoView = UIView()
+    private let remoteVideoView = RTCMTLVideoView()
     private let localVideoContainer = UIView()
     private let localVideoView = RTCMTLVideoView()
     
@@ -26,6 +27,8 @@ class CallViewController: UIViewController {
     private let microphoneButton = UIButton(type: .system)
     
     private let viewModel: CallViewModel
+    
+    private var cancellables = Set<AnyCancellable>()
     
     init(viewModel: CallViewModel) {
         self.viewModel = viewModel
@@ -42,15 +45,28 @@ class CallViewController: UIViewController {
 
         configureUI()
         
-        viewModel.initiateCall()
+        bindViewModel()
+        
+        viewModel.callEngineDelegate = self
+        
+        viewModel.processCall()
+    }
+    
+    private func bindViewModel() {
+        viewModel.publisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] event in
+                self?.dismiss(animated: true)
+            }
+            .store(in: &cancellables)
     }
     
     private func configureUI() {
         view.backgroundColor = ColorPalette.CallScreen.background
         
-        configurelocalVideoContainer()
-        configurelocalVideoView()
         configureRemoteVideoView()
+        configureLocalVideoContainer()
+        configureLocalVideoView()
         configureTopContainerView()
         configureCallerNameLabel()
         configureCallTimeLabel()
@@ -60,16 +76,18 @@ class CallViewController: UIViewController {
         configureDeclineCallButton()
         configureCameraButton()
         configureBottomStackView()
-        
-        viewModel.testStartCallPreview(in: localVideoView)
     }
     
-    private func configurelocalVideoContainer() {
+    private func configureLocalVideoContainer() {
         view.addSubview(localVideoContainer)
         
         localVideoContainer.translatesAutoresizingMaskIntoConstraints = false
         localVideoContainer.layer.cornerRadius = 8
         localVideoContainer.layer.masksToBounds = true
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(switchCameraPressed(sender:)))
+       
+        localVideoContainer.addGestureRecognizer(tapGesture)
         
         localVideoContainer.snp.makeConstraints { make in
             make.bottom.equalToSuperview().inset(170)
@@ -79,7 +97,7 @@ class CallViewController: UIViewController {
         }
     }
     
-    private func configurelocalVideoView() {
+    private func configureLocalVideoView() {
         localVideoContainer.addSubview(localVideoView)
         
         localVideoView.translatesAutoresizingMaskIntoConstraints = false
@@ -93,6 +111,9 @@ class CallViewController: UIViewController {
         view.addSubview(remoteVideoView)
         
         remoteVideoView.translatesAutoresizingMaskIntoConstraints = false
+        
+        remoteVideoView.delegate = self
+        remoteVideoView.videoContentMode = .scaleAspectFill
         
         remoteVideoView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -165,6 +186,8 @@ class CallViewController: UIViewController {
         microphoneButton.tintColor = .white
         microphoneButton.backgroundColor = ColorPalette.CallScreen.containerBackground
         
+        microphoneButton.addTarget(self, action: #selector(microphoneButtonPressed(sender:)), for: .touchUpInside)
+        
         microphoneButton.snp.makeConstraints { make in
             make.width.equalTo(60)
             make.height.equalTo(60)
@@ -181,6 +204,8 @@ class CallViewController: UIViewController {
         acceptCallButton.tintColor = .green
         acceptCallButton.backgroundColor = ColorPalette.CallScreen.containerBackground
         
+        acceptCallButton.addTarget(self, action: #selector(acceptCallButtonPressed(sender:)), for: .touchUpInside)
+        
         acceptCallButton.snp.makeConstraints { make in
             make.width.equalTo(60)
             make.height.equalTo(60)
@@ -191,6 +216,7 @@ class CallViewController: UIViewController {
         declineCallButton.translatesAutoresizingMaskIntoConstraints = false
         
         declineCallButton.setImage(UIImage(systemName: "phone.down.fill"), for: .normal)
+        
         declineCallButton.addTarget(self, action: #selector(endCallButtonPressed(sender:)), for: .touchUpInside)
         
         declineCallButton.layer.cornerRadius = 30
@@ -213,6 +239,8 @@ class CallViewController: UIViewController {
         cameraButton.layer.masksToBounds = true
         cameraButton.tintColor = .white
         cameraButton.backgroundColor = ColorPalette.CallScreen.containerBackground
+        
+        cameraButton.addTarget(self, action: #selector(cameraButtonPressed(sender:)), for: .touchUpInside)
         
         cameraButton.snp.makeConstraints { make in
             make.width.equalTo(60)
@@ -241,11 +269,49 @@ class CallViewController: UIViewController {
         }
     }
     
+    deinit {
+        print("CallViewController deinited")
+    }
+}
+
+// MARK: - CallEngineDelegate -
+extension CallViewController: CallEngineDelegate {
+    func remoteVideoRenderer() -> any RTCVideoRenderer {
+        return remoteVideoView
+    }
+    
+    func localVideoRenderer() -> any RTCVideoRenderer {
+        return localVideoView
+    }
+}
+
+// MARK: - User actions -
+extension CallViewController {
+    @objc func acceptCallButtonPressed(sender: UIButton) {
+        viewModel.acceptCall()
+    }
+    
     @objc func endCallButtonPressed(sender: UIButton) {
+        viewModel.endCall()
+        
         self.dismiss(animated: true)
     }
     
-    deinit {
-        print("CallViewController deinited")
+    @objc func microphoneButtonPressed(sender: UIButton) {
+        viewModel.manageMicrophone()
+    }
+    
+    @objc func cameraButtonPressed(sender: UIButton) {
+        viewModel.manageCamera()
+    }
+    
+    @objc func switchCameraPressed(sender: UITapGestureRecognizer) {
+        viewModel.switchCamera()
+    }
+}
+
+extension CallViewController: RTCVideoViewDelegate {
+    func videoView(_ videoView: RTCVideoRenderer, didChangeVideoSize size: CGSize) {
+        print("📹 Remote video size changed: \(size)")
     }
 }

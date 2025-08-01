@@ -6,13 +6,26 @@
 //
 
 import Foundation
-
-import Foundation
+import UIKit
 import CallKit
+import Combine
 
-final class CallKitManager: NSObject, CallManaging {
+enum CallEvent {
+    case ringing
+    case ringingInApp
+    case accepted
+    case declined
+}
+
+final class DefaultCallKitManager: NSObject, CallKitManager {
     private let provider: CXProvider
-
+    private let subject = PassthroughSubject<CallEvent, Never>()
+    private var payload: VoIPNotificationPayload?
+    
+    var publisher: AnyPublisher<CallEvent, Never> {
+        subject.eraseToAnyPublisher()
+    }
+    
     override init() {
         let config = CXProviderConfiguration()
         config.includesCallsInRecents = true
@@ -27,51 +40,48 @@ final class CallKitManager: NSObject, CallManaging {
     }
 
     func reportIncomingCall(payload: VoIPNotificationPayload) {
-        let uuid = payload.callId
-
+        if UIApplication.shared.applicationState == .active {
+            subject.send(.ringingInApp)
+            return
+        }
+        
+        self.payload = payload
+        
         let update = CXCallUpdate()
+        
         update.remoteHandle = CXHandle(type: .generic, value: payload.callerName)
         update.hasVideo = payload.callType == .video
         update.localizedCallerName = payload.callerName
 
-        provider.reportNewIncomingCall(with: uuid, update: update) { error in
+        provider.reportNewIncomingCall(with: payload.callId, update: update) { error in
             if let error = error {
                 print("❌ CallKit report error: \(error)")
             } else {
                 print("✅ CallKit incoming call reported")
-            }
-        }
-    }
-
-    func endCall(uuid: UUID) {
-        let action = CXEndCallAction(call: uuid)
-        let transaction = CXTransaction(action: action)
-
-        let controller = CXCallController()
-        controller.request(transaction) { error in
-            if let error = error {
-                print("❌ Failed to end call: \(error)")
-            } else {
-                print("✅ Call ended via CallKit")
+                self.subject.send(.ringing)
             }
         }
     }
 }
 
-extension CallKitManager: CXProviderDelegate {
+extension DefaultCallKitManager: CXProviderDelegate {
     func providerDidReset(_ provider: CXProvider) {
         print("CallKit provider reset.")
     }
 
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
         print("✅ User answered the call.")
+        
         action.fulfill()
-        // inform WebRTC or backend to proceed
+        
+        subject.send(.accepted)
     }
 
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
         print("✅ User ended the call.")
+        
         action.fulfill()
-        // inform WebRTC or backend to hang up
+        
+        subject.send(.declined)
     }
 }

@@ -9,12 +9,12 @@ import UIKit
 import Combine
 
 final class TabBarCoordinator: Coordinator {
-    let tabBarController: UITabBarController
+    let tabBarController: MainTabBarViewController
     let dependencies: AppDependencies
     var childCoordinators: [Coordinator] = []
     weak var delegate: TabBarCoordinatorDelegate?
     
-    private var socketManager: SocketManaging {
+    private var socketManager: SocketManager {
         dependencies.socketManager
     }
     
@@ -22,17 +22,17 @@ final class TabBarCoordinator: Coordinator {
         dependencies.callClient
     }
     
-    private var sessionService: SessionMonitor {
+    private var sessionService: SessionService {
         dependencies.sessionService
     }
     
-    private var callManager: CallManaging {
-        dependencies.callManager
+    private var callKitManager: CallKitManager {
+        dependencies.callKitManager
     }
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(tabBarController: UITabBarController, dependencies: AppDependencies) {
+    init(tabBarController: MainTabBarViewController, dependencies: AppDependencies) {
         self.tabBarController = tabBarController
         self.dependencies = dependencies
     }
@@ -42,9 +42,9 @@ final class TabBarCoordinator: Coordinator {
         let appointmentsNavigationController = UINavigationController()
         let profileNavigationController = UINavigationController()
         
-        let dashboardCoordinator = DashboardCoordinator(navigationController: dashboardNavigationController)
-        let appointmentsCoordinator = AppointmentsCoordinator(navigationController: appointmentsNavigationController)
-        let profileCoordinator = ProfileCoordinator(navigationController: profileNavigationController)
+        let dashboardCoordinator = DashboardCoordinator(navigationController: dashboardNavigationController, dependencies: dependencies)
+        let appointmentsCoordinator = AppointmentsCoordinator(navigationController: appointmentsNavigationController, dependencies: dependencies)
+        let profileCoordinator = ProfileCoordinator(navigationController: profileNavigationController, dependencies: dependencies)
         
         dashboardCoordinator.delegate = self
         profileCoordinator.delegate = self
@@ -59,9 +59,23 @@ final class TabBarCoordinator: Coordinator {
             profileNavigationController
         ]
         
+        tabBarController.handleIncomingCall = {
+            self.handleIncomingCall()
+        }
+        
         dashboardCoordinator.start()
         appointmentsCoordinator.start()
         profileCoordinator.start() 
+    }
+    
+    private func handleIncomingCall() {
+        let viewModel = CallViewModel(callEngine: dependencies.callEngine, callConfiguration: nil)
+        
+        let callController = CallViewController(viewModel: viewModel)
+        
+        callController.modalPresentationStyle = .fullScreen
+        
+        self.tabBarController.present(callController, animated: true)
     }
 }
 
@@ -74,12 +88,10 @@ extension TabBarCoordinator: ProfileCoordinatorDelegate {
 
 // MARK: - DashboardCoordinatorDelegate -
 extension TabBarCoordinator: DashboardCoordinatorDelegate {
-    func startLocalCall(userId: UUID) {
-        let viewModel = CallViewModel(callDTO: StartCallRequestDTO(calleeId: userId, callType: .video),
-                                      webRTCManager: WebRTCManager(),
-                                      socketManager: socketManager,
-                                      callClient: callClient,
-                                      sessionService: sessionService)
+    func startCall(userId: UUID) {
+        let callConfiguration = CallConfiguration(calleeId: userId, callType: .video)
+        
+        let viewModel = CallViewModel(callEngine: dependencies.callEngine, callConfiguration: callConfiguration)
         
         let callController = CallViewController(viewModel: viewModel)
         

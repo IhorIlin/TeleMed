@@ -8,14 +8,17 @@
 import Combine
 import WebRTC
 
-protocol WebRTCManaging {
-    var localVideoPublisher: AnyPublisher<RTCVideoTrack?, Never> { get }
-    func startLocalVideo(in view: RTCVideoRenderer)
-    func stopLocalVideo()
-    func startLocalAudio()
+protocol WebRTCManager {
+    var eventPublisher: AnyPublisher<WebRTCEvent, Never> { get }
+    var localVideoView: RTCVideoRenderer? { get set }
+    var remoteVideoView: RTCVideoRenderer? { get set }
     
-    func createPeerConnection(delegate: RTCPeerConnectionDelegate)
-    func addLocalTracks()
+    func setupPeerConnectionAndMedia()
+    
+    func toggleSpeaker()
+    func toggleMicrophone()
+    func toggleCamera()
+    func switchCamera()
     
     func createOffer(completion: @escaping (String?) -> Void)
     func set(remoteOffer sdpString: String, completion: @escaping (Bool) -> Void)
@@ -24,4 +27,6 @@ protocol WebRTCManaging {
     func set(remoteAnswer sdpString: String, completion: @escaping (Bool) -> Void)
     
     func addIceCandidate(_ candidate: IceCandidatePayload)
+    
+    func terminate()
 }

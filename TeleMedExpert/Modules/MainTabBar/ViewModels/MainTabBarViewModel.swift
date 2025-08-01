@@ -9,18 +9,27 @@ import Combine
 import Foundation
 
 final class MainTabBarViewModel: ObservableObject {
-    private let pushService: PushManaging
-    private let socketManager: SocketManaging
-    private let callManager: CallManaging
+    enum Event {
+        case handleIncomingCall
+    }
     
+    private let callEngine: CallEngine
+    private let pushService: PushService
+    private let socketManager: SocketManager
+    
+    var eventPublisher: AnyPublisher<Event, Never> {
+        subject.eraseToAnyPublisher()
+    }
+    
+    private var subject = PassthroughSubject<Event, Never>()
     private var cancellables = Set<AnyCancellable>()
     
-    init(pushService: PushManaging, socketManager: SocketManaging, callManager: CallManaging) {
+    init(callEngine: CallEngine, pushService: PushService, socketManager: SocketManager) {
+        self.callEngine = callEngine
         self.pushService = pushService
         self.socketManager = socketManager
-        self.callManager = callManager
         
-        bindPushNotifications()
+        bindEngine()
     }
     
     func registerPushNotifications() {
@@ -54,14 +63,19 @@ final class MainTabBarViewModel: ObservableObject {
             print("\(#function) error: \(error.localizedDescription)")
         }
     }
-}
-
-// MARK: - VoIPNotification handling -
-extension MainTabBarViewModel {
-    private func bindPushNotifications() {
-        pushService.pushPublisher
-            .sink { [weak self] notification in
-                self?.callManager.reportIncomingCall(payload: notification)
+    
+    private func bindEngine() {
+        callEngine.eventPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] event in
+                switch event {
+                case .incomingCallInApp, .incomingCall:
+                    self?.subject.send(.handleIncomingCall)
+                case .callDeclined:
+                    break
+                case .callEnded:
+                    break
+                }
             }
             .store(in: &cancellables)
     }

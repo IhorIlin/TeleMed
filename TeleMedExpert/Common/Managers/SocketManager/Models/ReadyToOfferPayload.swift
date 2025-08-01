@@ -1,16 +1,15 @@
 //
-//  OfferPayload.swift
+//  ReadyToOfferPayload.swift
 //  TeleMedExpert
 //
-//  Created by Ihor Ilin on 06.07.2025.
+//  Created by Ihor Ilin on 17.07.2025.
 //
 
 import Foundation
 
-struct OfferPayload: Codable {
+struct ReadyToOfferPayload: Codable {
     let callId: UUID
     let callerId: UUID
     let calleeId: UUID
     let callType: CallType
-    let sdp: String
 }

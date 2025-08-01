@@ -22,7 +22,7 @@ final class AuthCoordinator: Coordinator {
         dependencies.authClient
     }
     
-    private var sessionService: SessionMonitor {
+    private var sessionService: SessionService {
         dependencies.sessionService
     }
     

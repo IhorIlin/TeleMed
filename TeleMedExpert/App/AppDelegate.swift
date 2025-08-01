@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         print("Device token : \(deviceToken.hexString)")
+        
         dependencies.pushService.registerRegularToken(deviceToken)
     }
     

@@ -12,10 +12,16 @@ final class ProfileViewModel: ObservableObject {
         case logout
         case showEditProfile
     }
-    private var cancellables = Set<AnyCancellable>()
-    private(set) var subject = PassthroughSubject<Event, Never>()
     
+    var publisher: AnyPublisher<Event, Never> {
+        subject.eraseToAnyPublisher()
+    }
+    
+    private var subject = PassthroughSubject<Event, Never>()
+
     private let userClient: UserClient
+    
+    private var cancellables = Set<AnyCancellable>()
     
     init(userClient: UserClient) {
         self.userClient = userClient

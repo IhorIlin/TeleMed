@@ -11,11 +11,17 @@ import Combine
 final class DashboardViewModel: ObservableObject {
     enum Event {
         case usersLoaded([DashboardUserModel])
+        case logout
     }
     
     private let userClient: any UserClient
     
-    private(set) var subject = PassthroughSubject<Event, Never>()
+    var publisher: AnyPublisher<Event, Never> {
+        subject.eraseToAnyPublisher()
+    }
+    
+    private let subject = PassthroughSubject<Event, Never>()
+    
     private var cancellables = Set<AnyCancellable>()
     
     init(userClient: any UserClient) {
@@ -25,8 +31,18 @@ final class DashboardViewModel: ObservableObject {
     func getAllUsers() {
         userClient.getUsers()
             .receive(on: DispatchQueue.main)
-            .sink { completion in
-                print("\(#function) \(completion)")
+            .sink { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    switch error {
+                    case .unauthorized:
+                        self?.subject.send(.logout)
+                    default:
+                        break
+                    }
+                case .finished:
+                    break
+                }
             } receiveValue: { users in
                 let userModels = users.map { DashboardUserModel(userId: $0.id, email: $0.email, userRole: $0.role) }
                 

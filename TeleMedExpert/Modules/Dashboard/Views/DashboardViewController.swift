@@ -15,6 +15,7 @@ class DashboardViewController: UIViewController {
     private var tableView = UITableView()
     
     var startCallCallback: ((UUID) -> Void)?
+    var logout: (() -> Void)?
     
     private var cancellables = Set<AnyCancellable>()
 
@@ -68,13 +69,15 @@ class DashboardViewController: UIViewController {
     }
     
     private func bindViewModel() {
-        viewModel.subject
+        viewModel.publisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] event in
                 switch event {
                 case .usersLoaded(let users):
                     self?.users = users
                     self?.tableView.reloadData()
+                case .logout:
+                    self?.logout?()
                 }
             }
             .store(in: &cancellables)

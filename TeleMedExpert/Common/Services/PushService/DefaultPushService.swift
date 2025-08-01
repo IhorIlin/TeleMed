@@ -1,5 +1,5 @@
 //
-//  PushService.swift
+//  DefaultPushService.swift
 //  TeleMedExpert
 //
 //  Created by Ihor Ilin on 28.06.2025.
@@ -12,13 +12,18 @@ import UserNotifications
 import UIKit
 import CallKit
 
-final class PushService: NSObject, PushManaging {
+final class DefaultPushService: NSObject, PushService {
     private let apnsClient: any APNSClient
     private var pushRegistry: any PushRegistryManaging
-    private let pushSubject = PassthroughSubject<VoIPNotificationPayload, Never>()
+    private let voipPushSubject = PassthroughSubject<VoIPNotificationPayload, Never>()
+    private let regularPushSubject = PassthroughSubject<RegularNotificationPayload, Never>()
     
-    var pushPublisher: AnyPublisher<VoIPNotificationPayload, Never> {
-        pushSubject.eraseToAnyPublisher()
+    var voipPushPublisher: AnyPublisher<VoIPNotificationPayload, Never> {
+        voipPushSubject.eraseToAnyPublisher()
+    }
+    
+    var regularPushPublisher: AnyPublisher<RegularNotificationPayload, Never> {
+        regularPushSubject.eraseToAnyPublisher()
     }
     
     private var cancellables = Set<AnyCancellable>()
@@ -100,21 +105,28 @@ final class PushService: NSObject, PushManaging {
             let data = try JSONSerialization.data(withJSONObject: payloadDict, options: [])
             let model = try JSONDecoder().decode(VoIPNotificationPayload.self, from: data)
             
-            pushSubject.send(model)
+            voipPushSubject.send(model)
             print("✅ VoIP payload converted: \(model)")
-            
         } catch {
             print("❌ Failed to decode VoIP payload: \(error)")
         }
     }
     
-    func handleRemoteNotification(_ userInfo: [AnyHashable : Any]) {
-        print("Regular push info: \(userInfo)")
+    func handleRemoteNotification(_ userInfo: [AnyHashable : Any]) {        
+        do {
+            let data = try JSONSerialization.data(withJSONObject: userInfo, options: [])
+            let model = try JSONDecoder().decode(RegularNotificationPayload.self, from: data)
+            
+            regularPushSubject.send(model)
+            print("✅ Regular push converted: \(model)")
+        } catch {
+            print("❌ Failed to decode regular push: \(error)")
+        }
     }
 }
 
 // MARK: - PKPushRegistryDelegate -
-extension PushService: PKPushRegistryDelegate {
+extension DefaultPushService: PKPushRegistryDelegate {
     func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
         registerVoIPToken(pushCredentials.token)
     }
