@@ -21,7 +21,6 @@ final class AppDependencies {
     let callClient: CallClient
     let callKitManager: CallKitManager
     let userClient: UserClient
-    let webRTCManager: WebRTCManager
     let callEngine: CallEngine
     
     init() {
@@ -46,9 +45,7 @@ final class AppDependencies {
         callClient = DefaultCallClient(protectedNetworkClient: protectedNetworkClient)
         callKitManager = DefaultCallKitManager()
         userClient = DefaultUserClient(protectedNetworkClient: protectedNetworkClient)
-        webRTCManager = DefaultWebRTCManager()
         callEngine = DefaultCallEngine(callClient: callClient,
-                                       webRTCManager: webRTCManager,
                                        socketManager: socketManager,
                                        pushService: pushService,
                                        callKitManager: callKitManager)

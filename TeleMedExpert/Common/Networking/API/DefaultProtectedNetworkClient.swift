@@ -28,7 +28,7 @@ final class DefaultProtectedNetworkClient: ProtectedNetworkClient {
                     guard let self, case .unauthorized = error else {
                         return Fail(error: error).eraseToAnyPublisher()
                     }
-                    
+                    print("Retry for - \(endpoint.url)")
                     return self.retryAfterRefresh(endpoint: endpoint)
                 }
                 .eraseToAnyPublisher()
