@@ -221,8 +221,6 @@ final class DefaultWebRTCManager: NSObject, WebRTCManager {
         localAudioTrack = nil
         videoCapturer = nil
         
-        stopLocalAudio()
-        
         peerConnection?.close()
         peerConnection = nil
     }
@@ -256,16 +254,6 @@ extension DefaultWebRTCManager {
         return nil
     }
     
-    private func stopLocalAudio() {
-        do {
-            try AVAudioSession.sharedInstance().setActive(false)
-            
-            print("✅ AVAudioSession disabled.")
-        } catch {
-            print("❌ Failed to disable AVAudioSession: \(error.localizedDescription)")
-        }
-    }
-    
     private func createPeerConnection(delegate: RTCPeerConnectionDelegate) {
         let config = RTCConfiguration()
         config.iceServers = iceServers
@@ -295,7 +283,7 @@ extension DefaultWebRTCManager {
         } catch {
             print("❌ Failed to configure AVAudioSession: \(error.localizedDescription)")
         }
-        
+
         let audioTrack = factory.audioTrack(withTrackId: "ARDAMSa0")
         localAudioTrack = audioTrack
         localAudioTrack?.isEnabled = configuration.isMicrophoneEnabled

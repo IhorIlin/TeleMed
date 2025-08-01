@@ -15,7 +15,6 @@ enum CallEvent {
     case ringingInApp
     case accepted
     case declined
-    case ended
 }
 
 final class DefaultCallKitManager: NSObject, CallKitManager {
@@ -60,22 +59,6 @@ final class DefaultCallKitManager: NSObject, CallKitManager {
             } else {
                 print("✅ CallKit incoming call reported")
                 self.subject.send(.ringing)
-            }
-        }
-    }
-
-    func endCall(uuid: UUID) {
-        let action = CXEndCallAction(call: uuid)
-        let transaction = CXTransaction(action: action)
-
-        let controller = CXCallController()
-        controller.request(transaction) { error in
-            if let error = error {
-                print("❌ Failed to end call: \(error)")
-            } else {
-                print("✅ Call ended via CallKit")
-                
-                self.subject.send(.ended)
             }
         }
     }

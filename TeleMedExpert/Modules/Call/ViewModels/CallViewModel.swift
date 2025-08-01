@@ -10,6 +10,15 @@ import Foundation
 import WebRTC
 
 final class CallViewModel: ObservableObject {
+    enum Event {
+        case callEnded
+    }
+    
+    var publisher: AnyPublisher<Event, Never> {
+        subject.eraseToAnyPublisher()
+    }
+    
+    private let subject = PassthroughSubject<Event, Never>()
     private var callEngine: CallEngine
     private let callConfiguration: CallConfiguration?
     
@@ -27,12 +36,28 @@ final class CallViewModel: ObservableObject {
     init(callEngine: CallEngine, callConfiguration: CallConfiguration?) {
         self.callEngine = callEngine
         self.callConfiguration = callConfiguration
+        
+        bindCallEngine()
     }
     
     func processCall() {
         if let config = callConfiguration {
             callEngine.startCall(config)
         }
+    }
+    
+    private func bindCallEngine() {
+        callEngine.eventPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] event in
+                switch event {
+                case .callEnded:
+                    self?.subject.send(.callEnded)
+                default:
+                    break
+                }
+            }
+            .store(in: &cancellables)
     }
     
     deinit {

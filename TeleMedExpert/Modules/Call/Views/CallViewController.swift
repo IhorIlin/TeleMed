@@ -8,6 +8,7 @@
 import UIKit
 import WebRTC
 import SnapKit
+import Combine
 
 class CallViewController: UIViewController {
     private let topContainerView = UIView()
@@ -27,6 +28,8 @@ class CallViewController: UIViewController {
     
     private let viewModel: CallViewModel
     
+    private var cancellables = Set<AnyCancellable>()
+    
     init(viewModel: CallViewModel) {
         self.viewModel = viewModel
         
@@ -42,9 +45,20 @@ class CallViewController: UIViewController {
 
         configureUI()
         
+        bindViewModel()
+        
         viewModel.callEngineDelegate = self
         
         viewModel.processCall()
+    }
+    
+    private func bindViewModel() {
+        viewModel.publisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] event in
+                self?.dismiss(animated: true)
+            }
+            .store(in: &cancellables)
     }
     
     private func configureUI() {
